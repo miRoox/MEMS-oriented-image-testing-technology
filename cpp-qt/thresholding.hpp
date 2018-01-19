@@ -12,6 +12,7 @@
 #include <QColor>
 #include <QVector>
 #include <cmath>
+#include <limits>
 #include <QtDebug>
 
 namespace MEMS {
@@ -35,11 +36,14 @@ constexpr ::std::size_t ColorValueRange = 0x100;
            Use the mean level as the threshold.
     \value Moments
            Moment-preserving thresholding.
+    \value Fuzziness
+           Thresholding by minimizing the measures of fuzziness.
 
     \omitvalue Cluster
     \omitvalue Otsu
     \omitvalue Mean
     \omitvalue Moments
+    \omitvalue Fuzziness
  */
 enum class AutoThresholdMethod
 {
@@ -47,6 +51,7 @@ enum class AutoThresholdMethod
     Otsu        = AutoThresholdMethod::Cluster,
     Mean        = 1,
     Moments     = 2,
+    Fuzziness   = 3,
 };
 
 inline QVector<::std::size_t> imageValueHistogram(const QImage& image);
@@ -264,6 +269,81 @@ inline int momentsThreshold(const QVector<::std::size_t>& histogram)
         {
             threshold = i;
             break;
+        }
+    }
+    return threshold;
+}
+
+// pre-declaration
+inline int fuzzinessThreshold(const QVector<::std::size_t>& histogram);
+
+/*!
+    Thresholding by minimizing the measures of fuzziness.
+ */
+inline int fuzzinessThreshold(const QImage& img)
+{
+/*!
+    \quotation
+    Huang, L-K & Wang, M-J J (1995), "Image thresholding by minimizing the measure of fuzziness",
+    Pattern Recognition 28(1): 41-51
+    \endquotation
+ */
+
+    return fuzzinessThreshold(imageValueHistogram(img));
+}
+
+/*!
+    \overload fuzzinessThreshold()
+ */
+inline int fuzzinessThreshold(const QVector<::std::size_t>& histogram)
+{
+    using ::std::log;
+    using ::std::abs;
+
+    const int histoSize = histogram.length();
+    int first, last;
+
+    for (first=0; first<histoSize && histogram[first]==0; ++first);
+    for (last=histoSize-1; last>first && histogram[last]==0; --last);
+    if (first==last || first+1==last)
+        return first;
+
+    QVector<qreal> s(last+1,0);
+    QVector<qreal> w(last+1,0);
+    s[0] = histogram[0];
+    for (int i= ::std::max(first,1); i<=last; ++i)
+    {
+        s[i] = s.at(i-1) + histogram.at(i);
+        w[i] = w.at(i-1) + i*histogram.at(i);
+    }
+
+    qreal c = last-first;
+    QVector<qreal> s_mu(last-first+1);
+    for (int i=1; i<s_mu.length(); ++i)
+    {
+        qreal mu = 1/(1+i/c);
+        s_mu[i] = -mu*log(mu) - (1-mu)*log(1-mu);
+    }
+
+    int threshold = 0;
+    qreal bestEntropy = ::std::numeric_limits<qreal>::max();
+    for (int i=first; i<last; ++i)
+    {
+        qreal entropy = 0.;
+        int mu = static_cast<int>(w.at(i)/s.at(i));
+        for (int j=first; j<=i; ++j)
+        {
+            entropy += s_mu.at(abs(j-mu))*histogram.at(j);
+        }
+        mu = static_cast<int>((w.at(last)-w.at(i))/(s.at(last)-s.at(i)));
+        for (int j=i+1; j<=last; ++j)
+        {
+            entropy += s_mu.at(abs(j-mu))*histogram.at(j);
+        }
+        if (bestEntropy > entropy)
+        {
+            bestEntropy = entropy;
+            threshold = i;
         }
     }
     return threshold;

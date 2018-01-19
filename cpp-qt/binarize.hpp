@@ -77,6 +77,8 @@ inline QImage binarize(const QImage& origin,
         return binarize(origin,meanThreshold(origin));
     case AutoThresholdMethod::Moments:
         return binarize(origin,momentsThreshold(origin));
+    case AutoThresholdMethod::Fuzziness:
+        return binarize(origin,fuzzinessThreshold(origin));
     default:
         break;
     }
