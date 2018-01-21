@@ -16,7 +16,8 @@ SOURCES += main.cpp \
 HEADERS += \
     mainpanel.h \
     binarize.hpp \
-    thresholding.hpp
+    thresholding.hpp \
+    matrix.hpp
 
 FORMS += \
     mainpanel.ui
