@@ -10,14 +10,15 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000 # disables all the APIs depreca
 QT += core gui widgets
 
 SOURCES += main.cpp \
-    mainpanel.cpp
+    mainpanel.cpp \
+    imagefilter.cpp
 
 
 HEADERS += \
     mainpanel.h \
     binarize.hpp \
     thresholding.hpp \
-    matrix.hpp
+    imagefilter.h
 
 FORMS += \
     mainpanel.ui
