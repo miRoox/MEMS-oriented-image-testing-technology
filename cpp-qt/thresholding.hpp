@@ -54,7 +54,7 @@ enum class AutoThresholdMethod
     Fuzziness   = 3,
 };
 
-inline QVector<::std::size_t> imageValueHistogram(const QImage& image);
+inline QVector<::std::size_t> grayscaleHistogram(const QImage& image);
 
 /*!
     Use the mean level as the threshold.
@@ -107,7 +107,7 @@ inline int pTileThreshold(const QImage& img, qreal pValue)
     const int height = img.height();
     const int width = img.width();
     const unsigned long total = height*width;
-    const auto histogram = imageValueHistogram(img);
+    const auto histogram = grayscaleHistogram(img);
 
     int threshold = ColorValueRange;
     unsigned long partSum = 0;
@@ -167,7 +167,7 @@ inline int clusterThreshold(const QImage& img)
     \endquotation
  */
 
-    return clusterThreshold(imageValueHistogram(img));
+    return clusterThreshold(grayscaleHistogram(img));
 }
 
 /*!
@@ -225,7 +225,7 @@ inline int momentsThreshold(const QImage& img)
     \endquotation
  */
 
-    return momentsThreshold(imageValueHistogram(img));
+    return momentsThreshold(grayscaleHistogram(img));
 }
 
 /*!
@@ -289,7 +289,7 @@ inline int fuzzinessThreshold(const QImage& img)
     \endquotation
  */
 
-    return fuzzinessThreshold(imageValueHistogram(img));
+    return fuzzinessThreshold(grayscaleHistogram(img));
 }
 
 /*!
@@ -350,9 +350,9 @@ inline int fuzzinessThreshold(const QVector<::std::size_t>& histogram)
 }
 
 /*!
-    Get HSV-value histogram of the \a image .
+    Get grayscale histogram of the \a image .
  */
-inline QVector<::std::size_t> imageValueHistogram(const QImage& image)
+inline QVector<::std::size_t> grayscaleHistogram(const QImage& image)
 {
     using namespace ThresholdPrivate;
 
@@ -364,7 +364,7 @@ inline QVector<::std::size_t> imageValueHistogram(const QImage& image)
     {
         for (int x=0 ;x<width ;++x)
         {
-            histogram[image.pixelColor(x,y).value()] += 1;
+            histogram[qGray(image.pixel(x,y))] += 1;
         }
     }
 

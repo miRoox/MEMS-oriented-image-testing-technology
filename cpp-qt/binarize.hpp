@@ -21,7 +21,7 @@ namespace MEMS {
     \fn QImage binarize(const QImage& origin, Predicate predicate)
 
     Create a binary image from \a origin, by replacing pixels which
-    \c predicate(pixelColor) is true with 1 and others with 0.
+    \c predicate(pixel) is true with 1 and others with 0.
  */
 template<typename Predicate>
 QImage binarize(const QImage& origin, Predicate predicate)
@@ -35,7 +35,7 @@ QImage binarize(const QImage& origin, Predicate predicate)
         for (int x=0; x<width ;++x)
         {
             binarized.setPixel(x,y,
-                               predicate(origin.pixelColor(x,y))
+                               predicate(origin.pixel(x,y))
                                ? Qt::color1 : Qt::color0);
         }
     }
@@ -53,7 +53,7 @@ inline QImage binarize(const QImage& origin, int threshold)
 {
     Q_ASSERT_X(threshold>=0&&threshold<static_cast<int>(ThresholdPrivate::ColorValueRange),
                __func__,"threshold is out of range");
-    return binarize(origin,[=](QColor&& color){return color.value()>threshold;});
+    return binarize(origin,[=](QRgb pixel){return qGray(pixel)>threshold;});
 }
 
 /*!
