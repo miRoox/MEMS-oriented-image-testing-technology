@@ -162,4 +162,25 @@ QImage convolve(const QImage& origin, const MatrixKernel& kernel, const QColor& 
     return convolveImpl(origin,kernel,padding.rgb());
 }
 
+QImage boxFilter(const QImage& origin, uint radius, PaddingType padding)
+{
+    auto boxKer = QVector<QVector<qreal>>(2*radius+1,QVector<qreal>(2*radius+1,
+                                                         1./(2*radius+1)/(2*radius+1)));
+    return convolve(origin,boxKer,padding);
+}
+
+extern QImage boxFilter(const QImage& origin, uint radius, QRgb padding)
+{
+    auto boxKer = QVector<QVector<qreal>>(2*radius+1,QVector<qreal>(2*radius+1,
+                                                         1./(2*radius+1)/(2*radius+1)));
+    return convolve(origin,boxKer,padding);
+}
+
+extern QImage boxFilter(const QImage& origin, uint radius, const QColor& padding)
+{
+    auto boxKer = QVector<QVector<qreal>>(2*radius+1,QVector<qreal>(2*radius+1,
+                                                         1./(2*radius+1)/(2*radius+1)));
+    return convolve(origin,boxKer,padding);
+}
+
 } // namespace MEMS

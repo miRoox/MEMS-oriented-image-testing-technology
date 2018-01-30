@@ -31,6 +31,11 @@ extern QImage convolve(const QImage& origin, const MatrixKernel& kernel,
 extern QImage convolve(const QImage& origin, const MatrixKernel& kernel, QRgb padding);
 extern QImage convolve(const QImage& origin, const MatrixKernel& kernel, const QColor& padding);
 
+extern QImage boxFilter(const QImage& origin, uint radius = 2,
+                        PaddingType padding = PaddingType::Fixed);
+extern QImage boxFilter(const QImage& origin, uint radius, QRgb padding);
+extern QImage boxFilter(const QImage& origin, uint radius, const QColor& padding);
+
 } // namespace MEMS
 
 #endif // IMAGEFILTER_H
