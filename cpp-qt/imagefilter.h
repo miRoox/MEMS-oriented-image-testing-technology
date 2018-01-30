@@ -17,17 +17,17 @@ enum class PaddingType
 };
 
 
-QRgb getPixel(const QImage& img, int x, int y, PaddingType padding);
-QRgb getPixel(const QImage& img, const QPoint& position, PaddingType padding);
-QRgb getPixel(const QImage& img, int x, int y, QRgb padding);
-QRgb getPixel(const QImage& img, const QPoint& position, QRgb padding);
-QColor getPixelColor(const QImage& img, int x, int y, PaddingType padding);
-QColor getPixelColor(const QImage& img, const QPoint& position, PaddingType padding);
-QColor getPixelColor(const QImage& img, int x, int y, const QColor& padding);
-QColor getPixelColor(const QImage& img, const QPoint& position, const QColor& padding);
+extern QRgb getPixel(const QImage& img, int x, int y, PaddingType padding);
+extern QRgb getPixel(const QImage& img, const QPoint& position, PaddingType padding);
+extern QRgb getPixel(const QImage& img, int x, int y, QRgb padding);
+extern QRgb getPixel(const QImage& img, const QPoint& position, QRgb padding);
+extern QColor getPixelColor(const QImage& img, int x, int y, PaddingType padding);
+extern QColor getPixelColor(const QImage& img, const QPoint& position, PaddingType padding);
+extern QColor getPixelColor(const QImage& img, int x, int y, const QColor& padding);
+extern QColor getPixelColor(const QImage& img, const QPoint& position, const QColor& padding);
 
-QImage convolve(const QImage& origin, const MatrixKernel& kernel,
-                PaddingType padding = PaddingType::Fixed);
+extern QImage convolve(const QImage& origin, const MatrixKernel& kernel,
+                       PaddingType padding = PaddingType::Fixed);
 
 } // namespace MEMS
 
