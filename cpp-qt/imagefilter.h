@@ -28,6 +28,8 @@ extern QColor getPixelColor(const QImage& img, const QPoint& position, const QCo
 
 extern QImage convolve(const QImage& origin, const MatrixKernel& kernel,
                        PaddingType padding = PaddingType::Fixed);
+extern QImage convolve(const QImage& origin, const MatrixKernel& kernel, QRgb padding);
+extern QImage convolve(const QImage& origin, const MatrixKernel& kernel, const QColor& padding);
 
 } // namespace MEMS
 

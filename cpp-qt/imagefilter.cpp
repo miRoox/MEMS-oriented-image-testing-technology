@@ -96,7 +96,11 @@ QColor getPixelColor(const QImage& img, const QPoint& position, const QColor& pa
     return img.valid(position) ? img.pixelColor(position) : padding;
 }
 
-QImage convolve(const QImage& origin, const MatrixKernel& kernel, PaddingType padding)
+/*!
+    \internal
+ */
+template<typename Padding>
+static QImage convolveImpl(const QImage& origin, const MatrixKernel& kernel, Padding padding)
 {
     QImage output(origin.size(),QImage::Format_RGB32);
 
@@ -141,6 +145,21 @@ QImage convolve(const QImage& origin, const MatrixKernel& kernel, PaddingType pa
     }
 
     return output.convertToFormat(origin.format());
+}
+
+QImage convolve(const QImage& origin, const MatrixKernel& kernel, PaddingType padding)
+{
+    return convolveImpl(origin,kernel,padding);
+}
+
+QImage convolve(const QImage& origin, const MatrixKernel& kernel, QRgb padding)
+{
+    return convolveImpl(origin,kernel,padding);
+}
+
+QImage convolve(const QImage& origin, const MatrixKernel& kernel, const QColor& padding)
+{
+    return convolveImpl(origin,kernel,padding.rgb());
 }
 
 } // namespace MEMS
