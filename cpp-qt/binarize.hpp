@@ -7,13 +7,13 @@
     \brief The <binarize.hpp> header file provides image binarize
     algorithms.
 
-    \sa <thresholding.hpp>
+    \sa <thresholding.h>
  */
 
 #include <QImage>
 #include <QColor>
 
-#include "thresholding.hpp"
+#include "thresholding.h"
 
 namespace MEMS {
 
@@ -51,7 +51,7 @@ QImage binarize(const QImage& origin, Predicate predicate)
  */
 inline QImage binarize(const QImage& origin, int threshold)
 {
-    Q_ASSERT_X(threshold>=0&&threshold<static_cast<int>(ThresholdPrivate::ColorValueRange),
+    Q_ASSERT_X(threshold>=0&&threshold<0x100,
                __func__,"threshold is out of range");
     return binarize(origin,[=](QRgb pixel){return qGray(pixel)>threshold;});
 }

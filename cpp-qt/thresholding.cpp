@@ -1,10 +1,9 @@
-#ifndef THRESHOLDING_HPP
-#define THRESHOLDING_HPP
+#include "thresholding.h"
 
 /*!
-    \headerfile <thresholding.hpp>
+    \headerfile <thresholding.h>
     \title Image Thresholding Algorithms.
-    \brief The <thresholding.hpp> header file provides various
+    \brief The <thresholding.h> header file provides various
     methods to automatically select the threshold.
  */
 
@@ -17,11 +16,7 @@
 
 namespace MEMS {
 
-namespace ThresholdPrivate {
-
-constexpr ::std::size_t ColorValueRange = 0x100;
-
-}
+static constexpr ::std::size_t ColorValueRange = 0x100;
 
 /*!
     \enum AutoThresholdMethod
@@ -45,21 +40,12 @@ constexpr ::std::size_t ColorValueRange = 0x100;
     \omitvalue Moments
     \omitvalue Fuzziness
  */
-enum class AutoThresholdMethod
-{
-    Cluster     = 0,
-    Otsu        = AutoThresholdMethod::Cluster,
-    Mean        = 1,
-    Moments     = 2,
-    Fuzziness   = 3,
-};
 
-inline QVector<::std::size_t> grayscaleHistogram(const QImage& image);
 
 /*!
     Use the mean level as the threshold.
  */
-inline int meanThreshold(const QImage& img)
+int meanThreshold(const QImage& img)
 {
     qreal threshold = 0.;
 
@@ -77,12 +63,10 @@ inline int meanThreshold(const QImage& img)
 }
 
 /*!
-    \overload meanThreshold()
+    \overload meanThreshold
  */
-inline int meanThreshold(const QVector<::std::size_t>& histogram)
+int meanThreshold(const QVector<::std::size_t>& histogram)
 {
-    using namespace ThresholdPrivate;
-
     int total = 0;
     int weighted = 0;
     const int histoSize = histogram.length();
@@ -98,10 +82,8 @@ inline int meanThreshold(const QVector<::std::size_t>& histogram)
     Find a threshold value that make a fraction \a pValue
     of all pixels black.
  */
-inline int pTileThreshold(const QImage& img, qreal pValue)
+int pTileThreshold(const QImage& img, qreal pValue)
 {
-    using namespace ThresholdPrivate;
-
     Q_ASSERT_X(pValue>=0&&pValue<1,__func__,"p-value is out of range.");
 
     const int height = img.height();
@@ -124,9 +106,9 @@ inline int pTileThreshold(const QImage& img, qreal pValue)
 }
 
 /*!
-    \overload pTileThreshold()
+    \overload pTileThreshold
  */
-inline int pTileThreshold(const QVector<::std::size_t>& histogram, qreal pValue)
+int pTileThreshold(const QVector<::std::size_t>& histogram, qreal pValue)
 {
     Q_ASSERT_X(pValue>=0&&pValue<1,__func__,"p-value is out of range.");
 
@@ -151,14 +133,11 @@ inline int pTileThreshold(const QVector<::std::size_t>& histogram, qreal pValue)
     return threshold;
 }
 
-// pre-declaration
-inline int clusterThreshold(const QVector<::std::size_t>& histogram);
-
 /*!
     Perform clustering-based image thresholding, also known
     as Otsu's method.
  */
-inline int clusterThreshold(const QImage& img)
+int clusterThreshold(const QImage& img)
 {
 /*!
     \quotation
@@ -171,9 +150,9 @@ inline int clusterThreshold(const QImage& img)
 }
 
 /*!
-    \overload clusterThreshold()
+    \overload clusterThreshold
  */
-inline int clusterThreshold(const QVector<::std::size_t>& histogram)
+int clusterThreshold(const QVector<::std::size_t>& histogram)
 {
     const int histoSize = histogram.length();
     qreal total = 0.;
@@ -210,13 +189,10 @@ inline int clusterThreshold(const QVector<::std::size_t>& histogram)
     return threshold;
 }
 
-// pre-declaration
-inline int momentsThreshold(const QVector<::std::size_t>& histogram);
-
 /*!
     Moment-preserving thresholding.
  */
-inline int momentsThreshold(const QImage& img)
+int momentsThreshold(const QImage& img)
 {
 /*!
     \quotation
@@ -229,9 +205,9 @@ inline int momentsThreshold(const QImage& img)
 }
 
 /*!
-    \overload momentsThreshold()
+    \overload momentsThreshold
  */
-inline int momentsThreshold(const QVector<::std::size_t>& histogram)
+int momentsThreshold(const QVector<::std::size_t>& histogram)
 {
     using ::std::sqrt;
 
@@ -274,13 +250,10 @@ inline int momentsThreshold(const QVector<::std::size_t>& histogram)
     return threshold;
 }
 
-// pre-declaration
-inline int fuzzinessThreshold(const QVector<::std::size_t>& histogram);
-
 /*!
     Thresholding by minimizing the measures of fuzziness.
  */
-inline int fuzzinessThreshold(const QImage& img)
+int fuzzinessThreshold(const QImage& img)
 {
 /*!
     \quotation
@@ -293,9 +266,9 @@ inline int fuzzinessThreshold(const QImage& img)
 }
 
 /*!
-    \overload fuzzinessThreshold()
+    \overload fuzzinessThreshold
  */
-inline int fuzzinessThreshold(const QVector<::std::size_t>& histogram)
+int fuzzinessThreshold(const QVector<::std::size_t>& histogram)
 {
     using ::std::log;
     using ::std::abs;
@@ -352,10 +325,8 @@ inline int fuzzinessThreshold(const QVector<::std::size_t>& histogram)
 /*!
     Get grayscale histogram of the \a image .
  */
-inline QVector<::std::size_t> grayscaleHistogram(const QImage& image)
+QVector<::std::size_t> grayscaleHistogram(const QImage& image)
 {
-    using namespace ThresholdPrivate;
-
     QVector<::std::size_t> histogram(ColorValueRange,0);
 
     int height = image.height();
@@ -372,5 +343,3 @@ inline QVector<::std::size_t> grayscaleHistogram(const QImage& image)
 }
 
 } // namespace MEMS
-
-#endif // THRESHOLDING_HPP

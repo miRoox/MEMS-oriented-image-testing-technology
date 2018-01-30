@@ -11,14 +11,15 @@ QT += core gui widgets
 
 SOURCES += main.cpp \
     mainpanel.cpp \
-    imagefilter.cpp
+    imagefilter.cpp \
+    thresholding.cpp
 
 
 HEADERS += \
     mainpanel.h \
     binarize.hpp \
-    thresholding.hpp \
-    imagefilter.h
+    imagefilter.h \
+    thresholding.h
 
 FORMS += \
     mainpanel.ui
