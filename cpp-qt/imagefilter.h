@@ -10,7 +10,7 @@ using MatrixKernel = QVector<QVector<qreal>>;
 
 enum class PaddingType
 {
-    None = 0,
+//    None = 0,
     Fixed = 1,
     Periodic = 2,
     Reflected = 3,
@@ -26,7 +26,8 @@ QColor getPixelColor(const QImage& img, const QPoint& position, PaddingType padd
 QColor getPixelColor(const QImage& img, int x, int y, const QColor& padding);
 QColor getPixelColor(const QImage& img, const QPoint& position, const QColor& padding);
 
-//QImage convolve(const QImage& origin, const MatrixKernel& kernel, PaddingType padding);
+QImage convolve(const QImage& origin, const MatrixKernel& kernel,
+                PaddingType padding = PaddingType::Fixed);
 
 } // namespace MEMS
 
