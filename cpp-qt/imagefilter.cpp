@@ -187,4 +187,64 @@ QImage boxFilter(const QImage& origin, uint radius, const QColor& padding)
     return convolve(origin,boxKer,padding);
 }
 
+/*!
+    \internal
+ */
+static inline MatrixKernel gaussianKernel(uint radius, qreal sigma)
+{
+    constexpr qreal PI = 3.14159265358979323846;
+
+    MatrixKernel ker(2*radius+1,QVector<qreal>(2*radius+1,0));
+    const int r = radius;
+    const qreal s = 2*sigma*sigma;
+    qreal sum = 0;
+
+    for (int x=-r; x<=r; ++x)
+    {
+        for (int y=-r; y<=r; ++y)
+        {
+            sum += ker[x+radius][y+radius] = ::std::exp(-(x*x+y*y)/s)/s/PI;
+        }
+    }
+    for (auto& row : ker)
+    {
+        for (auto& val : row)
+        {
+            val /= sum;
+        }
+    }
+
+    return ker;
+}
+
+QImage gaussianFilter(const QImage& origin, uint radius, PaddingType padding)
+{
+    return gaussianFilter(origin,radius,radius/2.,padding);
+}
+
+QImage gaussianFilter(const QImage& origin, uint radius, qreal sigma, PaddingType padding)
+{
+    return convolve(origin,gaussianKernel(radius,sigma),padding);
+}
+
+QImage gaussianFilter(const QImage& origin, uint radius, QRgb padding)
+{
+    return gaussianFilter(origin,radius,radius/2.,padding);
+}
+
+QImage gaussianFilter(const QImage& origin, uint radius, qreal sigma, QRgb padding)
+{
+    return convolve(origin,gaussianKernel(radius,sigma),padding);
+}
+
+QImage gaussianFilter(const QImage& origin, uint radius, const QColor& padding)
+{
+    return gaussianFilter(origin,radius,radius/2.,padding);
+}
+
+QImage gaussianFilter(const QImage& origin, uint radius, qreal sigma, const QColor& padding)
+{
+    return convolve(origin,gaussianKernel(radius,sigma),padding);
+}
+
 } // namespace MEMS
