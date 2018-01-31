@@ -16,16 +16,6 @@ enum class PaddingType
     Reflected = 3,
 };
 
-
-extern QRgb getPixel(const QImage& img, int x, int y, PaddingType padding);
-extern QRgb getPixel(const QImage& img, const QPoint& position, PaddingType padding);
-extern QRgb getPixel(const QImage& img, int x, int y, QRgb padding);
-extern QRgb getPixel(const QImage& img, const QPoint& position, QRgb padding);
-extern QColor getPixelColor(const QImage& img, int x, int y, PaddingType padding);
-extern QColor getPixelColor(const QImage& img, const QPoint& position, PaddingType padding);
-extern QColor getPixelColor(const QImage& img, int x, int y, const QColor& padding);
-extern QColor getPixelColor(const QImage& img, const QPoint& position, const QColor& padding);
-
 extern QImage convolve(const QImage& origin, const MatrixKernel& kernel,
                        PaddingType padding = PaddingType::Fixed);
 extern QImage convolve(const QImage& origin, const MatrixKernel& kernel, QRgb padding);

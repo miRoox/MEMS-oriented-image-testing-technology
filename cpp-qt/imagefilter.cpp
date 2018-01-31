@@ -10,12 +10,8 @@ namespace MEMS {
 /*!
     \internal
  */
-static QPoint calcPadding(const QImage& img, const QPoint& position, PaddingType padding)
+static inline int calcPaddingX(const int width, int x, PaddingType padding)
 {
-    const int width = img.width();
-    const int height = img.height();
-    int x = position.x();
-    int y = position.y();
     switch (padding)
     {
     case PaddingType::Fixed:
@@ -23,16 +19,10 @@ static QPoint calcPadding(const QImage& img, const QPoint& position, PaddingType
             x = 0;
         else if (x>=width)
             x = width-1;
-        if (y<0)
-            y = 0;
-        else if (y>=height)
-            y = height-1;
         break;
     case PaddingType::Periodic:
         x = x>=0 ? x%width
                  : x%width+width;
-        y = y>=0 ? y%height
-                 : y%height+height;
         break;
     case PaddingType::Reflected:
         while (x>=0 && x<width)
@@ -42,6 +32,30 @@ static QPoint calcPadding(const QImage& img, const QPoint& position, PaddingType
             else
                 x = 2*width-x-1;
         }
+    default:
+        break;
+    }
+    return x;
+}
+
+/*!
+    \internal
+ */
+static inline int calcPaddingY(const int height, int y, PaddingType padding)
+{
+    switch (padding)
+    {
+    case PaddingType::Fixed:
+        if (y<0)
+            y = 0;
+        else if (y>=height)
+            y = height-1;
+        break;
+    case PaddingType::Periodic:
+        y = y>=0 ? y%height
+                 : y%height+height;
+        break;
+    case PaddingType::Reflected:
         while (y>=0 && y<height)
         {
             if (y<0)
@@ -53,54 +67,56 @@ static QPoint calcPadding(const QImage& img, const QPoint& position, PaddingType
     default:
         break;
     }
-    return QPoint(x,y);
+    return y;
 }
 
-QRgb getPixel(const QImage& img, int x, int y, PaddingType padding)
+QImage convolve(const QImage& origin, const MatrixKernel& kernel, PaddingType padding)
 {
-    return getPixel(img,QPoint(x,y),padding);
+    QImage output(origin.size(),QImage::Format_RGB32);
+    const QImage input = origin.convertToFormat(QImage::Format_RGB32);
+
+    const int width = origin.width();
+    const int height = origin.height();
+    const int kerRows = kernel.size();
+    const int kerCols = kernel.first().size();
+    Q_ASSERT_X(kerRows%2==1,__func__,"Row of kernel must be odd");
+    Q_ASSERT_X(kerCols%2==1,__func__,"Column of kernel must be odd");
+    const int kerCenterX = kerCols/2;
+    const int kerCenterY = kerRows/2;
+    for (const auto& row : kernel)
+    {
+        Q_ASSERT_X(row.size()==kerCols,__func__,"Kernel is not a matrix");
+    }
+
+    for (int y=0; y<height; ++y)
+    {
+        QRgb* line = reinterpret_cast<QRgb*>(output.scanLine(y));
+        for (int x=0; x<width; ++x)
+        {
+            qreal rr=0, gg=0, bb=0;
+            for (int i=0; i<kerRows; ++i)
+            {
+                const int yy = calcPaddingY(height,y+i-kerCenterY,padding);
+                const QRgb* iLine = reinterpret_cast<const QRgb*>(input.constScanLine(yy));
+                for (int j=0; j<kerCols; ++j)
+                {
+                    const int xx = calcPaddingX(width,x+j-kerCenterX,padding);
+                    const auto kerVar = kernel.at(kerRows-1-i).at(kerCols-1-j);
+                    rr += qRed(iLine[xx])*kerVar;
+                    gg += qGreen(iLine[xx])*kerVar;
+                    bb += qBlue(iLine[xx])*kerVar;
+                }
+            }
+            line[x] = qRgb(qBound(0,static_cast<int>(rr),0xff),
+                           qBound(0,static_cast<int>(gg),0xff),
+                           qBound(0,static_cast<int>(bb),0xff));
+        }
+    }
+
+    return output.convertToFormat(origin.format());
 }
 
-QRgb getPixel(const QImage& img, const QPoint& position, PaddingType padding)
-{
-    return img.pixel(calcPadding(img,position,padding));
-}
-
-QRgb getPixel(const QImage& img, int x, int y, QRgb padding)
-{
-    return img.valid(x,y) ? img.pixel(x,y) : padding;
-}
-
-QRgb getPixel(const QImage& img, const QPoint& position, QRgb padding)
-{
-    return img.valid(position) ? img.pixel(position) : padding;
-}
-
-QColor getPixelColor(const QImage& img, int x, int y, PaddingType padding)
-{
-    return getPixelColor(img,QPoint(x,y),padding);
-}
-
-QColor getPixelColor(const QImage& img, const QPoint& position, PaddingType padding)
-{
-    return img.pixelColor(calcPadding(img,position,padding));
-}
-
-QColor getPixelColor(const QImage& img, int x, int y, const QColor& padding)
-{
-    return img.valid(x,y) ? img.pixelColor(x,y) : padding;
-}
-
-QColor getPixelColor(const QImage& img, const QPoint& position, const QColor& padding)
-{
-    return img.valid(position) ? img.pixelColor(position) : padding;
-}
-
-/*!
-    \internal
- */
-template<typename Padding>
-static QImage convolveImpl(const QImage& origin, const MatrixKernel& kernel, Padding padding)
+QImage convolve(const QImage& origin, const MatrixKernel& kernel, QRgb padding)
 {
     QImage output(origin.size(),QImage::Format_RGB32);
 
@@ -119,6 +135,7 @@ static QImage convolveImpl(const QImage& origin, const MatrixKernel& kernel, Pad
 
     for (int y=0; y<height; ++y)
     {
+        QRgb* line = reinterpret_cast<QRgb*>(output.scanLine(y));
         for (int x=0; x<width; ++x)
         {
             qreal rr=0, gg=0, bb=0;
@@ -126,40 +143,27 @@ static QImage convolveImpl(const QImage& origin, const MatrixKernel& kernel, Pad
             {
                 for (int j=0; j<kerCols; ++j)
                 {
-                    QRgb pix = getPixel(origin,
-                                        x+i-kerCenterX,
-                                        y+j-kerCenterY,
-                                        padding);
-                    auto kerVar = kernel.at(kerRows-1-i).at(kerCols-1-j);
+                    const QRgb pix = origin.valid(x+j-kerCenterX,y+i-kerCenterY)
+                                    ? origin.pixel(x+j-kerCenterX,y+i-kerCenterY)
+                                    : padding;
+                    const auto kerVar = kernel.at(kerRows-1-i).at(kerCols-1-j);
                     rr += qRed(pix)*kerVar;
                     gg += qGreen(pix)*kerVar;
                     bb += qBlue(pix)*kerVar;
                 }
             }
-            int r=rr, g=gg, b=bb;
-            r = qBound(0,r,0xff);
-            g = qBound(0,g,0xff);
-            b = qBound(0,b,0xff);
-            output.setPixel(x,y,qRgb(r,g,b));
+            line[x] = qRgb(qBound(0,static_cast<int>(rr),0xff),
+                           qBound(0,static_cast<int>(gg),0xff),
+                           qBound(0,static_cast<int>(bb),0xff));
         }
     }
 
     return output.convertToFormat(origin.format());
 }
 
-QImage convolve(const QImage& origin, const MatrixKernel& kernel, PaddingType padding)
-{
-    return convolveImpl(origin,kernel,padding);
-}
-
-QImage convolve(const QImage& origin, const MatrixKernel& kernel, QRgb padding)
-{
-    return convolveImpl(origin,kernel,padding);
-}
-
 QImage convolve(const QImage& origin, const MatrixKernel& kernel, const QColor& padding)
 {
-    return convolveImpl(origin,kernel,padding.rgb());
+    return convolve(origin,kernel,padding.rgb());
 }
 
 QImage boxFilter(const QImage& origin, uint radius, PaddingType padding)
