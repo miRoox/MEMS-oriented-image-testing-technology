@@ -65,7 +65,7 @@ int meanThreshold(const QImage& img)
 /*!
     \overload meanThreshold
  */
-int meanThreshold(const QVector<::std::size_t>& histogram)
+int meanThreshold(const Histogram& histogram)
 {
     int total = 0;
     int weighted = 0;
@@ -108,7 +108,7 @@ int pTileThreshold(const QImage& img, qreal pValue)
 /*!
     \overload pTileThreshold
  */
-int pTileThreshold(const QVector<::std::size_t>& histogram, qreal pValue)
+int pTileThreshold(const Histogram& histogram, qreal pValue)
 {
     Q_ASSERT_X(pValue>=0&&pValue<1,__func__,"p-value is out of range.");
 
@@ -152,7 +152,7 @@ int clusterThreshold(const QImage& img)
 /*!
     \overload clusterThreshold
  */
-int clusterThreshold(const QVector<::std::size_t>& histogram)
+int clusterThreshold(const Histogram& histogram)
 {
     const int histoSize = histogram.length();
     qreal total = 0.;
@@ -207,7 +207,7 @@ int momentsThreshold(const QImage& img)
 /*!
     \overload momentsThreshold
  */
-int momentsThreshold(const QVector<::std::size_t>& histogram)
+int momentsThreshold(const Histogram& histogram)
 {
     using ::std::sqrt;
 
@@ -268,7 +268,7 @@ int fuzzinessThreshold(const QImage& img)
 /*!
     \overload fuzzinessThreshold
  */
-int fuzzinessThreshold(const QVector<::std::size_t>& histogram)
+int fuzzinessThreshold(const Histogram& histogram)
 {
     using ::std::log;
     using ::std::abs;
@@ -325,9 +325,9 @@ int fuzzinessThreshold(const QVector<::std::size_t>& histogram)
 /*!
     Get grayscale histogram of the \a image .
  */
-QVector<::std::size_t> grayscaleHistogram(const QImage& image)
+Histogram grayscaleHistogram(const QImage& image)
 {
-    QVector<::std::size_t> histogram(ColorValueRange,0);
+    Histogram histogram(ColorValueRange,0);
 
     int height = image.height();
     int width = image.width();
