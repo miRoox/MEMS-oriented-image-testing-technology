@@ -277,10 +277,14 @@ QImage medianFilter(const QImage& origin, uint radius)
                     medianCandidate.append(iLine[xx]);
                 }
             }
-            ::std::sort(medianCandidate.begin(),medianCandidate.end(),[](QRgb a, QRgb b){
+            ::std::size_t medianIndex = medianCandidate.length()/2;
+            ::std::nth_element(medianCandidate.begin(),
+                               medianCandidate.begin()+medianIndex,
+                               medianCandidate.end(),
+                               [](QRgb a, QRgb b){
                 return qGray(a) < qGray(b);
             });
-            line[x] = medianCandidate.at(medianCandidate.length()/2+1);
+            line[x] = medianCandidate.at(medianIndex);
             medianCandidate.clear();
         }
     }
