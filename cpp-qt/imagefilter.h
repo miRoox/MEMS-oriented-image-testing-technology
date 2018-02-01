@@ -35,6 +35,8 @@ extern QImage gaussianFilter(const QImage& origin, uint radius, qreal sigma, QRg
 extern QImage gaussianFilter(const QImage& origin, uint radius, const QColor& padding);
 extern QImage gaussianFilter(const QImage& origin, uint radius, qreal sigma, const QColor& padding);
 
+extern QImage medianFilter(const QImage& origin, uint radius);
+
 } // namespace MEMS
 
 #endif // IMAGEFILTER_H

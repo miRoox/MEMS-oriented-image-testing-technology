@@ -247,4 +247,45 @@ QImage gaussianFilter(const QImage& origin, uint radius, qreal sigma, const QCol
     return convolve(origin,gaussianKernel(radius,sigma),padding);
 }
 
+QImage medianFilter(const QImage& origin, uint radius)
+{
+    QImage output(origin.size(),QImage::Format_RGB32);
+    const QImage input = origin.convertToFormat(QImage::Format_RGB32);
+    QVector<QRgb> medianCandidate;
+    medianCandidate.reserve(((2*radius+1)*(2*radius+1))); // almost
+
+    const int width = origin.width();
+    const int height = origin.height();
+    const int r = radius;
+
+    for (int y=0; y<height; ++y)
+    {
+        QRgb* line = reinterpret_cast<QRgb*>(output.scanLine(y));
+        for (int x=0; x<width; ++x)
+        {
+            for (int i=-r; i<=r; ++i)
+            {
+                const int yy = y+i;
+                if (yy<0 || yy>=height)
+                    continue;
+                const QRgb* iLine = reinterpret_cast<const QRgb*>(input.constScanLine(yy));
+                for (int j=-r; j<=r; ++j)
+                {
+                    const int xx = x+j;
+                    if (xx<0 || xx>=width)
+                        continue;
+                    medianCandidate.append(iLine[xx]);
+                }
+            }
+            ::std::sort(medianCandidate.begin(),medianCandidate.end(),[](QRgb a, QRgb b){
+                return qGray(a) < qGray(b);
+            });
+            line[x] = medianCandidate.at(medianCandidate.length()/2+1);
+            medianCandidate.clear();
+        }
+    }
+
+    return output.convertToFormat(origin.format());
+}
+
 } // namespace MEMS
