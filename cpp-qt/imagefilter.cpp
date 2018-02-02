@@ -247,7 +247,69 @@ QImage gaussianFilter(const QImage& origin, uint radius, qreal sigma, const QCol
     return convolve(origin,gaussianKernel(radius,sigma),padding);
 }
 
-QImage medianFilter(const QImage& origin, uint radius)
+/*!
+    \internal
+
+    when the orgin image is grayscale.
+ */
+static QImage medianFilterA(const QImage& origin, uint radius)
+{
+    Q_ASSERT_X(origin.isGrayscale(),__func__,
+               "Only grayscale image can use this algorithm.");
+
+    QImage output(origin.size(),QImage::Format_RGB32);
+    const QImage input = origin.convertToFormat(QImage::Format_RGB32);
+    QVector<uint> histogram(0x100,0);
+
+    const int width = origin.width();
+    const int height = origin.height();
+    const int r = radius;
+
+    for (int y=0; y<height; ++y)
+    {
+        QRgb* line = reinterpret_cast<QRgb*>(output.scanLine(y));
+        for (int x=0; x<width; ++x)
+        {
+            uint sum = 0;
+            histogram.fill(0);
+            for (int i=-r; i<=r; ++i)
+            {
+                const int yy = y+i;
+                if (yy<0 || yy>=height)
+                    continue;
+                const QRgb* iLine = reinterpret_cast<const QRgb*>(input.constScanLine(yy));
+                for (int j=-r; j<=r; ++j)
+                {
+                    const int xx = x+j;
+                    if (xx<0 || xx>=width)
+                        continue;
+                    ++histogram[qGray(iLine[xx])];
+                    ++sum;
+                }
+            }
+
+            uint partSum = 0;
+            for (uint i=0; i<0x100;++i)
+            {
+                partSum += histogram.at(i);
+                if (partSum>=sum/2)
+                {
+                    line[x] = qRgb(i,i,i);
+                    break;
+                }
+            }
+        }
+    }
+
+    return output.convertToFormat(origin.format());
+}
+
+/*!
+    \internal
+
+    when the radius is small, and the orgin image is not grayscale.
+ */
+static QImage medianFilterB(const QImage& origin, uint radius)
 {
     QImage output(origin.size(),QImage::Format_RGB32);
     const QImage input = origin.convertToFormat(QImage::Format_RGB32);
@@ -290,6 +352,75 @@ QImage medianFilter(const QImage& origin, uint radius)
     }
 
     return output.convertToFormat(origin.format());
+}
+
+/*!
+    \internal
+
+    when the radius is large, and the orgin image is not grayscale.
+ */
+static QImage medianFilterC(const QImage& origin, uint radius)
+{
+    QImage output(origin.size(),QImage::Format_RGB32);
+    const QImage input = origin.convertToFormat(QImage::Format_RGB32);
+    QVector<QVector<QRgb>> histogram(0x100);
+    for (auto& pixels : histogram)
+    {
+        pixels.reserve(2*radius*radius); // approximation
+    }
+
+    const int width = origin.width();
+    const int height = origin.height();
+    const int r = radius;
+
+    for (int y=0; y<height; ++y)
+    {
+        QRgb* line = reinterpret_cast<QRgb*>(output.scanLine(y));
+        for (int x=0; x<width; ++x)
+        {
+            uint sum = 0;
+            for (int i=-r; i<=r; ++i)
+            {
+                const int yy = y+i;
+                if (yy<0 || yy>=height)
+                    continue;
+                const QRgb* iLine = reinterpret_cast<const QRgb*>(input.constScanLine(yy));
+                for (int j=-r; j<=r; ++j)
+                {
+                    const int xx = x+j;
+                    if (xx<0 || xx>=width)
+                        continue;
+                    histogram[qGray(iLine[xx])].append(iLine[xx]);
+                    ++sum;
+                }
+            }
+
+            bool find = false;
+            uint partSum = 0;
+            for (uint i=0; i<0x100;++i)
+            {
+                const uint nextSum = partSum + histogram.at(i).length();
+                if (nextSum>sum/2 && !find)
+                {
+                    line[x] = histogram.at(i).at(sum/2-partSum);
+                    find = true;
+                }
+                partSum = nextSum;
+                histogram[i].clear();
+            }
+        }
+    }
+
+    return output.convertToFormat(origin.format());
+}
+
+QImage medianFilter(const QImage& origin, uint radius)
+{
+    return origin.isGrayscale()
+            ? medianFilterA(origin,radius)
+            : radius<10
+              ? medianFilterB(origin,radius)
+              : medianFilterC(origin,radius);
 }
 
 } // namespace MEMS
