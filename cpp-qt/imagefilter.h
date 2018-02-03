@@ -16,24 +16,47 @@ enum class PaddingType
     Reflected = 3,
 };
 
-extern QImage convolve(const QImage& origin, const MatrixKernel& kernel,
+extern QImage convolve(const QImage& origin,
+                       const MatrixKernel& kernel,
                        PaddingType padding = PaddingType::Fixed);
-extern QImage convolve(const QImage& origin, const MatrixKernel& kernel, QRgb padding);
-extern QImage convolve(const QImage& origin, const MatrixKernel& kernel, const QColor& padding);
+extern QImage convolve(const QImage& origin,
+                       const MatrixKernel& kernel,
+                       QRgb padding);
+extern QImage convolve(const QImage& origin,
+                       const MatrixKernel& kernel,
+                       const QColor& padding);
 
-extern QImage boxFilter(const QImage& origin, uint radius = 2,
+extern QImage boxFilter(const QImage& origin,
+                        uint radius = 2,
                         PaddingType padding = PaddingType::Fixed);
-extern QImage boxFilter(const QImage& origin, uint radius, QRgb padding);
-extern QImage boxFilter(const QImage& origin, uint radius, const QColor& padding);
+extern QImage boxFilter(const QImage& origin,
+                        uint radius,
+                        QRgb padding);
+extern QImage boxFilter(const QImage& origin,
+                        uint radius,
+                        const QColor& padding);
 
-extern QImage gaussianFilter(const QImage& origin, uint radius = 2,
+extern QImage gaussianFilter(const QImage& origin,
+                             uint radius = 2,
                              PaddingType padding = PaddingType::Fixed);
-extern QImage gaussianFilter(const QImage& origin, uint radius, qreal sigma,
+extern QImage gaussianFilter(const QImage& origin,
+                             uint radius,
+                             qreal sigma,
                              PaddingType padding = PaddingType::Fixed);
-extern QImage gaussianFilter(const QImage& origin, uint radius, QRgb padding);
-extern QImage gaussianFilter(const QImage& origin, uint radius, qreal sigma, QRgb padding);
-extern QImage gaussianFilter(const QImage& origin, uint radius, const QColor& padding);
-extern QImage gaussianFilter(const QImage& origin, uint radius, qreal sigma, const QColor& padding);
+extern QImage gaussianFilter(const QImage& origin,
+                             uint radius,
+                             QRgb padding);
+extern QImage gaussianFilter(const QImage& origin,
+                             uint radius,
+                             qreal sigma,
+                             QRgb padding);
+extern QImage gaussianFilter(const QImage& origin,
+                             uint radius,
+                             const QColor& padding);
+extern QImage gaussianFilter(const QImage& origin,
+                             uint radius,
+                             qreal sigma,
+                             const QColor& padding);
 
 extern QImage medianFilter(const QImage& origin, uint radius);
 
