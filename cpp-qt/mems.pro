@@ -13,7 +13,8 @@ SOURCES += main.cpp \
     mainpanel.cpp \
     imagefilter.cpp \
     thresholding.cpp \
-    edgedetect.cpp
+    edgedetect.cpp \
+    circlefit.cpp
 
 
 HEADERS += \
@@ -21,7 +22,8 @@ HEADERS += \
     binarize.hpp \
     imagefilter.h \
     thresholding.h \
-    edgedetect.h
+    edgedetect.h \
+    circlefit.h
 
 FORMS += \
     mainpanel.ui
