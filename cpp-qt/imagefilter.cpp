@@ -2,6 +2,7 @@
 #include <QImage>
 #include <QPoint>
 #include <QColor>
+#include <cmath>
 
 #include <QtDebug>
 
@@ -164,6 +165,128 @@ QImage convolve(const QImage& origin, const MatrixKernel& kernel, QRgb padding)
 QImage convolve(const QImage& origin, const MatrixKernel& kernel, const QColor& padding)
 {
     return convolve(origin,kernel,padding.rgb());
+}
+
+QImage convolveXY(const QImage& origin, const MatrixKernel& kerX, const MatrixKernel& kerY, PaddingType padding)
+{
+    using ::std::hypot;
+
+    QImage output(origin.size(),QImage::Format_RGB32);
+    const QImage input = origin.convertToFormat(QImage::Format_RGB32);
+
+    const int width = origin.width();
+    const int height = origin.height();
+    Q_ASSERT_X(kerX.size()==kerY.size(),__func__,"Size of Kernel X and Kernel Y must be same");
+    Q_ASSERT_X(kerX.first().size()==kerY.first().size(),__func__,"Size of Kernel X and Kernel Y must be same");
+    const int kerRows = kerX.size();
+    const int kerCols = kerX.first().size();
+    Q_ASSERT_X(kerRows%2==1,__func__,"Row of kernels must be odd");
+    Q_ASSERT_X(kerCols%2==1,__func__,"Column of kernels must be odd");
+    const int kerCenterX = kerCols/2;
+    const int kerCenterY = kerRows/2;
+    for (const auto& row : kerX)
+    {
+        Q_ASSERT_X(row.size()==kerCols,__func__,"Kernel X is not a matrix");
+    }
+    for (const auto& row : kerY)
+    {
+        Q_ASSERT_X(row.size()==kerCols,__func__,"Kernel Y is not a matrix");
+    }
+
+    for (int y=0; y<height; ++y)
+    {
+        QRgb* line = reinterpret_cast<QRgb*>(output.scanLine(y));
+        for (int x=0; x<width; ++x)
+        {
+            qreal rx=0, gx=0, bx=0;
+            qreal ry=0, gy=0, by=0;
+            for (int i=0; i<kerRows; ++i)
+            {
+                const int yy = calcPaddingY(height,y+i-kerCenterY,padding);
+                const QRgb* iLine = reinterpret_cast<const QRgb*>(input.constScanLine(yy));
+                for (int j=0; j<kerCols; ++j)
+                {
+                    const int xx = calcPaddingX(width,x+j-kerCenterX,padding);
+                    const auto kerXVar = kerX.at(kerRows-1-i).at(kerCols-1-j);
+                    const auto kerYVar = kerY.at(kerRows-1-i).at(kerCols-1-j);
+                    rx += qRed(iLine[xx])*kerXVar;
+                    gx += qGreen(iLine[xx])*kerXVar;
+                    bx += qBlue(iLine[xx])*kerXVar;
+                    ry += qRed(iLine[xx])*kerYVar;
+                    gy += qGreen(iLine[xx])*kerYVar;
+                    by += qBlue(iLine[xx])*kerYVar;
+                }
+            }
+            line[x] = qRgb(qBound(0,static_cast<int>(hypot(rx,ry)),0xff),
+                           qBound(0,static_cast<int>(hypot(gx,gy)),0xff),
+                           qBound(0,static_cast<int>(hypot(bx,by)),0xff));
+        }
+    }
+
+    return output.convertToFormat(origin.format());
+}
+
+QImage convolveXY(const QImage& origin, const MatrixKernel& kerX, const MatrixKernel& kerY, QRgb padding)
+{
+    using ::std::hypot;
+
+    QImage output(origin.size(),QImage::Format_RGB32);
+
+    const int width = origin.width();
+    const int height = origin.height();
+    Q_ASSERT_X(kerX.size()==kerY.size(),__func__,"Size of Kernel X and Kernel Y must be same");
+    Q_ASSERT_X(kerX.first().size()==kerY.first().size(),__func__,"Size of Kernel X and Kernel Y must be same");
+    const int kerRows = kerX.size();
+    const int kerCols = kerX.first().size();
+    Q_ASSERT_X(kerRows%2==1,__func__,"Row of kernels must be odd");
+    Q_ASSERT_X(kerCols%2==1,__func__,"Column of kernels must be odd");
+    const int kerCenterX = kerCols/2;
+    const int kerCenterY = kerRows/2;
+    for (const auto& row : kerX)
+    {
+        Q_ASSERT_X(row.size()==kerCols,__func__,"Kernel X is not a matrix");
+    }
+    for (const auto& row : kerY)
+    {
+        Q_ASSERT_X(row.size()==kerCols,__func__,"Kernel Y is not a matrix");
+    }
+
+    for (int y=0; y<height; ++y)
+    {
+        QRgb* line = reinterpret_cast<QRgb*>(output.scanLine(y));
+        for (int x=0; x<width; ++x)
+        {
+            qreal rx=0, gx=0, bx=0;
+            qreal ry=0, gy=0, by=0;
+            for (int i=0; i<kerRows; ++i)
+            {
+                for (int j=0; j<kerCols; ++j)
+                {
+                    const QRgb pix = origin.valid(x+j-kerCenterX,y+i-kerCenterY)
+                                    ? origin.pixel(x+j-kerCenterX,y+i-kerCenterY)
+                                    : padding;
+                    const auto kerXVar = kerX.at(kerRows-1-i).at(kerCols-1-j);
+                    const auto kerYVar = kerY.at(kerRows-1-i).at(kerCols-1-j);
+                    rx += qRed(pix)*kerXVar;
+                    gx += qGreen(pix)*kerXVar;
+                    bx += qBlue(pix)*kerXVar;
+                    ry += qRed(pix)*kerYVar;
+                    gy += qGreen(pix)*kerYVar;
+                    by += qBlue(pix)*kerYVar;
+                }
+            }
+            line[x] = qRgb(qBound(0,static_cast<int>(hypot(rx,ry)),0xff),
+                           qBound(0,static_cast<int>(hypot(gx,gy)),0xff),
+                           qBound(0,static_cast<int>(hypot(bx,by)),0xff));
+        }
+    }
+
+    return output.convertToFormat(origin.format());
+}
+
+QImage convolveXY(const QImage& origin, const MatrixKernel& kerX, const MatrixKernel& kerY, const QColor& padding)
+{
+    return convolveXY(origin,kerX,kerY,padding.rgb());
 }
 
 QImage boxFilter(const QImage& origin, uint radius, PaddingType padding)

@@ -26,6 +26,19 @@ extern QImage convolve(const QImage& origin,
                        const MatrixKernel& kernel,
                        const QColor& padding);
 
+extern QImage convolveXY(const QImage& origin,
+                         const MatrixKernel& kerX,
+                         const MatrixKernel& kerY,
+                         PaddingType padding = PaddingType::Fixed);
+extern QImage convolveXY(const QImage& origin,
+                         const MatrixKernel& kerX,
+                         const MatrixKernel& kerY,
+                         QRgb padding);
+extern QImage convolveXY(const QImage& origin,
+                         const MatrixKernel& kerX,
+                         const MatrixKernel& kerY,
+                         const QColor& padding);
+
 extern QImage boxFilter(const QImage& origin,
                         uint radius = 2,
                         PaddingType padding = PaddingType::Fixed);
