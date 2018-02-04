@@ -23,7 +23,8 @@ HEADERS += \
     imagefilter.h \
     thresholding.h \
     edgedetect.h \
-    circlefit.h
+    circlefit.h \
+    algorithm.h
 
 FORMS += \
     mainpanel.ui
