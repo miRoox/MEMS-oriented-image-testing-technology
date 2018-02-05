@@ -12,6 +12,8 @@ namespace MEMS {
 
 struct CircleData
 {
+    CircleData() : center(0,0),radius(0) {}
+
     QPointF center;
     qreal radius;
 };
