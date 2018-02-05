@@ -375,7 +375,7 @@ QImage gaussianFilter(const QImage& origin, uint radius, qreal sigma, const QCol
 
     when the orgin image is grayscale.
  */
-static QImage medianFilterA(const QImage& origin, uint radius)
+static QImage medianFilter_Grayscale(const QImage& origin, uint radius)
 {
     Q_ASSERT_X(origin.isGrayscale(),__func__,
                "Only grayscale image can use this algorithm.");
@@ -432,7 +432,7 @@ static QImage medianFilterA(const QImage& origin, uint radius)
 
     when the radius is small, and the orgin image is not grayscale.
  */
-static QImage medianFilterB(const QImage& origin, uint radius)
+static QImage medianFilter_ColorSmall(const QImage& origin, uint radius)
 {
     QImage output(origin.size(),QImage::Format_RGB32);
     const QImage input = origin.convertToFormat(QImage::Format_RGB32);
@@ -482,7 +482,7 @@ static QImage medianFilterB(const QImage& origin, uint radius)
 
     when the radius is large, and the orgin image is not grayscale.
  */
-static QImage medianFilterC(const QImage& origin, uint radius)
+static QImage medianFilter_ColorLarge(const QImage& origin, uint radius)
 {
     QImage output(origin.size(),QImage::Format_RGB32);
     const QImage input = origin.convertToFormat(QImage::Format_RGB32);
@@ -540,10 +540,10 @@ static QImage medianFilterC(const QImage& origin, uint radius)
 QImage medianFilter(const QImage& origin, uint radius)
 {
     return origin.isGrayscale()
-            ? medianFilterA(origin,radius)
+            ? medianFilter_Grayscale(origin,radius)
             : radius<10
-              ? medianFilterB(origin,radius)
-              : medianFilterC(origin,radius);
+              ? medianFilter_ColorSmall(origin,radius)
+              : medianFilter_ColorLarge(origin,radius);
 }
 
 } // namespace MEMS
