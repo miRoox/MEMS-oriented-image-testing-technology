@@ -68,7 +68,7 @@ inline QImage binarize(const QImage& origin, int threshold)
     Create a binary image from \a origin. Use a certain \a method to
     find the threshold.
 
-    Defaulf \a method is Otsu's method.
+    Default \a method is Otsu's method.
 
     \sa AutoThresholdMethod
  */
