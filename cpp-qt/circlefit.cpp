@@ -3,6 +3,7 @@
 #include <QPoint>
 #include <QVector>
 #include <QColor>
+#include <cmath>
 #include <QtDebug>
 
 namespace MEMS {
@@ -48,6 +49,29 @@ QVector<QPoint> whitePixelPositions(const QImage& img)
     }
 
     return result;
+}
+
+CircleData naiveCircleFit(const QVector<QPoint>& points)
+{
+    const int num = points.size();
+    CircleData circle;
+
+    QPoint sumP(0,0);
+    for (const auto& point : points)
+    {
+        sumP += point;
+    }
+    circle.center = QPointF(sumP)/num;
+
+    qreal sumR2 = 0;
+    for (const auto& point : points)
+    {
+        QPointF vec = point-circle.center;
+        sumR2 += vec.x()*vec.x() + vec.y()*vec.y();
+    }
+    circle.radius = ::std::sqrt(sumR2/num);
+
+    return circle;
 }
 
 } // namespace MEMS
