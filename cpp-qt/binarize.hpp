@@ -32,11 +32,17 @@ QImage binarize(const QImage& origin, Predicate predicate)
     int width = origin.width();
     for (int y=0; y<height ;++y)
     {
+        uchar* line = binarized.scanLine(y);
         for (int x=0; x<width ;++x)
         {
-            binarized.setPixel(x,y,
-                               predicate(origin.pixel(x,y))
-                               ? Qt::color1 : Qt::color0);
+            if (predicate(origin.pixel(x,y)))
+            {
+                line[x>>3] |= (1 << (7-(x & 7)));
+            }
+            else
+            {
+                line[x>>3] &= ~(1 << (7-(x & 7)));
+            }
         }
     }
 
