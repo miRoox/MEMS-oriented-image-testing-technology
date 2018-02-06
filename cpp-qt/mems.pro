@@ -28,3 +28,6 @@ HEADERS += \
 
 FORMS += \
     mainpanel.ui
+
+DISTFILES += \
+    README.md
