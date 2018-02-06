@@ -119,4 +119,80 @@ CircleData simpleAlgebraicCircleFit(const QVector<QPoint>& points)
     return circle;
 }
 
+/*!
+    This is an algebraic fit based on the article
+
+    A. Al-Sharadqah and N. Chernov, "Error analysis for circle fitting algorithms",
+    Electronic Journal of Statistics, Vol. 3, pages 886-911, (2009)
+
+    This method combines the Pratt and Taubin fits to eliminate the essential bias.
+ */
+CircleData hyperAlgebraicCircleFit(const QVector<QPoint>& points)
+{
+    using ::std::abs;
+
+    const int num = points.size();
+    if (num<3)
+    {
+        qWarning() << __func__ << ": Fitting a circle requires at least three points";
+        return naiveCircleFit(points);
+    }
+
+    CircleData circle;
+
+    QPoint sumP(0,0);
+    for (const auto& point : points)
+    {
+        sumP += point;
+    }
+    QPointF mean = QPointF(sumP)/num;
+
+    qreal mxx=0, myy=0, mxy=0;
+    qreal mxz=0, myz=0, mzz=0;
+    for (const auto& point : points)
+    {
+        qreal x = point.x() - mean.x();
+        qreal y = point.y() - mean.y();
+        qreal z = x*x + y*y;
+        mxx += x*x; myy += y*y; mxy += x*y;
+        mxz += x*z; myz += y*z; mzz += z*z;
+    }
+    mxx /= num; myy /= num; mxy /= num;
+    mxz /= num; myz /= num; mzz /= num;
+    qreal mz = mxx + myy;
+    qreal covxy = mxx*myy - mxy*mxy;
+    qreal varz = mzz - mz*mz;
+
+    qreal a2 = 4*covxy - 3*mz*mz - mzz;
+    qreal a1 = varz*mz + 4*covxy*mz - mxz*mxz - myz*myz;
+    qreal a0 = mxz*(mxz*myy - myz*mxy) + myz*(myz*mxx - mxz*mxy) - varz*covxy;
+    qreal a22 = 2*a2;
+
+    qreal t=0, f=a0;
+    constexpr uint maxIter = 99;
+    constexpr qreal eps = 1e-10;
+    for (uint iter=0; iter<maxIter; ++iter)
+    {
+        qreal df = a1 + t*(a22 + 16*t*t);
+        qreal t_ = t - f/df;
+        if (abs(t-t_) <= eps || !::std::isfinite(t_))
+        {
+            break;
+        }
+        qreal f_ = a0 + t_*(a1 + t_*(a2 + 4*t_*t_));
+        if (abs(f_) >= abs(f))
+        {
+            break;
+        }
+        t = t_; f = f_;
+    }
+    qreal det = t*t - t*mz + covxy;
+    qreal xCenter = (mxz*(myy - t) - myz*mxy) / det / 2;
+    qreal yCenter = (myz*(mxx - t) - mxz*mxy) / det / 2;
+    circle.center = mean + QPointF{xCenter, yCenter};
+    circle.radius = ::std::sqrt(xCenter*xCenter + yCenter*yCenter + mz - 2*t);
+
+    return circle;
+}
+
 } // namespace MEMS
