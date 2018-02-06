@@ -21,6 +21,7 @@ struct CircleData
 extern QVector<QPoint> whitePixelPositions(const QImage& img);
 
 extern CircleData naiveCircleFit(const QVector<QPoint>& points);
+extern CircleData simpleAlgebraicCircleFit(const QVector<QPoint>& points);
 
 } // namespace MEMS
 
