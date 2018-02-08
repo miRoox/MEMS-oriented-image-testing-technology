@@ -12,11 +12,17 @@ namespace MEMS {
 
 struct CircleData
 {
-    CircleData() : center(0,0),radius(0) {}
+    Q_DECL_CONSTEXPR CircleData() : center(0,0),radius(0) {}
+    friend Q_DECL_CONSTEXPR inline bool operator==(const CircleData&, const CircleData&);
 
     QPointF center;
     qreal radius;
 };
+
+Q_DECL_CONSTEXPR inline bool operator==(const CircleData& a, const CircleData& b)
+{
+    return a.center==b.center && qFuzzyIsNull(a.radius-b.radius);
+}
 
 extern QVector<QPoint> whitePixelPositions(const QImage& img);
 
