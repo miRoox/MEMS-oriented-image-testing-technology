@@ -14,7 +14,8 @@ SOURCES += main.cpp \
     imagefilter.cpp \
     thresholding.cpp \
     edgedetect.cpp \
-    circlefit.cpp
+    circlefit.cpp \
+    processor.cpp
 
 
 HEADERS += \
@@ -24,7 +25,8 @@ HEADERS += \
     thresholding.h \
     edgedetect.h \
     circlefit.h \
-    algorithm.h
+    algorithm.h \
+    processor.h
 
 FORMS += \
     mainpanel.ui
