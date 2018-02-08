@@ -170,12 +170,11 @@ CircleData hyperAlgebraicCircleFit(const QVector<QPoint>& points)
 
     qreal t=0, f=a0;
     constexpr uint maxIter = 99;
-    constexpr qreal eps = 1e-10;
     for (uint iter=0; iter<maxIter; ++iter)
     {
         qreal df = a1 + t*(a22 + 16*t*t);
         qreal t_ = t - f/df;
-        if (abs(t-t_) <= eps || !::std::isfinite(t_))
+        if (qFuzzyIsNull(t-t_) || !::std::isfinite(t_))
         {
             break;
         }
