@@ -32,7 +32,7 @@ class Processor : public QObject
     Q_PROPERTY(int threshold READ threshold NOTIFY thresholdChanged)
 
 public:
-    explicit Processor(const QImage& origin, QObject *parent = nullptr);
+    explicit Processor(QObject* parent = nullptr);
     ~Processor();
 
     QImage originImage() const;

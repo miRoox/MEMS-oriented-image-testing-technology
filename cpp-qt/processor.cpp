@@ -52,6 +52,8 @@ public:
     void updateFilteredImage()
     {
         using namespace MEMS;
+        if (origin.isNull())
+            return;
         switch (filterMethod)
         {
         case Processor::BoxFilter:
@@ -71,6 +73,8 @@ public:
     void updateThreshold()
     {
         using namespace MEMS;
+        if (filtered.isNull() || filteredHisto.isEmpty())
+            return;
         switch (thresholdingMethod)
         {
         case Processor::Cluster:
@@ -95,6 +99,8 @@ public:
     void updateEdgeImage()
     {
         using namespace MEMS;
+        if (binarized.isNull())
+            return;
         switch (edgeMethod)
         {
         case Processor::Sobel:
@@ -117,6 +123,8 @@ public:
     void updateCircle()
     {
         using namespace MEMS;
+        if (edge.isNull() || edgePixels.isEmpty())
+            return;
         switch (circleFitMethod)
         {
         case Processor::NaiveFit:
@@ -147,10 +155,9 @@ public:
 
 }; // class Processor::Impl
 
-Processor::Processor(const QImage& origin, QObject *parent)
+Processor::Processor(QObject* parent)
     : QObject(parent), d(new Impl(this))
 {
-    setOriginImage(origin);
 }
 
 Processor::~Processor()
