@@ -4,6 +4,7 @@
 #include <QVariant>
 #include <QMetaEnum>
 #include <QApplication>
+#include <QtDebug>
 
 static constexpr auto DefaultFilterMethod = Configuration::GaussianFilter;
 static constexpr auto DefaultThresholdingMethod = Configuration::Cluster;
@@ -199,6 +200,21 @@ static QString valueToKey(Enum value)
 {
     static QMetaEnum meta = QMetaEnum::fromType<Enum>();
     return meta.valueToKey(value);
+}
+
+QDebug operator<<(QDebug dbg, const Configuration& config)
+{
+    QDebugStateSaver saver(dbg);
+    dbg.nospace() << "Configuration("
+                  << "FilterMethod: " <<  valueToKey(config.data->filterMethod) << ", "
+                  << "ThresholdingMethod: " << valueToKey(config.data->thresholdingMethod) << ", "
+                  << "EdgeDetectionMethod: " << valueToKey(config.data->edgeDetectionMethod) << ", "
+                  << "CircleFitMethod: " << valueToKey(config.data->circleFitMethod) << ", "
+                  << "FilterRadius: " << config.data->filterRadius << ", "
+                  << "GaussianSigma: " << config.data->gaussianSigma << ", "
+                  << "PTileValue: " << config.data->pTileValue << ")";
+
+    return dbg;
 }
 
 static constexpr const char FilterMethodKey[] = "FilterMethod";

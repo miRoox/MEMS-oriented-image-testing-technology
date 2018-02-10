@@ -71,6 +71,7 @@ public:
 
     friend bool operator!=(const Configuration& lhs, const Configuration& rhs);
     friend bool operator==(const Configuration& lhs, const Configuration& rhs);
+    friend QDebug operator<<(QDebug dbg, const Configuration& config);
 
 private:
     QSharedDataPointer<ConfigurationData> data;
