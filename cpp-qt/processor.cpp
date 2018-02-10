@@ -24,10 +24,10 @@ public:
     QImage circle;
     MEMS::CircleData circleData;
 
-    Processor::FilterMethod filterMethod;
-    Processor::ThresholdingMethod thresholdingMethod;
-    Processor::EdgeDetectionMethod edgeMethod;
-    Processor::CircleFitMethod circleFitMethod;
+    Configuration::FilterMethod filterMethod;
+    Configuration::ThresholdingMethod thresholdingMethod;
+    Configuration::EdgeDetectionMethod edgeMethod;
+    Configuration::CircleFitMethod circleFitMethod;
 
     uint filterRadius;
     qreal gaussianSigma;
@@ -40,10 +40,10 @@ public:
 
     Impl(Processor* interface)
         : q(interface),
-          filterMethod(Processor::GaussianFilter),
-          thresholdingMethod(Processor::Cluster),
-          edgeMethod(Processor::Sobel),
-          circleFitMethod(Processor::SimpleAlgebraicFit),
+          filterMethod(Configuration::GaussianFilter),
+          thresholdingMethod(Configuration::Cluster),
+          edgeMethod(Configuration::Sobel),
+          circleFitMethod(Configuration::SimpleAlgebraicFit),
           filterRadius(2), gaussianSigma(1.),
           pTileValue(0.5)
     {
@@ -56,13 +56,13 @@ public:
             return;
         switch (filterMethod)
         {
-        case Processor::BoxFilter:
+        case Configuration::BoxFilter:
             q->setFilteredImage(boxFilter(origin,filterRadius));
             break;
-        case Processor::GaussianFilter:
+        case Configuration::GaussianFilter:
             q->setFilteredImage(gaussianFilter(origin,filterRadius,gaussianSigma));
             break;
-        case Processor::MedianFilter:
+        case Configuration::MedianFilter:
             q->setFilteredImage(medianFilter(origin,filterRadius));
             break;
         default:
@@ -77,19 +77,19 @@ public:
             return;
         switch (thresholdingMethod)
         {
-        case Processor::Cluster:
+        case Configuration::Cluster:
             q->setThreshold(clusterThreshold(filteredHisto));
             break;
-        case Processor::Mean:
+        case Configuration::Mean:
             q->setThreshold(meanThreshold(filteredHisto));
             break;
-        case Processor::Moments:
+        case Configuration::Moments:
             q->setThreshold(momentsThreshold(filteredHisto));
             break;
-        case Processor::Fuzziness:
+        case Configuration::Fuzziness:
             q->setThreshold(fuzzinessThreshold(filteredHisto));
             break;
-        case Processor::PTile:
+        case Configuration::PTile:
             q->setThreshold(pTileThreshold(filteredHisto,pTileValue));
         default:
             break;
@@ -103,16 +103,16 @@ public:
             return;
         switch (edgeMethod)
         {
-        case Processor::Sobel:
+        case Configuration::Sobel:
             q->setEdgeImage(sobelOperator(binarized));
             break;
-        case Processor::Prewitt:
+        case Configuration::Prewitt:
             q->setEdgeImage(prewittOperator(binarized));
             break;
-        case Processor::Scharr:
+        case Configuration::Scharr:
             q->setEdgeImage(scharrOperator(binarized));
             break;
-        case Processor::Laplacian:
+        case Configuration::Laplacian:
             q->setEdgeImage(laplacianOperator(binarized));
             break;
         default:
@@ -127,13 +127,13 @@ public:
             return;
         switch (circleFitMethod)
         {
-        case Processor::NaiveFit:
+        case Configuration::NaiveFit:
             q->setCircle(naiveCircleFit(edgePixels));
             break;
-        case Processor::SimpleAlgebraicFit:
+        case Configuration::SimpleAlgebraicFit:
             q->setCircle(simpleAlgebraicCircleFit(edgePixels));
             break;
-        case Processor::HyperAlgebraicFit:
+        case Configuration::HyperAlgebraicFit:
             q->setCircle(hyperAlgebraicCircleFit(edgePixels));
             break;
         default:
@@ -274,12 +274,12 @@ void Processor::setCircle(const MEMS::CircleData& circle)
             << "and the radius is " << d->circleData.radius;
 }
 
-Processor::FilterMethod Processor::filterMethod() const
+Configuration::FilterMethod Processor::filterMethod() const
 {
     return d->filterMethod;
 }
 
-void Processor::setFilterMethod(Processor::FilterMethod method)
+void Processor::setFilterMethod(Configuration::FilterMethod method)
 {
     if (d->filterMethod == method)
         return;
@@ -289,12 +289,12 @@ void Processor::setFilterMethod(Processor::FilterMethod method)
     d->updateFilteredImage();
 }
 
-Processor::ThresholdingMethod Processor::thresholdingMethod() const
+Configuration::ThresholdingMethod Processor::thresholdingMethod() const
 {
     return d->thresholdingMethod;
 }
 
-void Processor::setThresholdingMethod(ThresholdingMethod method)
+void Processor::setThresholdingMethod(Configuration::ThresholdingMethod method)
 {
     if (d->thresholdingMethod == method)
         return;
@@ -304,12 +304,12 @@ void Processor::setThresholdingMethod(ThresholdingMethod method)
     d->updateThreshold();
 }
 
-Processor::EdgeDetectionMethod Processor::edgeDetectionMethod() const
+Configuration::EdgeDetectionMethod Processor::edgeDetectionMethod() const
 {
     return d->edgeMethod;
 }
 
-void Processor::setEdgeDetectionMethod(Processor::EdgeDetectionMethod method)
+void Processor::setEdgeDetectionMethod(Configuration::EdgeDetectionMethod method)
 {
     if (d->edgeMethod == method)
         return;
@@ -319,12 +319,12 @@ void Processor::setEdgeDetectionMethod(Processor::EdgeDetectionMethod method)
     d->updateEdgeImage();
 }
 
-Processor::CircleFitMethod Processor::circleFitMethod() const
+Configuration::CircleFitMethod Processor::circleFitMethod() const
 {
     return d->circleFitMethod;
 }
 
-void Processor::setCircleFitMethod(Processor::CircleFitMethod method)
+void Processor::setCircleFitMethod(Configuration::CircleFitMethod method)
 {
     if (d->circleFitMethod == method)
         return;
@@ -356,8 +356,6 @@ qreal Processor::gaussianSigma() const
 
 void Processor::setGaussianSigma(qreal sigma)
 {
-    if (d->filterMethod != Processor::GaussianFilter)
-        return;
     if (qFuzzyIsNull(d->gaussianSigma - sigma))
         return;
     d->gaussianSigma = sigma;
@@ -373,8 +371,6 @@ qreal Processor::pTileValue() const
 
 void Processor::setPTileValue(qreal value)
 {
-    if (d->thresholdingMethod != Processor::PTile)
-        return;
     if (qFuzzyIsNull(d->pTileValue - value))
         return;
     d->pTileValue = value;

@@ -5,6 +5,7 @@
 #include <QScopedPointer>
 #include <QImage>
 #include <QPointF>
+#include "configuration.h"
 
 class QString;
 
@@ -22,10 +23,10 @@ class Processor : public QObject
     Q_PROPERTY(QImage circleImage READ circleImage NOTIFY circleImageChanged)
     Q_PROPERTY(QPointF circleCenter READ circleCenter NOTIFY circleCenterChanged)
     Q_PROPERTY(qreal circleRadius READ circleRadius NOTIFY circleRadiusChanged)
-    Q_PROPERTY(FilterMethod filterMethod READ filterMethod WRITE setFilterMethod NOTIFY filterMethodChanged)
-    Q_PROPERTY(ThresholdingMethod thresholdingMethod READ thresholdingMethod WRITE setThresholdingMethod NOTIFY thresholdingMethodChanged)
-    Q_PROPERTY(EdgeDetectionMethod edgeDetectionMethod READ edgeDetectionMethod WRITE setEdgeDetectionMethod NOTIFY edgeDetectionMethodChanged)
-    Q_PROPERTY(CircleFitMethod circleFitMethod READ circleFitMethod WRITE setCircleFitMethod NOTIFY circleFitMethodChanged)
+    Q_PROPERTY(Configuration::FilterMethod filterMethod READ filterMethod WRITE setFilterMethod NOTIFY filterMethodChanged)
+    Q_PROPERTY(Configuration::ThresholdingMethod thresholdingMethod READ thresholdingMethod WRITE setThresholdingMethod NOTIFY thresholdingMethodChanged)
+    Q_PROPERTY(Configuration::EdgeDetectionMethod edgeDetectionMethod READ edgeDetectionMethod WRITE setEdgeDetectionMethod NOTIFY edgeDetectionMethodChanged)
+    Q_PROPERTY(Configuration::CircleFitMethod circleFitMethod READ circleFitMethod WRITE setCircleFitMethod NOTIFY circleFitMethodChanged)
     Q_PROPERTY(uint filterRadius READ filterRadius WRITE setFilterRadius NOTIFY filterRadiusChanged)
     Q_PROPERTY(qreal gaussianSigma READ gaussianSigma WRITE setGaussianSigma NOTIFY gaussianSigmaChanged)
     Q_PROPERTY(qreal pTileValue READ pTileValue WRITE setPTileValue NOTIFY pTileValueChanged)
@@ -43,52 +44,19 @@ public:
     QPointF circleCenter() const;
     qreal circleRadius() const;
 
-    enum FilterMethod
-    {
-        BoxFilter,
-        GaussianFilter,
-        MedianFilter,
-    };
-    Q_ENUM(FilterMethod)
-
-    FilterMethod filterMethod() const;
+    Configuration::FilterMethod filterMethod() const;
     uint filterRadius() const;
     qreal gaussianSigma() const;
 
-    enum ThresholdingMethod
-    {
-        Cluster,
-        Mean,
-        Moments,
-        Fuzziness,
-        PTile,
-    };
-    Q_ENUM(ThresholdingMethod)
-
-    ThresholdingMethod thresholdingMethod() const;
+    Configuration::ThresholdingMethod thresholdingMethod() const;
     qreal pTileValue() const;
     int threshold() const;
 
-    enum EdgeDetectionMethod
-    {
-        Sobel,
-        Prewitt,
-        Scharr,
-        Laplacian,
-    };
-    Q_ENUM(EdgeDetectionMethod)
+    Configuration::EdgeDetectionMethod edgeDetectionMethod() const;
 
-    EdgeDetectionMethod edgeDetectionMethod() const;
+    Configuration::CircleFitMethod circleFitMethod() const;
 
-    enum CircleFitMethod
-    {
-        NaiveFit,
-        SimpleAlgebraicFit,
-        HyperAlgebraicFit,
-    };
-    Q_ENUM(CircleFitMethod)
 
-    CircleFitMethod circleFitMethod() const;
 
 signals:
     void originImageChanged(const QImage& origin);
@@ -98,10 +66,10 @@ signals:
     void circleImageChanged(const QImage& circle);
     void circleCenterChanged(const QPointF& center);
     void circleRadiusChanged(qreal radius);
-    void filterMethodChanged(FilterMethod method);
-    void thresholdingMethodChanged(ThresholdingMethod method);
-    void edgeDetectionMethodChanged(EdgeDetectionMethod method);
-    void circleFitMethodChanged(CircleFitMethod method);
+    void filterMethodChanged(Configuration::FilterMethod method);
+    void thresholdingMethodChanged(Configuration::Configuration::ThresholdingMethod method);
+    void edgeDetectionMethodChanged(Configuration::EdgeDetectionMethod method);
+    void circleFitMethodChanged(Configuration::CircleFitMethod method);
     void filterRadiusChanged(uint radius);
     void gaussianSigmaChanged(qreal sigma);
     void pTileValueChanged(qreal value);
@@ -109,10 +77,10 @@ signals:
 
 public slots:
     void setOriginImage(const QImage& origin);
-    void setFilterMethod(FilterMethod method);
-    void setThresholdingMethod(ThresholdingMethod method);
-    void setEdgeDetectionMethod(EdgeDetectionMethod method);
-    void setCircleFitMethod(CircleFitMethod method);
+    void setFilterMethod(Configuration::FilterMethod method);
+    void setThresholdingMethod(Configuration::ThresholdingMethod method);
+    void setEdgeDetectionMethod(Configuration::EdgeDetectionMethod method);
+    void setCircleFitMethod(Configuration::CircleFitMethod method);
     void setFilterRadius(uint radius);
     void setGaussianSigma(qreal sigma);
     void setPTileValue(qreal value);

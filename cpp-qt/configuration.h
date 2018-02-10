@@ -2,12 +2,14 @@
 #define CONFIGURATION_H
 
 #include <QSharedDataPointer>
-#include "processor.h"
+#include <QObject>
 
 class ConfigurationData;
 
 class Configuration
 {
+    Q_GADGET
+
 public:
     Configuration();
     Configuration(const Configuration& );
@@ -16,18 +18,53 @@ public:
     Configuration& operator=(Configuration&& ) noexcept;
     ~Configuration();
 
-    Processor::FilterMethod filterMethod() const;
-    Processor::ThresholdingMethod thresholdingMethod() const;
-    Processor::EdgeDetectionMethod edgeDetectionMethod() const;
-    Processor::CircleFitMethod circleFitMethod() const;
+    enum FilterMethod
+    {
+        BoxFilter,
+        GaussianFilter,
+        MedianFilter,
+    };
+    Q_ENUM(FilterMethod)
+
+    enum ThresholdingMethod
+    {
+        Cluster,
+        Mean,
+        Moments,
+        Fuzziness,
+        PTile,
+    };
+    Q_ENUM(ThresholdingMethod)
+
+    enum EdgeDetectionMethod
+    {
+        Sobel,
+        Prewitt,
+        Scharr,
+        Laplacian,
+    };
+    Q_ENUM(EdgeDetectionMethod)
+
+    enum CircleFitMethod
+    {
+        NaiveFit,
+        SimpleAlgebraicFit,
+        HyperAlgebraicFit,
+    };
+    Q_ENUM(CircleFitMethod)
+
+    FilterMethod filterMethod() const;
+    ThresholdingMethod thresholdingMethod() const;
+    EdgeDetectionMethod edgeDetectionMethod() const;
+    CircleFitMethod circleFitMethod() const;
     uint filterRadius() const;
     qreal gaussianSigma() const;
     qreal pTileValue() const;
 
-    Configuration& setFilterMethod(Processor::FilterMethod method);
-    Configuration& setThresholdingMethod(Processor::ThresholdingMethod method);
-    Configuration& setEdgeDetectionMethod(Processor::EdgeDetectionMethod method);
-    Configuration& setCircleFitMethod(Processor::CircleFitMethod method);
+    Configuration& setFilterMethod(FilterMethod method);
+    Configuration& setThresholdingMethod(ThresholdingMethod method);
+    Configuration& setEdgeDetectionMethod(EdgeDetectionMethod method);
+    Configuration& setCircleFitMethod(CircleFitMethod method);
     Configuration& setFilterRadius(uint radius);
     Configuration& setGaussianSigma(qreal sigma);
     Configuration& setPTileValue(qreal value);
@@ -38,7 +75,5 @@ public:
 private:
     QSharedDataPointer<ConfigurationData> data;
 };
-
-Q_DECLARE_METATYPE(Configuration)
 
 #endif // CONFIGURATION_H

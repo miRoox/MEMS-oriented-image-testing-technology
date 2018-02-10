@@ -5,10 +5,10 @@ class ConfigurationData : public QSharedData
 {
 public:
     ConfigurationData()
-        : filterMethod(Processor::GaussianFilter),
-          thresholdingMethod(Processor::Cluster),
-          edgeDetectionMethod(Processor::Sobel),
-          circleFitMethod(Processor::SimpleAlgebraicFit),
+        : filterMethod(Configuration::GaussianFilter),
+          thresholdingMethod(Configuration::Cluster),
+          edgeDetectionMethod(Configuration::Sobel),
+          circleFitMethod(Configuration::SimpleAlgebraicFit),
           filterRadius(2), gaussianSigma(1.),
           pTileValue(0.5)
     { }
@@ -34,10 +34,10 @@ public:
                 || qFuzzyIsNull(pTileValue - rhs.pTileValue);
     }
 
-    Processor::FilterMethod filterMethod;
-    Processor::ThresholdingMethod thresholdingMethod;
-    Processor::EdgeDetectionMethod edgeDetectionMethod;
-    Processor::CircleFitMethod circleFitMethod;
+    Configuration::FilterMethod filterMethod;
+    Configuration::ThresholdingMethod thresholdingMethod;
+    Configuration::EdgeDetectionMethod edgeDetectionMethod;
+    Configuration::CircleFitMethod circleFitMethod;
     uint filterRadius;
     qreal gaussianSigma;
     qreal pTileValue;
@@ -76,22 +76,22 @@ Configuration::~Configuration()
 {
 }
 
-Processor::FilterMethod Configuration::filterMethod() const
+Configuration::FilterMethod Configuration::filterMethod() const
 {
     return data->filterMethod;
 }
 
-Processor::ThresholdingMethod Configuration::thresholdingMethod() const
+Configuration::ThresholdingMethod Configuration::thresholdingMethod() const
 {
     return data->thresholdingMethod;
 }
 
-Processor::EdgeDetectionMethod Configuration::edgeDetectionMethod() const
+Configuration::EdgeDetectionMethod Configuration::edgeDetectionMethod() const
 {
     return data->edgeDetectionMethod;
 }
 
-Processor::CircleFitMethod Configuration::circleFitMethod() const
+Configuration::CircleFitMethod Configuration::circleFitMethod() const
 {
     return data->circleFitMethod;
 }
@@ -111,25 +111,25 @@ qreal Configuration::pTileValue() const
     return data->pTileValue;
 }
 
-Configuration& Configuration::setFilterMethod(Processor::FilterMethod method)
+Configuration& Configuration::setFilterMethod(Configuration::FilterMethod method)
 {
     data->filterMethod = method;
     return *this;
 }
 
-Configuration& Configuration::setThresholdingMethod(Processor::ThresholdingMethod method)
+Configuration& Configuration::setThresholdingMethod(Configuration::ThresholdingMethod method)
 {
     data->thresholdingMethod = method;
     return *this;
 }
 
-Configuration& Configuration::setEdgeDetectionMethod(Processor::EdgeDetectionMethod method)
+Configuration& Configuration::setEdgeDetectionMethod(Configuration::EdgeDetectionMethod method)
 {
     data->edgeDetectionMethod = method;
     return *this;
 }
 
-Configuration& Configuration::setCircleFitMethod(Processor::CircleFitMethod method)
+Configuration& Configuration::setCircleFitMethod(Configuration::CircleFitMethod method)
 {
     data->circleFitMethod = method;
     return *this;
