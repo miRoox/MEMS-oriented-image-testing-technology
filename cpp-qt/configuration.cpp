@@ -47,6 +47,9 @@ public:
 Configuration::Configuration()
     : data(new ConfigurationData)
 {
+    static int id = -1;
+    if (id == -1)
+        id = qRegisterMetaType<Configuration>();
 }
 
 Configuration::Configuration(const Configuration& rhs)
