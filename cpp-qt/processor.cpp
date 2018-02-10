@@ -37,21 +37,25 @@ public:
     MEMS::Histogram filteredHisto;
     int threshold;
     QVector<QPoint> edgePixels;
+    bool lazy = false;
 
-    Impl(Processor* interface)
+    Impl(Processor* interface, const Configuration& config)
         : q(interface),
-          filterMethod(Configuration::GaussianFilter),
-          thresholdingMethod(Configuration::Cluster),
-          edgeMethod(Configuration::Sobel),
-          circleFitMethod(Configuration::SimpleAlgebraicFit),
-          filterRadius(2), gaussianSigma(1.),
-          pTileValue(0.5)
+          filterMethod(config.filterMethod()),
+          thresholdingMethod(config.thresholdingMethod()),
+          edgeMethod(config.edgeDetectionMethod()),
+          circleFitMethod(config.circleFitMethod()),
+          filterRadius(config.filterRadius()),
+          gaussianSigma(config.gaussianSigma()),
+          pTileValue(config.pTileValue())
     {
     }
 
     void updateFilteredImage()
     {
         using namespace MEMS;
+        if (lazy)
+            return;
         if (origin.isNull())
             return;
         switch (filterMethod)
@@ -73,6 +77,8 @@ public:
     void updateThreshold()
     {
         using namespace MEMS;
+        if (lazy)
+            return;
         if (filtered.isNull() || filteredHisto.isEmpty())
             return;
         switch (thresholdingMethod)
@@ -99,6 +105,8 @@ public:
     void updateEdgeImage()
     {
         using namespace MEMS;
+        if (lazy)
+            return;
         if (binarized.isNull())
             return;
         switch (edgeMethod)
@@ -123,6 +131,8 @@ public:
     void updateCircle()
     {
         using namespace MEMS;
+        if (lazy)
+            return;
         if (edge.isNull() || edgePixels.isEmpty())
             return;
         switch (circleFitMethod)
@@ -156,7 +166,12 @@ public:
 }; // class Processor::Impl
 
 Processor::Processor(QObject* parent)
-    : QObject(parent), d(new Impl(this))
+    : QObject(parent), d(new Impl(this,Configuration()))
+{
+}
+
+Processor::Processor(const Configuration& config, QObject* parent)
+    : QObject(parent), d(new Impl(this,config))
 {
 }
 
@@ -272,6 +287,36 @@ void Processor::setCircle(const MEMS::CircleData& circle)
             << d->circleData.center.x() << ", "
             << d->circleData.center.y() << ") ,"
             << "and the radius is " << d->circleData.radius;
+}
+
+Configuration Processor::configurations() const
+{
+    return Configuration()
+            .setFilterMethod(d->filterMethod)
+            .setThresholdingMethod(d->thresholdingMethod)
+            .setEdgeDetectionMethod(d->edgeMethod)
+            .setCircleFitMethod(d->circleFitMethod)
+            .setFilterRadius(d->filterRadius)
+            .setGaussianSigma(d->gaussianSigma)
+            .setPTileValue(d->pTileValue);
+}
+
+void Processor::setConfigurations(const Configuration& config)
+{
+    d->lazy = true;
+    setFilterMethod(config.filterMethod());
+    setFilterRadius(config.filterRadius());
+    setGaussianSigma(config.gaussianSigma());
+    setThresholdingMethod(config.thresholdingMethod());
+    setPTileValue(config.pTileValue());
+    setEdgeDetectionMethod(config.edgeDetectionMethod());
+    setCircleFitMethod(config.circleFitMethod());
+
+    d->lazy = false;
+    d->updateFilteredImage();
+    d->updateThreshold();
+    d->updateEdgeImage();
+    d->updateCircle();
 }
 
 Configuration::FilterMethod Processor::filterMethod() const

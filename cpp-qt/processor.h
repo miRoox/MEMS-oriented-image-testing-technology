@@ -23,6 +23,7 @@ class Processor : public QObject
     Q_PROPERTY(QImage circleImage READ circleImage NOTIFY circleImageChanged)
     Q_PROPERTY(QPointF circleCenter READ circleCenter NOTIFY circleCenterChanged)
     Q_PROPERTY(qreal circleRadius READ circleRadius NOTIFY circleRadiusChanged)
+    Q_PROPERTY(Configuration configurations READ configurations WRITE setConfigurations STORED false)
     Q_PROPERTY(Configuration::FilterMethod filterMethod READ filterMethod WRITE setFilterMethod NOTIFY filterMethodChanged)
     Q_PROPERTY(Configuration::ThresholdingMethod thresholdingMethod READ thresholdingMethod WRITE setThresholdingMethod NOTIFY thresholdingMethodChanged)
     Q_PROPERTY(Configuration::EdgeDetectionMethod edgeDetectionMethod READ edgeDetectionMethod WRITE setEdgeDetectionMethod NOTIFY edgeDetectionMethodChanged)
@@ -34,6 +35,7 @@ class Processor : public QObject
 
 public:
     explicit Processor(QObject* parent = nullptr);
+    explicit Processor(const Configuration& config, QObject* parent = nullptr);
     ~Processor();
 
     QImage originImage() const;
@@ -43,6 +45,8 @@ public:
     QImage circleImage() const;
     QPointF circleCenter() const;
     qreal circleRadius() const;
+
+    Configuration configurations() const;
 
     Configuration::FilterMethod filterMethod() const;
     uint filterRadius() const;
@@ -77,6 +81,7 @@ signals:
 
 public slots:
     void setOriginImage(const QImage& origin);
+    void setConfigurations(const Configuration& config);
     void setFilterMethod(Configuration::FilterMethod method);
     void setThresholdingMethod(Configuration::ThresholdingMethod method);
     void setEdgeDetectionMethod(Configuration::EdgeDetectionMethod method);
