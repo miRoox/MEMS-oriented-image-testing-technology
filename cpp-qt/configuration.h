@@ -76,4 +76,7 @@ private:
     QSharedDataPointer<ConfigurationData> data;
 };
 
+void saveConfigs(const Configuration& config, QString group);
+Configuration loadConfigs(QString group);
+
 #endif // CONFIGURATION_H

@@ -1,16 +1,25 @@
 #include "configuration.h"
 #include <QSharedData>
+#include <QSettings>
+#include <QVariant>
+#include <QMetaEnum>
+#include <QApplication>
 
+static constexpr auto DefaultFilterMethod = Configuration::GaussianFilter;
+static constexpr auto DefaultThresholdingMethod = Configuration::Cluster;
+static constexpr auto DefaultEdgeDetectionMethod = Configuration::Sobel;
+static constexpr auto DefaultCircleFitMethod = Configuration::SimpleAlgebraicFit;
+static constexpr auto DefaultFilterRadius = 2u;
+static constexpr auto DefaultGaussianSigma = 1.;
+static constexpr auto DefaultPTileValue = 0.5;
+
+/*!
+    \internal
+ */
 class ConfigurationData : public QSharedData
 {
 public:
     ConfigurationData()
-        : filterMethod(Configuration::GaussianFilter),
-          thresholdingMethod(Configuration::Cluster),
-          edgeDetectionMethod(Configuration::Sobel),
-          circleFitMethod(Configuration::SimpleAlgebraicFit),
-          filterRadius(2), gaussianSigma(1.),
-          pTileValue(0.5)
     { }
     ConfigurationData(const ConfigurationData& rhs)
         : QSharedData(rhs),
@@ -34,13 +43,13 @@ public:
                 || qFuzzyIsNull(pTileValue - rhs.pTileValue);
     }
 
-    Configuration::FilterMethod filterMethod;
-    Configuration::ThresholdingMethod thresholdingMethod;
-    Configuration::EdgeDetectionMethod edgeDetectionMethod;
-    Configuration::CircleFitMethod circleFitMethod;
-    uint filterRadius;
-    qreal gaussianSigma;
-    qreal pTileValue;
+    Configuration::FilterMethod filterMethod = DefaultFilterMethod;
+    Configuration::ThresholdingMethod thresholdingMethod = DefaultThresholdingMethod;
+    Configuration::EdgeDetectionMethod edgeDetectionMethod = DefaultEdgeDetectionMethod;
+    Configuration::CircleFitMethod circleFitMethod = DefaultCircleFitMethod;
+    uint filterRadius = DefaultFilterRadius;
+    qreal gaussianSigma = DefaultGaussianSigma;
+    qreal pTileValue = DefaultPTileValue;
 
 };
 
@@ -156,6 +165,8 @@ Configuration& Configuration::setPTileValue(qreal value)
     return *this;
 }
 
+/** related non-member **/
+
 bool operator!=(const Configuration& lhs, const Configuration& rhs)
 {
     return !(lhs==rhs);
@@ -164,4 +175,68 @@ bool operator!=(const Configuration& lhs, const Configuration& rhs)
 bool operator==(const Configuration& lhs, const Configuration& rhs)
 {
     return lhs.data == rhs.data || (*lhs.data) == (*rhs.data);
+}
+
+/*!
+    \internal
+ */
+template<typename Enum>
+static Enum keyToValue(const QString& key, Enum defaultValue = static_cast<Enum>(0))
+{
+    static QMetaEnum meta = QMetaEnum::fromType<Enum>();
+    bool ok = false;
+    Enum value = static_cast<Enum>(meta.keyToValue(key.toLatin1(),&ok));
+    if (!ok)
+        value = defaultValue;
+    return value;
+}
+
+/*!
+    \internal
+ */
+template<typename Enum>
+static QString valueToKey(Enum value)
+{
+    static QMetaEnum meta = QMetaEnum::fromType<Enum>();
+    return meta.valueToKey(value);
+}
+
+static constexpr const char FilterMethodKey[] = "FilterMethod";
+static constexpr const char ThresholdingMethodKey[] = "ThresholdingMethod";
+static constexpr const char EdgeDetectionMethodKey[] = "EdgeDetectionMethod";
+static constexpr const char CircleFitMethodKey[] = "CircleFitMethod";
+static constexpr const char FilterRadiusKey[] = "FilterRadius";
+static constexpr const char GaussianSigmaKey[] = "GaussianSigma";
+static constexpr const char PTileValueKey[] = "PTileValue";
+
+static constexpr const char SettingFile[] = "/config.ini";
+
+void saveConfigs(const Configuration& config, QString group)
+{
+    QSettings settings(qApp->applicationDirPath() + SettingFile, QSettings::IniFormat);
+    settings.beginGroup(group);
+    settings.setValue(FilterMethodKey,valueToKey(config.filterMethod()));
+    settings.setValue(ThresholdingMethodKey,valueToKey(config.thresholdingMethod()));
+    settings.setValue(EdgeDetectionMethodKey,valueToKey(config.edgeDetectionMethod()));
+    settings.setValue(CircleFitMethodKey,valueToKey(config.circleFitMethod()));
+    settings.setValue(FilterRadiusKey,config.filterRadius());
+    settings.setValue(GaussianSigmaKey,config.gaussianSigma());
+    settings.setValue(PTileValueKey,config.pTileValue());
+    settings.endGroup();
+}
+
+Configuration loadConfigs(QString group)
+{
+    QSettings settings(qApp->applicationDirPath() + SettingFile, QSettings::IniFormat);
+    Configuration config;
+    settings.beginGroup(group);
+    config.setFilterMethod(keyToValue(settings.value(FilterMethodKey).toString(),DefaultFilterMethod))
+          .setThresholdingMethod(keyToValue(settings.value(ThresholdingMethodKey).toString(),DefaultThresholdingMethod))
+          .setEdgeDetectionMethod(keyToValue(settings.value(EdgeDetectionMethodKey).toString(),DefaultEdgeDetectionMethod))
+          .setCircleFitMethod(keyToValue(settings.value(CircleFitMethodKey).toString(),DefaultCircleFitMethod))
+          .setFilterRadius(settings.value(FilterRadiusKey,DefaultFilterRadius).toUInt())
+          .setGaussianSigma(settings.value(GaussianSigmaKey,DefaultGaussianSigma).toReal())
+          .setPTileValue(settings.value(PTileValueKey,DefaultPTileValue).toReal());//TODO
+    settings.endGroup();
+    return config;
 }
