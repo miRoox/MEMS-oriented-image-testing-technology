@@ -2,7 +2,13 @@
 #define MAINPANEL_H
 
 #include <QWidget>
+#include <QThread>
+#include <QPointer>
 #include <QString>
+#include <QPointF>
+#include "configuration.h"
+
+class Processor;
 
 namespace Ui {
 class MainPanel;
@@ -20,7 +26,18 @@ signals:
     void originImageChange(const QImage& origin);
 
 private:
+    void setByConfig(const Configuration& config);
     void setOrigin(const QString& key);
+    void updateCircle();
+
+private slots:
+    void initializeOnRun();
+    void setFilteredImage(const QImage& img);
+    void setBinaryImage(const QImage& img);
+    void setEdgeImage(const QImage& img);
+    void setFitImage(const QImage& img);
+    void setCircleCenter(const QPointF& center);
+    void setCircleRadius(qreal radius);
 
 private slots:
     void on_horizontalSliderGS_valueChanged(int value);
@@ -31,7 +48,11 @@ private slots:
 
 private:
     Ui::MainPanel *ui;
+    QThread workerThread;
+    QPointer<Processor> processor;
     QString currentOriginKey;
+    QPointF center;
+    qreal radius;
 };
 
 #endif // MAINPANEL_H
