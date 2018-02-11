@@ -40,9 +40,9 @@
         <height>567</height>
        </rect>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_4">
+      <layout class="QHBoxLayout" name="horizontalLayout_11">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_11">
+        <layout class="QVBoxLayout" name="verticalLayout_4">
          <item>
           <layout class="QFormLayout" name="formLayout">
            <property name="leftMargin">
@@ -525,31 +525,42 @@
             </widget>
            </item>
            <item row="4" column="1">
-            <layout class="QHBoxLayout" name="horizontalLayout_10">
-             <item alignment="Qt::AlignLeft">
-              <widget class="QLabel" name="labelCF">
-               <property name="text">
-                <string>Select fit method:</string>
-               </property>
-              </widget>
+            <layout class="QVBoxLayout" name="verticalLayout_5">
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_10">
+               <item alignment="Qt::AlignLeft">
+                <widget class="QLabel" name="labelCF">
+                 <property name="text">
+                  <string>Select fit method:</string>
+                 </property>
+                </widget>
+               </item>
+               <item alignment="Qt::AlignRight">
+                <widget class="QComboBox" name="comboBox">
+                 <item>
+                  <property name="text">
+                   <string>Naive fit</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Simple algebraic fit</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Hyper algebraic fit</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+              </layout>
              </item>
-             <item alignment="Qt::AlignRight">
-              <widget class="QComboBox" name="comboBox">
-               <item>
-                <property name="text">
-                 <string>Naive fit</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Simple algebraic fit</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Hyper algebraic fit</string>
-                </property>
-               </item>
+             <item alignment="Qt::AlignHCenter">
+              <widget class="QLabel" name="labelResult">
+               <property name="text">
+                <string notr="true">Result</string>
+               </property>
               </widget>
              </item>
             </layout>
@@ -557,134 +568,137 @@
           </layout>
          </item>
          <item>
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+          <layout class="QGridLayout" name="gridLayout_2">
+           <property name="sizeConstraint">
+            <enum>QLayout::SetMinimumSize</enum>
            </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
+           <property name="leftMargin">
+            <number>2</number>
            </property>
-          </spacer>
+           <property name="topMargin">
+            <number>2</number>
+           </property>
+           <property name="rightMargin">
+            <number>2</number>
+           </property>
+           <property name="bottomMargin">
+            <number>2</number>
+           </property>
+           <property name="spacing">
+            <number>9</number>
+           </property>
+           <item row="0" column="0">
+            <layout class="QVBoxLayout" name="verticalLayout1">
+             <item>
+              <widget class="QLabel" name="labelImage1">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelText1">
+               <property name="text">
+                <string>Filtered Image</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="0" column="1">
+            <layout class="QVBoxLayout" name="verticalLayout2">
+             <item>
+              <widget class="QLabel" name="labelImage2">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelText2">
+               <property name="text">
+                <string>Binarized Image</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="1" column="0">
+            <layout class="QVBoxLayout" name="verticalLayout3">
+             <item>
+              <widget class="QLabel" name="labelImage3">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelText3">
+               <property name="text">
+                <string>Edge Image</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="1" column="1">
+            <layout class="QVBoxLayout" name="verticalLayout4">
+             <item>
+              <widget class="QLabel" name="labelImage4">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelText4">
+               <property name="text">
+                <string>Circle Image</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
          </item>
         </layout>
        </item>
        <item>
-        <layout class="QGridLayout" name="gridLayout_2">
-         <property name="leftMargin">
-          <number>2</number>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
-         <property name="topMargin">
-          <number>2</number>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
          </property>
-         <property name="rightMargin">
-          <number>2</number>
-         </property>
-         <property name="bottomMargin">
-          <number>2</number>
-         </property>
-         <property name="spacing">
-          <number>9</number>
-         </property>
-         <item row="0" column="0">
-          <layout class="QVBoxLayout" name="verticalLayout1">
-           <item>
-            <widget class="QLabel" name="labelImage1">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="scaledContents">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="labelText1">
-             <property name="text">
-              <string>Filtered Image</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="0" column="1">
-          <layout class="QVBoxLayout" name="verticalLayout2">
-           <item>
-            <widget class="QLabel" name="labelImage2">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="scaledContents">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="labelText2">
-             <property name="text">
-              <string>Binarized Image</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="1" column="0">
-          <layout class="QVBoxLayout" name="verticalLayout3">
-           <item>
-            <widget class="QLabel" name="labelImage3">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="scaledContents">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="labelText3">
-             <property name="text">
-              <string>Edge Image</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="1" column="1">
-          <layout class="QVBoxLayout" name="verticalLayout4">
-           <item>
-            <widget class="QLabel" name="labelImage4">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="scaledContents">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="labelText4">
-             <property name="text">
-              <string>Circle Image</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-        </layout>
+        </spacer>
        </item>
       </layout>
      </widget>
