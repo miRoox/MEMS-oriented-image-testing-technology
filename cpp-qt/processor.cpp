@@ -37,7 +37,7 @@ public:
     MEMS::Histogram filteredHisto;
     int threshold;
     QVector<QPoint> edgePixels;
-    bool lazy = false;
+    bool lazy = true;
 
     Impl(Processor* interface, const Configuration& config)
         : q(interface),
@@ -193,6 +193,7 @@ void Processor::setOriginImage(const QImage& origin)
     d->origin = origin;
     emit originImageChanged(d->origin);
 
+    d->lazy = false;
     d->updateFilteredImage();
 }
 
