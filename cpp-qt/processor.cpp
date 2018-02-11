@@ -6,9 +6,9 @@
 #include <QPoint>
 #include <QPainter>
 #include <QPen>
+#include <QFont>
 #include <QFileInfo>
 #include <QtDebug>
-
 
 /*!
     \internal
@@ -152,9 +152,13 @@ public:
         QImage copy = origin.convertToFormat(QImage::Format_RGB32);
         QPainter painter(&copy);
         QPen pen(Qt::red);
+        pen.setWidth(2);
         pen.setStyle(Qt::DashLine);
         painter.setPen(pen);
         painter.drawEllipse(circleData.center,circleData.radius,circleData.radius);
+        QFont font = painter.font();
+        font.setPointSize(2*font.pointSize());
+        painter.setFont(font);
         painter.drawText(4,4,copy.width()/8.,copy.height()/8.,Qt::AlignLeft | Qt::TextDontClip,
                          q->tr("Center: (%1, %2)\n"
                                "Radius: %3")
