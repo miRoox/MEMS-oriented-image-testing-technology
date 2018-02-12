@@ -6,6 +6,7 @@
 #include <QPointer>
 #include <QString>
 #include <QPointF>
+#include <QMap>
 #include "configuration.h"
 
 class Processor;
@@ -24,6 +25,11 @@ public:
 
 signals:
     void changeOriginRequest(const QImage& origin);
+    void setConfigurationsRequset(const Configuration& config);
+    void changeFilterMethodRequest(Configuration::FilterMethod method);
+    void changeThresholdingMethodRequest(Configuration::ThresholdingMethod method);
+    void changeEdgeDetectionMethodRequest(Configuration::EdgeDetectionMethod method);
+    void changeCircleFitMethodRequest(Configuration::CircleFitMethod method);
 
 private:
     void setByConfig(const Configuration& config);
@@ -45,14 +51,24 @@ private slots:
     void on_radioButtonA_toggled(bool checked);
     void on_radioButtonB_toggled(bool checked);
     void on_radioButtonC_toggled(bool checked);
+    void on_comboBoxFilter_currentIndexChanged(const QString &arg1);
+    void on_comboBoxThres_currentIndexChanged(const QString &arg1);
+    void on_comboBoxEdge_currentIndexChanged(const QString &arg1);
+    void on_comboBoxFit_currentIndexChanged(const QString &arg1);
 
 private:
     Ui::MainPanel *ui;
     QThread workerThread;
     QPointer<Processor> processor;
+
     QString currentOriginKey;
     QPointF center;
     qreal radius;
+
+    const QMap<QString, Configuration::FilterMethod> MapFilterMethod;
+    const QMap<QString, Configuration::ThresholdingMethod> MapThresMethod;
+    const QMap<QString, Configuration::EdgeDetectionMethod> MapEdgeMethod;
+    const QMap<QString, Configuration::CircleFitMethod> MapFitMethod;
 };
 
 #endif // MAINPANEL_H

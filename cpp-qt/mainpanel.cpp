@@ -5,6 +5,7 @@
 #include <QIcon>
 #include <QPixmap>
 #include <QSize>
+#include <QStringList>
 #include <QtDebug>
 
 static constexpr const char DefaultOriginKey[] = "A";
@@ -17,18 +18,62 @@ static inline QString keyToImagePath(const QString& key)
 MainPanel::MainPanel(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MainPanel),
-    center(0,0),radius(0)
+    center(0,0),radius(0),
+    MapFilterMethod{
+        {tr("Box filter"), Configuration::BoxFilter},
+        {tr("Gaussian filter"), Configuration::GaussianFilter},
+        {tr("Median filter"), Configuration::MedianFilter}
+    },
+    MapThresMethod{
+        {tr("Otsu's threshold clustering algorithm"), Configuration::Cluster},
+        {tr("Mean of gray levels"), Configuration::Mean},
+        {tr("Moment-preserving thresholding method"), Configuration::Moments},
+        {tr("Huang's fuzzy thresholding method"), Configuration::Fuzziness},
+        {tr("P-tile thresholding"), Configuration::PTile}
+    },
+    MapEdgeMethod{
+        {tr("Sobel operator"), Configuration::Sobel},
+        {tr("Prewitt operator"), Configuration::Prewitt},
+        {tr("Scharr operator"), Configuration::Scharr},
+        {tr("Laplacian operator"), Configuration::Laplacian}
+    },
+    MapFitMethod{
+        {tr("Naive fit"), Configuration::NaiveFit},
+        {tr("Simple algebraic fit"), Configuration::SimpleAlgebraicFit},
+        {tr("Hyper algebraic fit"), Configuration::HyperAlgebraicFit}
+    }
 {
     ui->setupUi(this);
+    // init combo box
+    ui->comboBoxFilter->addItems(MapFilterMethod.keys());
+    ui->comboBoxThres->addItems(MapThresMethod.keys());
+    ui->comboBoxEdge->addItems(MapEdgeMethod.keys());
+    ui->comboBoxFit->addItems(MapFitMethod.keys());
 
+    // load config
     auto config = loadConfigs(DefaultOriginKey);
     setByConfig(config);
+    // init processor
     processor = new Processor(config);
     processor->moveToThread(&workerThread);
     connect(&workerThread,&QThread::started,
             this,&MainPanel::initializeOnRun);
+
+    // send request to Processor
     connect(this,&MainPanel::changeOriginRequest,
             processor,&Processor::setOriginImage);
+    connect(this,&MainPanel::setConfigurationsRequset,
+            processor,&Processor::setConfigurations);
+    connect(this,&MainPanel::changeFilterMethodRequest,
+            processor,&Processor::setFilterMethod);
+    connect(this,&MainPanel::changeThresholdingMethodRequest,
+            processor,&Processor::setThresholdingMethod);
+    connect(this,&MainPanel::changeEdgeDetectionMethodRequest,
+            processor,&Processor::setEdgeDetectionMethod);
+    connect(this,&MainPanel::changeCircleFitMethodRequest,
+            processor,&Processor::setCircleFitMethod);
+
+    // recieve data from Processor
     connect(processor,&Processor::filteredImageChanged,
             this,&MainPanel::setFilteredImage);
     connect(processor,&Processor::binaryImageChanged,
@@ -162,4 +207,24 @@ void MainPanel::on_radioButtonC_toggled(bool checked)
     {
         setOrigin("C");
     }
+}
+
+void MainPanel::on_comboBoxFilter_currentIndexChanged(const QString &arg1)
+{
+    emit changeFilterMethodRequest(MapFilterMethod.value(arg1,Configuration::defaultFilterMethod()));
+}
+
+void MainPanel::on_comboBoxThres_currentIndexChanged(const QString &arg1)
+{
+    emit changeThresholdingMethodRequest(MapThresMethod.value(arg1,Configuration::defaultThresholdingMethod()));
+}
+
+void MainPanel::on_comboBoxEdge_currentIndexChanged(const QString &arg1)
+{
+    emit changeEdgeDetectionMethodRequest(MapEdgeMethod.value(arg1,Configuration::defaultEdgeDetectionMethod()));
+}
+
+void MainPanel::on_comboBoxFit_currentIndexChanged(const QString &arg1)
+{
+    emit changeCircleFitMethodRequest(MapFitMethod.value(arg1,Configuration::defaultCircleFitMethod()));
 }
