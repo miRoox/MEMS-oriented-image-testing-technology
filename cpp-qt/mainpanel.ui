@@ -40,9 +40,9 @@
         <height>567</height>
        </rect>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_11">
+      <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout_4">
+        <layout class="QHBoxLayout" name="horizontalLayout_11">
          <item>
           <layout class="QFormLayout" name="formLayout">
            <property name="leftMargin">
@@ -155,23 +155,7 @@
                 </widget>
                </item>
                <item alignment="Qt::AlignRight">
-                <widget class="QComboBox" name="comboBoxFilter">
-                 <item>
-                  <property name="text">
-                   <string>Box Filter</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>Gaussian Filter</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>Median Filter</string>
-                  </property>
-                 </item>
-                </widget>
+                <widget class="QComboBox" name="comboBoxFilter"/>
                </item>
               </layout>
              </item>
@@ -379,33 +363,7 @@
                 </widget>
                </item>
                <item alignment="Qt::AlignRight">
-                <widget class="QComboBox" name="comboBoxThres">
-                 <item>
-                  <property name="text">
-                   <string>Otsu's clustering</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>Mean level</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>Preserving the moments</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>Minimizing the measure of fuzziness</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>P-Tile</string>
-                  </property>
-                 </item>
-                </widget>
+                <widget class="QComboBox" name="comboBoxThres"/>
                </item>
               </layout>
              </item>
@@ -492,28 +450,7 @@
               </widget>
              </item>
              <item alignment="Qt::AlignRight">
-              <widget class="QComboBox" name="comboBoxEdge">
-               <item>
-                <property name="text">
-                 <string>Sobel operator</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Prewitt operator</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Scharr operator</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Laplacian operator</string>
-                </property>
-               </item>
-              </widget>
+              <widget class="QComboBox" name="comboBoxEdge"/>
              </item>
             </layout>
            </item>
@@ -536,28 +473,18 @@
                 </widget>
                </item>
                <item alignment="Qt::AlignRight">
-                <widget class="QComboBox" name="comboBox">
-                 <item>
-                  <property name="text">
-                   <string>Naive fit</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>Simple algebraic fit</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>Hyper algebraic fit</string>
-                  </property>
-                 </item>
-                </widget>
+                <widget class="QComboBox" name="comboBoxFit"/>
                </item>
               </layout>
              </item>
              <item alignment="Qt::AlignHCenter">
               <widget class="QLabel" name="labelResult">
+               <property name="frameShape">
+                <enum>QFrame::Box</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
                <property name="text">
                 <string notr="true">Result</string>
                </property>
@@ -688,14 +615,14 @@
         </layout>
        </item>
        <item>
-        <spacer name="horizontalSpacer_2">
+        <spacer name="verticalSpacer">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Vertical</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>40</width>
-           <height>20</height>
+           <width>20</width>
+           <height>268</height>
           </size>
          </property>
         </spacer>
