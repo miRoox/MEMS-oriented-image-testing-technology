@@ -27,7 +27,7 @@ MainPanel::MainPanel(QWidget *parent) :
     processor->moveToThread(&workerThread);
     connect(&workerThread,&QThread::started,
             this,&MainPanel::initializeOnRun);
-    connect(this,&MainPanel::originImageChange,
+    connect(this,&MainPanel::changeOriginRequest,
             processor,&Processor::setOriginImage);
     connect(processor,&Processor::filteredImageChanged,
             this,&MainPanel::setFilteredImage);
@@ -82,7 +82,7 @@ void MainPanel::setOrigin(const QString& key)
         setWindowTitle(tr("C"));
     }
     setWindowIcon(QIcon(keyToImagePath(key)));
-    emit originImageChange(QImage(keyToImagePath(key)));
+    emit changeOriginRequest(QImage(keyToImagePath(key)));
 }
 
 void MainPanel::updateCircle()

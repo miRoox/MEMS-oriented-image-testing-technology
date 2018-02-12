@@ -23,7 +23,7 @@ public:
     ~MainPanel();
 
 signals:
-    void originImageChange(const QImage& origin);
+    void changeOriginRequest(const QImage& origin);
 
 private:
     void setByConfig(const Configuration& config);
