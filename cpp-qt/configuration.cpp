@@ -166,6 +166,41 @@ Configuration& Configuration::setPTileValue(qreal value)
     return *this;
 }
 
+Configuration::FilterMethod Configuration::defaultFilterMethod()
+{
+    return DefaultFilterMethod;
+}
+
+Configuration::ThresholdingMethod Configuration::defaultThresholdingMethod()
+{
+    return DefaultThresholdingMethod;
+}
+
+Configuration::EdgeDetectionMethod Configuration::defaultEdgeDetectionMethod()
+{
+    return DefaultEdgeDetectionMethod;
+}
+
+Configuration::CircleFitMethod Configuration::defaultCircleFitMethod()
+{
+    return DefaultCircleFitMethod;
+}
+
+uint Configuration::defaultFilterRadius()
+{
+    return DefaultFilterRadius;
+}
+
+qreal Configuration::defaultGaussianSigma()
+{
+    return DefaultGaussianSigma;
+}
+
+qreal Configuration::defaultPTileValue()
+{
+    return DefaultPTileValue;
+}
+
 /** related non-member **/
 
 bool operator!=(const Configuration& lhs, const Configuration& rhs)

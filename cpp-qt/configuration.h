@@ -69,6 +69,14 @@ public:
     Configuration& setGaussianSigma(qreal sigma);
     Configuration& setPTileValue(qreal value);
 
+    static FilterMethod defaultFilterMethod();
+    static ThresholdingMethod defaultThresholdingMethod();
+    static EdgeDetectionMethod defaultEdgeDetectionMethod();
+    static CircleFitMethod defaultCircleFitMethod();
+    static uint defaultFilterRadius();
+    static qreal defaultGaussianSigma();
+    static qreal defaultPTileValue();
+
     friend bool operator!=(const Configuration& lhs, const Configuration& rhs);
     friend bool operator==(const Configuration& lhs, const Configuration& rhs);
     friend QDebug operator<<(QDebug dbg, const Configuration& config);
