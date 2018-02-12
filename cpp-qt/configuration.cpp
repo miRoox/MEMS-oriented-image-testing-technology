@@ -59,7 +59,13 @@ Configuration::Configuration()
 {
     static int id = -1;
     if (id == -1)
+    {
         id = qRegisterMetaType<Configuration>();
+        qRegisterMetaType<Configuration::FilterMethod>();
+        qRegisterMetaType<Configuration::ThresholdingMethod>();
+        qRegisterMetaType<Configuration::EdgeDetectionMethod>();
+        qRegisterMetaType<Configuration::CircleFitMethod>();
+    }
 }
 
 Configuration::Configuration(const Configuration& rhs)
