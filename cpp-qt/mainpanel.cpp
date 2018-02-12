@@ -6,6 +6,7 @@
 #include <QPixmap>
 #include <QSize>
 #include <QStringList>
+#include <QFileDialog>
 #include <QtDebug>
 
 static constexpr const char DefaultOriginKey[] = "A";
@@ -72,6 +73,8 @@ MainPanel::MainPanel(QWidget *parent) :
             processor,&Processor::setEdgeDetectionMethod);
     connect(this,&MainPanel::changeCircleFitMethodRequest,
             processor,&Processor::setCircleFitMethod);
+    connect(this,&MainPanel::exportResultRequest,
+            processor,&Processor::exportResult);
 
     // recieve data from Processor
     connect(processor,&Processor::filteredImageChanged,
@@ -227,4 +230,15 @@ void MainPanel::on_comboBoxEdge_currentIndexChanged(const QString &arg1)
 void MainPanel::on_comboBoxFit_currentIndexChanged(const QString &arg1)
 {
     emit changeCircleFitMethodRequest(MapFitMethod.value(arg1,Configuration::defaultCircleFitMethod()));
+}
+
+void MainPanel::on_pushButtonExport_clicked()
+{
+    QString fileName = QFileDialog::getSaveFileName(this,tr("Export result"),
+                                                    currentOriginKey + ".out.png",
+                                                    tr("Images (*.png *.jpg *.jpeg *.bmp *.xpm)"));
+    if (!fileName.isEmpty())
+    {
+        emit exportResultRequest(fileName);
+    }
 }
