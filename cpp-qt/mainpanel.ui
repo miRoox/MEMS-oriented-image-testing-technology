@@ -479,6 +479,9 @@
              </item>
              <item alignment="Qt::AlignHCenter">
               <widget class="QLabel" name="labelResult">
+               <property name="cursor">
+                <cursorShape>IBeamCursor</cursorShape>
+               </property>
                <property name="frameShape">
                 <enum>QFrame::Box</enum>
                </property>
@@ -487,6 +490,9 @@
                </property>
                <property name="text">
                 <string notr="true">Result</string>
+               </property>
+               <property name="textInteractionFlags">
+                <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
                </property>
               </widget>
              </item>
