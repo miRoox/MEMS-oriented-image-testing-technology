@@ -122,7 +122,14 @@ MainPanel::~MainPanel()
 
 void MainPanel::setByConfig(const Configuration& config)
 {
-    Q_UNUSED(config)
+    emit setConfigurationsRequset(config);
+    ui->comboBoxFilter->setCurrentText(MapFilterMethod.key(config.filterMethod()));
+    ui->comboBoxThres->setCurrentText(MapThresMethod.key(config.thresholdingMethod()));
+    ui->comboBoxEdge->setCurrentText(MapEdgeMethod.key(config.edgeDetectionMethod()));
+    ui->comboBoxFit->setCurrentText(MapFitMethod.key(config.circleFitMethod()));
+    ui->spinBoxFR->setValue(config.filterRadius());
+    ui->doubleSpinBoxGS->setValue(config.gaussianSigma());
+    ui->spinBoxPT->setValue(config.pTileValue());
 }
 
 void MainPanel::setOrigin(const QString& key)
