@@ -247,10 +247,10 @@ QDebug operator<<(QDebug dbg, const Configuration& config)
 {
     QDebugStateSaver saver(dbg);
     dbg.nospace() << "Configuration("
-                  << "FilterMethod: " <<  valueToKey(config.data->filterMethod) << ", "
-                  << "ThresholdingMethod: " << valueToKey(config.data->thresholdingMethod) << ", "
-                  << "EdgeDetectionMethod: " << valueToKey(config.data->edgeDetectionMethod) << ", "
-                  << "CircleFitMethod: " << valueToKey(config.data->circleFitMethod) << ", "
+                  << "FilterMethod: " <<  qPrintable(valueToKey(config.data->filterMethod)) << ", "
+                  << "ThresholdingMethod: " << qPrintable(valueToKey(config.data->thresholdingMethod)) << ", "
+                  << "EdgeDetectionMethod: " << qPrintable(valueToKey(config.data->edgeDetectionMethod)) << ", "
+                  << "CircleFitMethod: " << qPrintable(valueToKey(config.data->circleFitMethod)) << ", "
                   << "FilterRadius: " << config.data->filterRadius << ", "
                   << "GaussianSigma: " << config.data->gaussianSigma << ", "
                   << "PTileValue: " << config.data->pTileValue << ")";
