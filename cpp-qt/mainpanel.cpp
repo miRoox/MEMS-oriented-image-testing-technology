@@ -50,6 +50,15 @@ MainPanel::MainPanel(QWidget *parent) :
     ui->comboBoxThres->addItems(MapThresMethod.keys());
     ui->comboBoxEdge->addItems(MapEdgeMethod.keys());
     ui->comboBoxFit->addItems(MapFitMethod.keys());
+    // init ui connection
+    connect(ui->spinBoxFR,qOverload<int>(&QSpinBox::valueChanged),
+            ui->spinBoxFRG,&QSpinBox::setValue);
+    connect(ui->spinBoxFRG,qOverload<int>(&QSpinBox::valueChanged),
+            ui->spinBoxFR,&QSpinBox::setValue);
+    connect(ui->spinBoxFR,qOverload<int>(&QSpinBox::valueChanged),
+            this,&MainPanel::changeFilterRadiusRequest);
+    connect(ui->doubleSpinBoxGS,qOverload<double>(&QDoubleSpinBox::valueChanged),
+            this,&MainPanel::changeGaussianSigmaRequest);
 
     // load config
     auto config = loadConfigs(DefaultOriginKey);
@@ -73,6 +82,12 @@ MainPanel::MainPanel(QWidget *parent) :
             processor,&Processor::setEdgeDetectionMethod);
     connect(this,&MainPanel::changeCircleFitMethodRequest,
             processor,&Processor::setCircleFitMethod);
+    connect(this,&MainPanel::changeFilterRadiusRequest,
+            processor,&Processor::setFilterRadius);
+    connect(this,&MainPanel::changeGaussianSigmaRequest,
+            processor,&Processor::setGaussianSigma);
+    connect(this,&MainPanel::changePTileValueRequest,
+            processor,&Processor::setPTileValue);
     connect(this,&MainPanel::exportResultRequest,
             processor,&Processor::exportResult);
 
@@ -230,6 +245,11 @@ void MainPanel::on_comboBoxEdge_currentIndexChanged(const QString &arg1)
 void MainPanel::on_comboBoxFit_currentIndexChanged(const QString &arg1)
 {
     emit changeCircleFitMethodRequest(MapFitMethod.value(arg1,Configuration::defaultCircleFitMethod()));
+}
+
+void MainPanel::on_spinBoxPT_valueChanged(int arg1)
+{
+    emit changePTileValueRequest(arg1/100.);
 }
 
 void MainPanel::on_pushButtonExport_clicked()

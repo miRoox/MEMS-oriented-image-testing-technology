@@ -30,6 +30,9 @@ signals:
     void changeThresholdingMethodRequest(Configuration::ThresholdingMethod method);
     void changeEdgeDetectionMethodRequest(Configuration::EdgeDetectionMethod method);
     void changeCircleFitMethodRequest(Configuration::CircleFitMethod method);
+    void changeFilterRadiusRequest(uint radius);
+    void changeGaussianSigmaRequest(qreal sigma);
+    void changePTileValueRequest(qreal value);
     void exportResultRequest(const QString& fileName);
 
 private:
@@ -56,6 +59,7 @@ private slots:
     void on_comboBoxThres_currentIndexChanged(const QString &arg1);
     void on_comboBoxEdge_currentIndexChanged(const QString &arg1);
     void on_comboBoxFit_currentIndexChanged(const QString &arg1);
+    void on_spinBoxPT_valueChanged(int arg1);
     void on_pushButtonExport_clicked();
 
 private:
