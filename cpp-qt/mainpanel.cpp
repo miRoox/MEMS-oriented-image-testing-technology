@@ -119,7 +119,6 @@ MainPanel::~MainPanel()
     workerThread.quit();
     bool quited = workerThread.wait();
     Q_ASSERT(quited);
-    delete ui;
 }
 
 void MainPanel::setByConfig(const Configuration& config)

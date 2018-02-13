@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QThread>
 #include <QPointer>
+#include <QScopedPointer>
 #include <QString>
 #include <QPointF>
 #include <QMap>
@@ -66,9 +67,10 @@ private slots:
     void on_pushButtonExport_clicked();
 
 private:
-    Ui::MainPanel *ui;
+    QScopedPointer<Ui::MainPanel> ui;
     QThread workerThread;
     QPointer<Processor> processor;
+    Q_DISABLE_COPY(MainPanel)
 
     QString currentOriginKey;
     QPointF center;
