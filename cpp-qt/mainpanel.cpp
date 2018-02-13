@@ -88,6 +88,8 @@ MainPanel::MainPanel(QWidget *parent) :
             processor,&Processor::setGaussianSigma);
     connect(this,&MainPanel::changePTileValueRequest,
             processor,&Processor::setPTileValue);
+    connect(this,&MainPanel::saveConfigurationsRequest,
+            processor,&Processor::saveConfigurations);
     connect(this,&MainPanel::exportResultRequest,
             processor,&Processor::exportResult);
 
@@ -270,6 +272,11 @@ void MainPanel::on_comboBoxFit_currentIndexChanged(const QString& arg1)
 void MainPanel::on_spinBoxPT_valueChanged(int arg1)
 {
     emit changePTileValueRequest(arg1/100.);
+}
+
+void MainPanel::on_pushButtonSaveConfig_clicked()
+{
+    emit saveConfigurationsRequest(currentOriginKey);
 }
 
 void MainPanel::on_pushButtonExport_clicked()

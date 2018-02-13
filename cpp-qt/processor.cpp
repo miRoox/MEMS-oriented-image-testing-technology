@@ -428,6 +428,13 @@ void Processor::setPTileValue(qreal value)
     d->updateThreshold();
 }
 
+void Processor::saveConfigurations(const QString& group) const
+{
+    Configuration config = configurations();
+    saveConfigs(config,group);
+    qInfo() << "For" << qPrintable(group) << ", save current" << config;
+}
+
 int Processor::threshold() const
 {
     return d->threshold;

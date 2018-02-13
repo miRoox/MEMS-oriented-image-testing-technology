@@ -33,6 +33,7 @@ signals:
     void changeFilterRadiusRequest(uint radius);
     void changeGaussianSigmaRequest(qreal sigma);
     void changePTileValueRequest(qreal value);
+    void saveConfigurationsRequest(const QString& group);
     void exportResultRequest(const QString& fileName);
 
 private:
@@ -60,6 +61,7 @@ private slots:
     void on_comboBoxEdge_currentIndexChanged(const QString& arg1);
     void on_comboBoxFit_currentIndexChanged(const QString& arg1);
     void on_spinBoxPT_valueChanged(int arg1);
+    void on_pushButtonSaveConfig_clicked();
     void on_pushButtonExport_clicked();
 
 private:
