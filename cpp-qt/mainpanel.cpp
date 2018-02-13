@@ -66,6 +66,8 @@ MainPanel::MainPanel(QWidget *parent) :
     // init processor
     processor = new Processor(config);
     processor->moveToThread(&workerThread);
+    connect(&workerThread,&QThread::finished,
+            processor,&Processor::deleteLater);
     connect(&workerThread,&QThread::started,
             this,&MainPanel::initializeOnRun);
 
