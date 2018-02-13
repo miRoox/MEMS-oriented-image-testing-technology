@@ -368,12 +368,12 @@
               </layout>
              </item>
              <item>
-              <widget class="QStackedWidget" name="stackedWidget">
+              <widget class="QStackedWidget" name="stackedWidgetThres">
                <property name="currentIndex">
                 <number>1</number>
                </property>
-               <widget class="QWidget" name="pageB"/>
-               <widget class="QWidget" name="pageBP">
+               <widget class="QWidget" name="pageThres"/>
+               <widget class="QWidget" name="pageThresPT">
                 <layout class="QFormLayout" name="formLayout_4">
                  <property name="leftMargin">
                   <number>0</number>

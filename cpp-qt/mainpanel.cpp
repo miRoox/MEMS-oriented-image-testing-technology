@@ -229,12 +229,32 @@ void MainPanel::on_radioButtonC_toggled(bool checked)
 
 void MainPanel::on_comboBoxFilter_currentIndexChanged(const QString &arg1)
 {
-    emit changeFilterMethodRequest(MapFilterMethod.value(arg1,Configuration::defaultFilterMethod()));
+    auto method = MapFilterMethod.value(arg1,Configuration::defaultFilterMethod());
+    emit changeFilterMethodRequest(method);
+    switch (method)
+    {
+    case Configuration::GaussianFilter:
+        ui->stackedWidgetFilter->setCurrentWidget(ui->pageFilterG);
+        break;
+    default:
+        ui->stackedWidgetFilter->setCurrentWidget(ui->pageFilter);
+        break;
+    }
 }
 
 void MainPanel::on_comboBoxThres_currentIndexChanged(const QString &arg1)
 {
-    emit changeThresholdingMethodRequest(MapThresMethod.value(arg1,Configuration::defaultThresholdingMethod()));
+    auto method = MapThresMethod.value(arg1,Configuration::defaultThresholdingMethod());
+    emit changeThresholdingMethodRequest(method);
+    switch (method)
+    {
+    case Configuration::PTile:
+        ui->stackedWidgetThres->setCurrentWidget(ui->pageThresPT);
+        break;
+    default:
+        ui->stackedWidgetThres->setCurrentWidget(ui->pageThres);
+        break;
+    }
 }
 
 void MainPanel::on_comboBoxEdge_currentIndexChanged(const QString &arg1)
