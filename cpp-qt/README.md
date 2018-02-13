@@ -13,3 +13,22 @@
 第三步，边缘检测；
 
 第四步，提取边缘，拟合圆，计算圆心和半径。
+
+## 构建需求
+
+* Qt framework & Qt development tools (版本在 5.9.1 及以上)
+* 支持 C++14 的编译器
+
+## 结果预览
+
+![A.out](/cpp-qt/results/A.out.png)
+
+A组
+
+![B.out](/cpp-qt/results/B.out.png)
+
+B组
+
+![C.out](/cpp-qt/results/C.out.png)
+
+C组

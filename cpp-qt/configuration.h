@@ -1,6 +1,3 @@
-#ifndef CONFIGURATION_H
-#define CONFIGURATION_H
-
 /**
  ** MIT License
  **
@@ -26,6 +23,9 @@
  ** SOFTWARE.
  **/
 
+
+#ifndef CONFIGURATION_H
+#define CONFIGURATION_H
 
 #include <QSharedDataPointer>
 #include <QObject>
