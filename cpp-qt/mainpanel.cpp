@@ -286,6 +286,13 @@ void MainPanel::on_pushButtonSaveConfig_clicked()
     emit saveConfigurationsRequest(currentOriginKey);
 }
 
+void MainPanel::on_pushButtonLoadConfig_clicked()
+{
+    Configuration config = loadConfigs(currentOriginKey);
+    setByConfig(config);
+    qInfo() << "For" << currentOriginKey << ", load the" << config;
+}
+
 void MainPanel::on_pushButtonExport_clicked()
 {
     QString fileName = QFileDialog::getSaveFileName(this,tr("Export result"),

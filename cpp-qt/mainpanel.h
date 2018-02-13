@@ -62,6 +62,7 @@ private slots:
     void on_comboBoxFit_currentIndexChanged(const QString& arg1);
     void on_spinBoxPT_valueChanged(int arg1);
     void on_pushButtonSaveConfig_clicked();
+    void on_pushButtonLoadConfig_clicked();
     void on_pushButtonExport_clicked();
 
 private:
