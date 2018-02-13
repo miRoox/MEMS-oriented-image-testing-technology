@@ -55,10 +55,10 @@ private slots:
     void on_radioButtonA_toggled(bool checked);
     void on_radioButtonB_toggled(bool checked);
     void on_radioButtonC_toggled(bool checked);
-    void on_comboBoxFilter_currentIndexChanged(const QString &arg1);
-    void on_comboBoxThres_currentIndexChanged(const QString &arg1);
-    void on_comboBoxEdge_currentIndexChanged(const QString &arg1);
-    void on_comboBoxFit_currentIndexChanged(const QString &arg1);
+    void on_comboBoxFilter_currentIndexChanged(const QString& arg1);
+    void on_comboBoxThres_currentIndexChanged(const QString& arg1);
+    void on_comboBoxEdge_currentIndexChanged(const QString& arg1);
+    void on_comboBoxFit_currentIndexChanged(const QString& arg1);
     void on_spinBoxPT_valueChanged(int arg1);
     void on_pushButtonExport_clicked();
 

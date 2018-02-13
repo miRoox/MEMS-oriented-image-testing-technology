@@ -227,7 +227,7 @@ void MainPanel::on_radioButtonC_toggled(bool checked)
     }
 }
 
-void MainPanel::on_comboBoxFilter_currentIndexChanged(const QString &arg1)
+void MainPanel::on_comboBoxFilter_currentIndexChanged(const QString& arg1)
 {
     auto method = MapFilterMethod.value(arg1,Configuration::defaultFilterMethod());
     emit changeFilterMethodRequest(method);
@@ -242,7 +242,7 @@ void MainPanel::on_comboBoxFilter_currentIndexChanged(const QString &arg1)
     }
 }
 
-void MainPanel::on_comboBoxThres_currentIndexChanged(const QString &arg1)
+void MainPanel::on_comboBoxThres_currentIndexChanged(const QString& arg1)
 {
     auto method = MapThresMethod.value(arg1,Configuration::defaultThresholdingMethod());
     emit changeThresholdingMethodRequest(method);
@@ -257,12 +257,12 @@ void MainPanel::on_comboBoxThres_currentIndexChanged(const QString &arg1)
     }
 }
 
-void MainPanel::on_comboBoxEdge_currentIndexChanged(const QString &arg1)
+void MainPanel::on_comboBoxEdge_currentIndexChanged(const QString& arg1)
 {
     emit changeEdgeDetectionMethodRequest(MapEdgeMethod.value(arg1,Configuration::defaultEdgeDetectionMethod()));
 }
 
-void MainPanel::on_comboBoxFit_currentIndexChanged(const QString &arg1)
+void MainPanel::on_comboBoxFit_currentIndexChanged(const QString& arg1)
 {
     emit changeCircleFitMethodRequest(MapFitMethod.value(arg1,Configuration::defaultCircleFitMethod()));
 }
