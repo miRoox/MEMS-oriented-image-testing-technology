@@ -27,6 +27,7 @@
 #include "mainpanel.h"
 #include "ui_mainpanel.h"  // generate from mainpanel.ui
 #include "processor.h"
+#include <cmath>
 #include <QImage>
 #include <QIcon>
 #include <QPixmap>
@@ -156,7 +157,7 @@ void MainPanel::setByConfig(const Configuration& config)
     ui->comboBoxFit->setCurrentText(MapFitMethod.key(config.circleFitMethod()));
     ui->spinBoxFR->setValue(config.filterRadius());
     ui->doubleSpinBoxGS->setValue(config.gaussianSigma());
-    ui->spinBoxPT->setValue(config.pTileValue());
+    ui->spinBoxPT->setValue(::std::round(100*config.pTileValue()));
 }
 
 void MainPanel::setOrigin(const QString& key)
