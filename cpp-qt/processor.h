@@ -54,6 +54,7 @@ class Processor : public QObject
     Q_PROPERTY(Configuration::ThresholdingMethod thresholdingMethod READ thresholdingMethod WRITE setThresholdingMethod NOTIFY thresholdingMethodChanged)
     Q_PROPERTY(Configuration::EdgeDetectionMethod edgeDetectionMethod READ edgeDetectionMethod WRITE setEdgeDetectionMethod NOTIFY edgeDetectionMethodChanged)
     Q_PROPERTY(Configuration::CircleFitMethod circleFitMethod READ circleFitMethod WRITE setCircleFitMethod NOTIFY circleFitMethodChanged)
+    Q_PROPERTY(Configuration::ErrorEliminateMethod errorEliminateMethod READ errorEliminateMethod WRITE setErrorEliminateMethod NOTIFY errorEliminateMethodChanged)
     Q_PROPERTY(uint filterRadius READ filterRadius WRITE setFilterRadius NOTIFY filterRadiusChanged)
     Q_PROPERTY(qreal gaussianSigma READ gaussianSigma WRITE setGaussianSigma NOTIFY gaussianSigmaChanged)
     Q_PROPERTY(qreal pTileValue READ pTileValue WRITE setPTileValue NOTIFY pTileValueChanged)
@@ -86,7 +87,7 @@ public:
 
     Configuration::CircleFitMethod circleFitMethod() const;
 
-
+    Configuration::ErrorEliminateMethod errorEliminateMethod() const;
 
 signals:
     void originImageChanged(const QImage& origin);
@@ -100,6 +101,7 @@ signals:
     void thresholdingMethodChanged(Configuration::Configuration::ThresholdingMethod method);
     void edgeDetectionMethodChanged(Configuration::EdgeDetectionMethod method);
     void circleFitMethodChanged(Configuration::CircleFitMethod method);
+    void errorEliminateMethodChanged(Configuration::ErrorEliminateMethod method);
     void filterRadiusChanged(uint radius);
     void gaussianSigmaChanged(qreal sigma);
     void pTileValueChanged(qreal value);
@@ -112,6 +114,7 @@ public slots:
     void setThresholdingMethod(Configuration::ThresholdingMethod method);
     void setEdgeDetectionMethod(Configuration::EdgeDetectionMethod method);
     void setCircleFitMethod(Configuration::CircleFitMethod method);
+    void setErrorEliminateMethod(Configuration::ErrorEliminateMethod method);
     void setFilterRadius(uint radius);
     void setGaussianSigma(qreal sigma);
     void setPTileValue(qreal value);

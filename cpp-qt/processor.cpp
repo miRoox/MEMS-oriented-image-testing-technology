@@ -54,6 +54,7 @@ public:
     Configuration::ThresholdingMethod thresholdingMethod;
     Configuration::EdgeDetectionMethod edgeMethod;
     Configuration::CircleFitMethod circleFitMethod;
+    Configuration::ErrorEliminateMethod errorEliminateMethod;
 
     uint filterRadius;
     qreal gaussianSigma;
@@ -71,6 +72,7 @@ public:
           thresholdingMethod(config.thresholdingMethod()),
           edgeMethod(config.edgeDetectionMethod()),
           circleFitMethod(config.circleFitMethod()),
+          errorEliminateMethod(config.errorEliminateMethod()),
           filterRadius(config.filterRadius()),
           gaussianSigma(config.gaussianSigma()),
           pTileValue(config.pTileValue())
@@ -161,16 +163,25 @@ public:
             return;
         if (edge.isNull() || edgePixels.isEmpty())
             return;
+        CircleFitFunction fit = nullptr;
         switch (circleFitMethod)
         {
         case Configuration::NaiveFit:
-            q->setCircle(naiveCircleFit(edgePixels));
+            fit = naiveCircleFit;
             break;
         case Configuration::SimpleAlgebraicFit:
-            q->setCircle(simpleAlgebraicCircleFit(edgePixels));
+            fit = simpleAlgebraicCircleFit;
             break;
         case Configuration::HyperAlgebraicFit:
-            q->setCircle(hyperAlgebraicCircleFit(edgePixels));
+            fit = hyperAlgebraicCircleFit;
+            break;
+        default:
+            break;
+        }
+        switch (errorEliminateMethod)
+        {
+        case Configuration::NoEliminate:
+            q->setCircle(noErrorEliminate(fit,edgePixels));
             break;
         default:
             break;
@@ -405,6 +416,21 @@ void Processor::setCircleFitMethod(Configuration::CircleFitMethod method)
         return;
     d->circleFitMethod = method;
     emit circleFitMethodChanged(d->circleFitMethod);
+
+    d->updateCircle();
+}
+
+Configuration::ErrorEliminateMethod Processor::errorEliminateMethod() const
+{
+    return d->errorEliminateMethod;
+}
+
+void Processor::setErrorEliminateMethod(Configuration::ErrorEliminateMethod method)
+{
+    if (d->errorEliminateMethod == method)
+        return;
+    d->errorEliminateMethod = method;
+    emit errorEliminateMethodChanged(d->errorEliminateMethod);
 
     d->updateCircle();
 }

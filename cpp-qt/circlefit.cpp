@@ -220,4 +220,10 @@ CircleData hyperAlgebraicCircleFit(const QVector<QPoint>& points)
     return circle;
 }
 
+// do nothing
+CircleData noErrorEliminate(CircleFitFunction fit, const QVector<QPoint>& points)
+{
+    return fit(points);
+}
+
 } // namespace MEMS

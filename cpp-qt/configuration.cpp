@@ -36,6 +36,7 @@ static constexpr auto DefaultFilterMethod = Configuration::GaussianFilter;
 static constexpr auto DefaultThresholdingMethod = Configuration::Cluster;
 static constexpr auto DefaultEdgeDetectionMethod = Configuration::Sobel;
 static constexpr auto DefaultCircleFitMethod = Configuration::SimpleAlgebraicFit;
+static constexpr auto DefaultErrorEliminateMethod = Configuration::NoEliminate;
 static constexpr auto DefaultFilterRadius = 2u;
 static constexpr auto DefaultGaussianSigma = 1.;
 static constexpr auto DefaultPTileValue = 0.5;
@@ -74,6 +75,7 @@ public:
     Configuration::ThresholdingMethod thresholdingMethod = DefaultThresholdingMethod;
     Configuration::EdgeDetectionMethod edgeDetectionMethod = DefaultEdgeDetectionMethod;
     Configuration::CircleFitMethod circleFitMethod = DefaultCircleFitMethod;
+    Configuration::ErrorEliminateMethod errorEliminateMethod = DefaultErrorEliminateMethod;
     uint filterRadius = DefaultFilterRadius;
     qreal gaussianSigma = DefaultGaussianSigma;
     qreal pTileValue = DefaultPTileValue;
@@ -91,6 +93,7 @@ Configuration::Configuration()
         qRegisterMetaType<Configuration::ThresholdingMethod>();
         qRegisterMetaType<Configuration::EdgeDetectionMethod>();
         qRegisterMetaType<Configuration::CircleFitMethod>();
+        qRegisterMetaType<Configuration::ErrorEliminateMethod>();
     }
 }
 
@@ -141,6 +144,11 @@ Configuration::CircleFitMethod Configuration::circleFitMethod() const
     return data->circleFitMethod;
 }
 
+Configuration::ErrorEliminateMethod Configuration::errorEliminateMethod() const
+{
+    return data->errorEliminateMethod;
+}
+
 uint Configuration::filterRadius() const
 {
     return data->filterRadius;
@@ -180,6 +188,12 @@ Configuration& Configuration::setCircleFitMethod(Configuration::CircleFitMethod 
     return *this;
 }
 
+Configuration& Configuration::setErrorEliminateMethod(Configuration::ErrorEliminateMethod method)
+{
+    data->errorEliminateMethod = method;
+    return *this;
+}
+
 Configuration& Configuration::setFilterRadius(uint radius)
 {
     data->filterRadius = radius;
@@ -216,6 +230,11 @@ Configuration::EdgeDetectionMethod Configuration::defaultEdgeDetectionMethod()
 Configuration::CircleFitMethod Configuration::defaultCircleFitMethod()
 {
     return DefaultCircleFitMethod;
+}
+
+Configuration::ErrorEliminateMethod Configuration::defaultErrorEliminateMethod()
+{
+    return DefaultErrorEliminateMethod;
 }
 
 uint Configuration::defaultFilterRadius()
@@ -277,6 +296,7 @@ QDebug operator<<(QDebug dbg, const Configuration& config)
                   << "ThresholdingMethod: " << qPrintable(valueToKey(config.data->thresholdingMethod)) << ", "
                   << "EdgeDetectionMethod: " << qPrintable(valueToKey(config.data->edgeDetectionMethod)) << ", "
                   << "CircleFitMethod: " << qPrintable(valueToKey(config.data->circleFitMethod)) << ", "
+                  << "ErrorEliminateMethod: " << qPrintable(valueToKey(config.data->errorEliminateMethod)) << ", "
                   << "FilterRadius: " << config.data->filterRadius << ", "
                   << "GaussianSigma: " << config.data->gaussianSigma << ", "
                   << "PTileValue: " << config.data->pTileValue << ")";
@@ -288,6 +308,7 @@ static constexpr const char FilterMethodKey[] = "FilterMethod";
 static constexpr const char ThresholdingMethodKey[] = "ThresholdingMethod";
 static constexpr const char EdgeDetectionMethodKey[] = "EdgeDetectionMethod";
 static constexpr const char CircleFitMethodKey[] = "CircleFitMethod";
+static constexpr const char ErrorEliminateMethodKey[] = "ErrorEliminateMethod";
 static constexpr const char FilterRadiusKey[] = "FilterRadius";
 static constexpr const char GaussianSigmaKey[] = "GaussianSigma";
 static constexpr const char PTileValueKey[] = "PTileValue";
@@ -302,6 +323,7 @@ void saveConfigs(const Configuration& config, QString group)
     settings.setValue(ThresholdingMethodKey,valueToKey(config.thresholdingMethod()));
     settings.setValue(EdgeDetectionMethodKey,valueToKey(config.edgeDetectionMethod()));
     settings.setValue(CircleFitMethodKey,valueToKey(config.circleFitMethod()));
+    settings.setValue(ErrorEliminateMethodKey,valueToKey(config.errorEliminateMethod()));
     settings.setValue(FilterRadiusKey,config.filterRadius());
     settings.setValue(GaussianSigmaKey,config.gaussianSigma());
     settings.setValue(PTileValueKey,config.pTileValue());
@@ -317,6 +339,7 @@ Configuration loadConfigs(QString group)
           .setThresholdingMethod(keyToValue(settings.value(ThresholdingMethodKey).toString(),DefaultThresholdingMethod))
           .setEdgeDetectionMethod(keyToValue(settings.value(EdgeDetectionMethodKey).toString(),DefaultEdgeDetectionMethod))
           .setCircleFitMethod(keyToValue(settings.value(CircleFitMethodKey).toString(),DefaultCircleFitMethod))
+          .setErrorEliminateMethod(keyToValue(settings.value(ErrorEliminateMethodKey).toString(),DefaultErrorEliminateMethod))
           .setFilterRadius(settings.value(FilterRadiusKey,DefaultFilterRadius).toUInt())
           .setGaussianSigma(settings.value(GaussianSigmaKey,DefaultGaussianSigma).toReal())
           .setPTileValue(settings.value(PTileValueKey,DefaultPTileValue).toReal());//TODO

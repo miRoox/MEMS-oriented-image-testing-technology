@@ -79,10 +79,17 @@ public:
     };
     Q_ENUM(CircleFitMethod)
 
+    enum ErrorEliminateMethod
+    {
+        NoEliminate,
+    };
+    Q_ENUM(ErrorEliminateMethod)
+
     FilterMethod filterMethod() const;
     ThresholdingMethod thresholdingMethod() const;
     EdgeDetectionMethod edgeDetectionMethod() const;
     CircleFitMethod circleFitMethod() const;
+    ErrorEliminateMethod errorEliminateMethod() const;
     uint filterRadius() const;
     qreal gaussianSigma() const;
     qreal pTileValue() const;
@@ -91,6 +98,7 @@ public:
     Configuration& setThresholdingMethod(ThresholdingMethod method);
     Configuration& setEdgeDetectionMethod(EdgeDetectionMethod method);
     Configuration& setCircleFitMethod(CircleFitMethod method);
+    Configuration& setErrorEliminateMethod(ErrorEliminateMethod method);
     Configuration& setFilterRadius(uint radius);
     Configuration& setGaussianSigma(qreal sigma);
     Configuration& setPTileValue(qreal value);
@@ -99,6 +107,7 @@ public:
     static ThresholdingMethod defaultThresholdingMethod();
     static EdgeDetectionMethod defaultEdgeDetectionMethod();
     static CircleFitMethod defaultCircleFitMethod();
+    static ErrorEliminateMethod defaultErrorEliminateMethod();
     static uint defaultFilterRadius();
     static qreal defaultGaussianSigma();
     static qreal defaultPTileValue();

@@ -52,9 +52,15 @@ Q_DECL_CONSTEXPR inline bool operator==(const CircleData& a, const CircleData& b
 
 extern QVector<QPoint> whitePixelPositions(const QImage& img);
 
+using CircleFitFunction = CircleData (*)(const QVector<QPoint>&);
+
+// circle fit functions
 extern CircleData naiveCircleFit(const QVector<QPoint>& points);
 extern CircleData simpleAlgebraicCircleFit(const QVector<QPoint>& points);
 extern CircleData hyperAlgebraicCircleFit(const QVector<QPoint>& points);
+
+// error points elimination functions
+extern CircleData noErrorEliminate(CircleFitFunction fit, const QVector<QPoint>& points);
 
 } // namespace MEMS
 

@@ -69,6 +69,9 @@ MainPanel::MainPanel(QWidget *parent) :
         {tr("Naive fit"), Configuration::NaiveFit},
         {tr("Simple algebraic fit"), Configuration::SimpleAlgebraicFit},
         {tr("Hyper algebraic fit"), Configuration::HyperAlgebraicFit}
+    },
+    MapErrElimMethod{
+        {tr("No eliminate"), Configuration::NoEliminate}
     }
 {
     ui->setupUi(this);
@@ -77,6 +80,7 @@ MainPanel::MainPanel(QWidget *parent) :
     ui->comboBoxThres->addItems(MapThresMethod.keys());
     ui->comboBoxEdge->addItems(MapEdgeMethod.keys());
     ui->comboBoxFit->addItems(MapFitMethod.keys());
+    ui->comboBoxElim->addItems(MapErrElimMethod.keys());
     // init ui connection
     connect(ui->spinBoxFR,qOverload<int>(&QSpinBox::valueChanged),
             ui->spinBoxFRG,&QSpinBox::setValue);
@@ -111,6 +115,8 @@ MainPanel::MainPanel(QWidget *parent) :
             processor,&Processor::setEdgeDetectionMethod);
     connect(this,&MainPanel::changeCircleFitMethodRequest,
             processor,&Processor::setCircleFitMethod);
+    connect(this,&MainPanel::changeErrorEliminateMethodRequest,
+            processor,&Processor::setErrorEliminateMethod);
     connect(this,&MainPanel::changeFilterRadiusRequest,
             processor,&Processor::setFilterRadius);
     connect(this,&MainPanel::changeGaussianSigmaRequest,
@@ -155,6 +161,7 @@ void MainPanel::setByConfig(const Configuration& config)
     ui->comboBoxThres->setCurrentText(MapThresMethod.key(config.thresholdingMethod()));
     ui->comboBoxEdge->setCurrentText(MapEdgeMethod.key(config.edgeDetectionMethod()));
     ui->comboBoxFit->setCurrentText(MapFitMethod.key(config.circleFitMethod()));
+    ui->comboBoxElim->setCurrentText(MapErrElimMethod.key(config.errorEliminateMethod()));
     ui->spinBoxFR->setValue(config.filterRadius());
     ui->doubleSpinBoxGS->setValue(config.gaussianSigma());
     ui->spinBoxPT->setValue(::std::round(100*config.pTileValue()));
@@ -302,6 +309,11 @@ void MainPanel::on_comboBoxEdge_currentIndexChanged(const QString& arg1)
 void MainPanel::on_comboBoxFit_currentIndexChanged(const QString& arg1)
 {
     emit changeCircleFitMethodRequest(MapFitMethod.value(arg1,Configuration::defaultCircleFitMethod()));
+}
+
+void MainPanel::on_comboBoxElim_currentIndexChanged(const QString& arg1)
+{
+    emit changeErrorEliminateMethodRequest(MapErrElimMethod.value(arg1,Configuration::defaultErrorEliminateMethod()));
 }
 
 void MainPanel::on_spinBoxPT_valueChanged(int arg1)
