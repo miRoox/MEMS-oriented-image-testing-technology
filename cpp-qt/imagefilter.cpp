@@ -60,6 +60,7 @@ static inline int calcPaddingX(const int width, int x, PaddingType padding)
                 x = 2*width-x-1;
         }
     default:
+        Q_UNREACHABLE();
         break;
     }
     return x;
@@ -92,6 +93,7 @@ static inline int calcPaddingY(const int height, int y, PaddingType padding)
         }
         break;
     default:
+        Q_UNREACHABLE();
         break;
     }
     return y;

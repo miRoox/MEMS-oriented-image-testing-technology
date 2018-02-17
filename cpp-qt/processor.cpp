@@ -98,6 +98,7 @@ public:
             q->setFilteredImage(medianFilter(origin,filterRadius));
             break;
         default:
+            Q_UNREACHABLE();
             break;
         }
     }
@@ -126,6 +127,7 @@ public:
         case Configuration::PTile:
             q->setThreshold(pTileThreshold(filteredHisto,pTileValue));
         default:
+            Q_UNREACHABLE();
             break;
         }
     }
@@ -152,6 +154,7 @@ public:
             q->setEdgeImage(laplacianOperator(binarized));
             break;
         default:
+            Q_UNREACHABLE();
             break;
         }
     }
@@ -176,6 +179,7 @@ public:
             fit = hyperAlgebraicCircleFit;
             break;
         default:
+            Q_UNREACHABLE();
             break;
         }
         switch (errorEliminateMethod)
@@ -184,6 +188,7 @@ public:
             q->setCircle(noErrorEliminate(fit,edgePixels));
             break;
         default:
+            Q_UNREACHABLE();
             break;
         }
         QImage copy = origin.convertToFormat(QImage::Format_RGB32);

@@ -112,6 +112,7 @@ inline QImage binarize(const QImage& origin,
     case AutoThresholdMethod::Fuzziness:
         return binarize(origin,fuzzinessThreshold(origin));
     default:
+        Q_UNREACHABLE();
         break;
     }
     return binarize(origin);

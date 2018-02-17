@@ -71,6 +71,7 @@ QVector<QPoint> whitePixelPositions(const QImage& img)
         }
         break;
     default:
+        Q_UNREACHABLE();
         break;
     }
 
