@@ -126,6 +126,7 @@ public:
             break;
         case Configuration::PTile:
             q->setThreshold(pTileThreshold(filteredHisto,pTileValue));
+            break;
         default:
             Q_UNREACHABLE();
             break;
