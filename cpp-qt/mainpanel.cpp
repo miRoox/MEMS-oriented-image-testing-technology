@@ -71,7 +71,8 @@ MainPanel::MainPanel(QWidget *parent) :
         {tr("Hyper algebraic fit"), Configuration::HyperAlgebraicFit}
     },
     MapErrElimMethod{
-        {tr("No eliminate"), Configuration::NoEliminate}
+        {tr("No eliminate"), Configuration::NoEliminate},
+        {tr("Median error elimination"), Configuration::MedianError}
     }
 {
     ui->setupUi(this);

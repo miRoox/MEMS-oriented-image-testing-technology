@@ -188,6 +188,9 @@ public:
         case Configuration::NoEliminate:
             q->setCircle(noErrorEliminate(fit,edgePixels));
             break;
+        case Configuration::MedianError:
+            q->setCircle(medianErrorEliminate(fit,edgePixels));
+            break;
         default:
             Q_UNREACHABLE();
             break;

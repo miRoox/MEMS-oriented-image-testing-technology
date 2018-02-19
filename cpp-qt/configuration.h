@@ -82,6 +82,7 @@ public:
     enum ErrorEliminateMethod
     {
         NoEliminate,
+        MedianError,
     };
     Q_ENUM(ErrorEliminateMethod)
 
