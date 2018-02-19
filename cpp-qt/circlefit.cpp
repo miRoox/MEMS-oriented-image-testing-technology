@@ -221,10 +221,62 @@ CircleData hyperAlgebraicCircleFit(const QVector<QPoint>& points)
     return circle;
 }
 
+/*!
+    \internal
+ */
+static inline qreal geometricError(CircleData circle, const QPoint& point)
+{
+    using ::std::abs;
+    using ::std::hypot;
+    return abs(hypot(point.x()-circle.center.x(),point.y()-circle.center.y())-circle.radius);
+}
+
 // do nothing
 CircleData noErrorEliminate(CircleFitFunction fit, const QVector<QPoint>& points)
 {
     return fit(points);
+}
+
+/*!
+    Using the median error as threshold to eliminate the error points.
+    Reduce errors by iteration.
+ */
+CircleData medianErrorEliminate(CircleFitFunction fit, const QVector<QPoint>& points)
+{
+    using size_type = typename QVector<QPoint>::size_type;
+    constexpr uint maxIter = 99;
+    constexpr qreal proposalError = 4.5;
+    const size_type size = points.size();
+    const size_type medianIndex = size/2;
+
+    CircleData circle = fit(points);
+    QVector<qreal> errors(size,0);
+    QVector<QPoint> validPoints = points;
+    qreal lastMedianError = ::std::numeric_limits<qreal>::max();
+    for (uint iter=0; iter<maxIter; ++iter)
+    {
+        ::std::transform(points.begin(),points.end(),errors.begin(),
+                         [&circle](const QPoint& point){
+            return geometricError(circle,point);
+        });
+        ::std::nth_element(errors.begin(),errors.begin()+medianIndex,errors.end());
+        qreal medianError = errors.at(medianIndex);
+
+        if (medianError < proposalError)
+            return circle;
+        if (qFuzzyIsNull(medianError-lastMedianError))
+            break;
+        lastMedianError = medianError;
+
+        validPoints.clear();
+        ::std::copy_if(points.begin(),points.end(),::std::back_inserter(validPoints),
+                       [&circle,medianError](const QPoint& point){
+            return geometricError(circle,point) < medianError;
+        });
+        circle = fit(validPoints);
+    }
+    qWarning() << __func__ << ": Unable to converge to the proposal error";
+    return circle;
 }
 
 } // namespace MEMS

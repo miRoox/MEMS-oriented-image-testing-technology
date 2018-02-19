@@ -61,6 +61,7 @@ extern CircleData hyperAlgebraicCircleFit(const QVector<QPoint>& points);
 
 // error points elimination functions
 extern CircleData noErrorEliminate(CircleFitFunction fit, const QVector<QPoint>& points);
+extern CircleData medianErrorEliminate(CircleFitFunction fit, const QVector<QPoint>& points);
 
 } // namespace MEMS
 
