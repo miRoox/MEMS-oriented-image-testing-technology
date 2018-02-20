@@ -83,6 +83,7 @@ public:
     {
         NoEliminate,
         MedianError,
+        ConnectivityBased,
     };
     Q_ENUM(ErrorEliminateMethod)
 

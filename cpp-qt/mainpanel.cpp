@@ -72,7 +72,8 @@ MainPanel::MainPanel(QWidget *parent) :
     },
     MapErrElimMethod{
         {tr("No eliminate"), Configuration::NoEliminate},
-        {tr("Median error elimination"), Configuration::MedianError}
+        {tr("Median error elimination"), Configuration::MedianError},
+        {tr("Connectivity-based error points elimination"), Configuration::ConnectivityBased}
     }
 {
     ui->setupUi(this);
