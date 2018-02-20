@@ -25,6 +25,13 @@
 
 
 #include "circlefit.h"
+
+/*!
+    \headerfile <circlefit.h>
+    \title Circle Fit Algorithms.
+    \brief The <circlefit.h> header file provides various methods to fit circle.
+ */
+
 #include <QImage>
 #include <QPoint>
 #include <QVector>
@@ -34,20 +41,50 @@
 
 namespace MEMS {
 
-QVector<QPoint> whitePixelPositions(const QImage& img)
+/*!
+    \struct CircleData
+    \brief The CircleData structure contains the center and radius of a circle.
+
+
+    \variable CircleData::center
+
+    The center of the circle.
+
+    \variable CircleData::radius
+
+    The radius of the circle.
+ */
+
+/*!
+    \typedef CircleFitFunction
+    This is a typedef for a pointer to a function with the following signature:
+
+    \code
+        CircleData myCircleFit(const QVector<QPoint>&)
+    \endcode
+ */
+
+
+/*!
+    Get positions of the white pixels in the \a monochrome image.
+
+    \note The format of the input image should
+    be \c QImage::Format_Mono or \c QImage::Format_MonoLSB.
+ */
+QVector<QPoint> whitePixelPositions(const QImage& monochrome)
 {
-    Q_ASSERT_X(img.format()==QImage::Format_Mono || img.format()==QImage::Format_MonoLSB,
+    Q_ASSERT_X(monochrome.format()==QImage::Format_Mono || monochrome.format()==QImage::Format_MonoLSB,
                __func__,"Only monochrome image is valid.");
-    const int whiteIndex = img.colorTable().first() == QColor(Qt::white).rgba() ? 0 : 1;
+    const int whiteIndex = monochrome.colorTable().first() == QColor(Qt::white).rgba() ? 0 : 1;
 
     QVector<QPoint> result;
-    const int width = img.width();
-    const int height = img.height();
-    switch (img.format()) {
+    const int width = monochrome.width();
+    const int height = monochrome.height();
+    switch (monochrome.format()) {
     case QImage::Format_Mono:
         for (int y=0; y<height; ++y)
         {
-            const uchar* line = img.constScanLine(y);
+            const uchar* line = monochrome.constScanLine(y);
             for (int x=0; x<width; ++x)
             {
                 if (((line[x>>3] >> (7-(x&7))) & 1) == whiteIndex)
@@ -60,7 +97,7 @@ QVector<QPoint> whitePixelPositions(const QImage& img)
     case QImage::Format_MonoLSB:
         for (int y=0; y<height; ++y)
         {
-            const uchar* line = img.constScanLine(y);
+            const uchar* line = monochrome.constScanLine(y);
             for (int x=0; x<width; ++x)
             {
                 if (((line[x>>3] >> (x&7)) & 1) == whiteIndex)
@@ -78,6 +115,9 @@ QVector<QPoint> whitePixelPositions(const QImage& img)
     return result;
 }
 
+/*!
+    Naïve !
+ */
 CircleData naiveCircleFit(const QVector<QPoint>& points)
 {
     const int num = points.size();
@@ -103,7 +143,9 @@ CircleData naiveCircleFit(const QVector<QPoint>& points)
 
 /*!
     a linear least square method to find the circle by minimizing the function
+
        f(x_c,y_c,R) = Σ((x_i - x_c)^2 + (y_i - y_c)^2 - R^2)^2
+
     where ((x_i - x_c)^2 + (y_i - y_c)^2 - R^2)^2 is so called algebraic distance
     from the point (x_i, y_i) to the circle.
  */
@@ -149,8 +191,10 @@ CircleData simpleAlgebraicCircleFit(const QVector<QPoint>& points)
 /*!
     This is an algebraic fit based on the article
 
+    \quotation
     A. Al-Sharadqah and N. Chernov, "Error analysis for circle fitting algorithms",
     Electronic Journal of Statistics, Vol. 3, pages 886-911, (2009)
+    \endquotation
 
     This method combines the Pratt and Taubin fits to eliminate the essential bias.
  */
@@ -223,6 +267,8 @@ CircleData hyperAlgebraicCircleFit(const QVector<QPoint>& points)
 
 /*!
     \internal
+
+    Calculate geometric distance between the \a point and the \a circle.
  */
 static inline qreal geometricError(CircleData circle, const QPoint& point)
 {

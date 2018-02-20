@@ -50,7 +50,7 @@ Q_DECL_CONSTEXPR inline bool operator==(const CircleData& a, const CircleData& b
     return a.center==b.center && qFuzzyIsNull(a.radius-b.radius);
 }
 
-extern QVector<QPoint> whitePixelPositions(const QImage& img);
+extern QVector<QPoint> whitePixelPositions(const QImage& monochrome);
 
 using CircleFitFunction = CircleData (*)(const QVector<QPoint>&);
 
