@@ -390,7 +390,7 @@
                  <item row="0" column="0">
                   <widget class="QLabel" name="labelPT">
                    <property name="text">
-                    <string>P-Tile value:</string>
+                    <string>Black fraction:</string>
                    </property>
                   </widget>
                  </item>
