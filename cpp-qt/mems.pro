@@ -26,9 +26,9 @@ HEADERS += \
     thresholding.h \
     edgedetect.h \
     circlefit.h \
-    algorithm.h \
     processor.h \
-    configuration.h
+    configuration.h \
+    algorithms.h
 
 FORMS += \
     mainpanel.ui

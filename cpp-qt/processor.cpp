@@ -25,7 +25,7 @@
 
 
 #include "processor.h"
-#include "algorithm.h"
+#include "algorithms.h"
 #include <QImage>
 #include <QPointer>
 #include <QVector>
