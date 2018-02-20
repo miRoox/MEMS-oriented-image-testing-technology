@@ -37,6 +37,8 @@
 #include <QVector>
 #include <QColor>
 #include <cmath>
+#include <limits>
+#include <algorithm>
 #include <QtDebug>
 
 namespace MEMS {
@@ -73,14 +75,16 @@ namespace MEMS {
  */
 QVector<QPoint> whitePixelPositions(const QImage& monochrome)
 {
-    Q_ASSERT_X(monochrome.format()==QImage::Format_Mono || monochrome.format()==QImage::Format_MonoLSB,
+    Q_ASSERT_X(monochrome.format()==QImage::Format_Mono
+               || monochrome.format()==QImage::Format_MonoLSB,
                __func__,"Only monochrome image is valid.");
     const int whiteIndex = monochrome.colorTable().first() == QColor(Qt::white).rgba() ? 0 : 1;
 
     QVector<QPoint> result;
     const int width = monochrome.width();
     const int height = monochrome.height();
-    switch (monochrome.format()) {
+    switch (monochrome.format())
+    {
     case QImage::Format_Mono:
         for (int y=0; y<height; ++y)
         {
@@ -123,12 +127,7 @@ CircleData naiveCircleFit(const QVector<QPoint>& points)
     const int num = points.size();
     CircleData circle;
 
-    QPoint sumP(0,0);
-    for (const auto& point : points)
-    {
-        sumP += point;
-    }
-    circle.center = QPointF(sumP)/num;
+    circle.center = ::std::accumulate(points.cbegin(),points.cend(),QPointF{0,0})/num;
 
     qreal sumR2 = 0;
     for (const auto& point : points)
@@ -151,13 +150,14 @@ CircleData naiveCircleFit(const QVector<QPoint>& points)
  */
 CircleData simpleAlgebraicCircleFit(const QVector<QPoint>& points)
 {
-    CircleData circle;
     const int num = points.size();
     if (num<3)
     {
         qWarning() << __func__ << ": Fitting a circle requires at least three points";
         return naiveCircleFit(points);
     }
+
+    CircleData circle;
     qreal sx1=0, sy1=0;
     qreal sx2=0, sy2=0;
     qreal sx3=0, sy3=0;
@@ -175,14 +175,17 @@ CircleData simpleAlgebraicCircleFit(const QVector<QPoint>& points)
         sx2y1 += x2*y;  sx1y2 += x*y2;
         sx1y1 += x*y;
     }
+
     qreal px2 = num * sx2 - sx1 * sx1;
     qreal py2 = num * sy2 - sy1 * sy1;
     qreal pxy = num * sx1y1 - sx1 * sy1;
     qreal px1y2 = num * (sx3 + sx1y2) - (sx2 + sy2) * sx1;
     qreal px2y1 = num * (sx2y1 + sy3) - (sx2 + sy2) * sy1;
+
     qreal ca = (px1y2 * py2 - px2y1 * pxy) / (pxy * pxy - px2 * py2);
     qreal cb = (px2y1 * px2 - px1y2 * pxy) / (pxy * pxy - px2 * py2);
     qreal cc = - (ca * sx1 + cb * sy1 + sx2 + sy2) / num;
+
     circle.center = {ca/(-2), cb/(-2)};
     circle.radius = ::std::sqrt(ca*ca + cb*cb - 4*cc)/2;
     return circle;
@@ -211,13 +214,9 @@ CircleData hyperAlgebraicCircleFit(const QVector<QPoint>& points)
 
     CircleData circle;
 
-    QPoint sumP(0,0);
-    for (const auto& point : points)
-    {
-        sumP += point;
-    }
-    QPointF mean = QPointF(sumP)/num;
+    const QPointF mean = ::std::accumulate(points.cbegin(),points.cend(),QPointF{0,0})/num;
 
+    // calculate moments
     qreal mxx=0, myy=0, mxy=0;
     qreal mxz=0, myz=0, mzz=0;
     for (const auto& point : points)
@@ -234,11 +233,13 @@ CircleData hyperAlgebraicCircleFit(const QVector<QPoint>& points)
     qreal covxy = mxx*myy - mxy*mxy;
     qreal varz = mzz - mz*mz;
 
+    // computing the coefficients of the characteristic polynomial
     qreal a2 = 4*covxy - 3*mz*mz - mzz;
     qreal a1 = varz*mz + 4*covxy*mz - mxz*mxz - myz*myz;
     qreal a0 = mxz*(mxz*myy - myz*mxy) + myz*(myz*mxx - mxz*mxy) - varz*covxy;
     qreal a22 = 2*a2;
 
+    // finding the root of the characteristic polynomial
     qreal t=0, f=a0;
     constexpr uint maxIter = 99;
     for (uint iter=0; iter<maxIter; ++iter)
@@ -246,22 +247,19 @@ CircleData hyperAlgebraicCircleFit(const QVector<QPoint>& points)
         qreal df = a1 + t*(a22 + 16*t*t);
         qreal t_ = t - f/df;
         if (qFuzzyIsNull(t-t_) || !::std::isfinite(t_))
-        {
             break;
-        }
         qreal f_ = a0 + t_*(a1 + t_*(a2 + 4*t_*t_));
         if (abs(f_) >= abs(f))
-        {
             break;
-        }
         t = t_; f = f_;
     }
+
     qreal det = t*t - t*mz + covxy;
     qreal xCenter = (mxz*(myy - t) - myz*mxy) / det / 2;
     qreal yCenter = (myz*(mxx - t) - mxz*mxy) / det / 2;
+
     circle.center = mean + QPointF{xCenter, yCenter};
     circle.radius = ::std::sqrt(xCenter*xCenter + yCenter*yCenter + mz - 2*t);
-
     return circle;
 }
 
@@ -301,6 +299,7 @@ CircleData medianErrorEliminate(CircleFitFunction fit, const QVector<QPoint>& po
     qreal lastMedianError = ::std::numeric_limits<qreal>::max();
     for (uint iter=0; iter<maxIter; ++iter)
     {
+        // get median error
         ::std::transform(points.begin(),points.end(),errors.begin(),
                          [&circle](const QPoint& point){
             return geometricError(circle,point);
@@ -308,12 +307,14 @@ CircleData medianErrorEliminate(CircleFitFunction fit, const QVector<QPoint>& po
         ::std::nth_element(errors.begin(),errors.begin()+medianIndex,errors.end());
         qreal medianError = errors.at(medianIndex);
 
+        // check
         if (medianError < proposalError)
-            return circle;
+            return circle; // accept
         if (qFuzzyIsNull(medianError-lastMedianError))
-            break;
+            break; // not converge
         lastMedianError = medianError;
 
+        // fit circle
         validPoints.clear();
         ::std::copy_if(points.begin(),points.end(),::std::back_inserter(validPoints),
                        [&circle,medianError](const QPoint& point){

@@ -536,6 +536,7 @@ static QImage medianFilter_Grayscale(const QImage& image, uint radius)
                 }
             }
 
+            // find median
             uint partSum = 0;
             for (uint i=0; i<0x100;++i)
             {
@@ -587,6 +588,8 @@ static QImage medianFilter_ColorSmall(const QImage& image, uint radius)
                     medianCandidate.append(iLine[xx]);
                 }
             }
+
+            // find median
             ::std::size_t medianIndex = medianCandidate.length()/2;
             ::std::nth_element(medianCandidate.begin(),
                                medianCandidate.begin()+medianIndex,
@@ -643,6 +646,7 @@ static QImage medianFilter_ColorLarge(const QImage& image, uint radius)
                 }
             }
 
+            // find median
             bool find = false;
             uint partSum = 0;
             for (uint i=0; i<0x100;++i)

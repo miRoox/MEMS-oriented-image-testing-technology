@@ -38,6 +38,7 @@
 #include <QVector>
 #include <cmath>
 #include <limits>
+#include <algorithm>
 #include <QtDebug>
 
 namespace MEMS {
@@ -71,21 +72,9 @@ static constexpr ::std::size_t ColorValueRange = 0x100;
 /*!
     Use the mean level as the threshold.
  */
-int meanThreshold(const QImage& img)
+int meanThreshold(const QImage& image)
 {
-    qreal threshold = 0.;
-
-    const int height = img.height();
-    const int width = img.width();
-    const int size = height*width;
-    for (int y=0; y<height ;++y)
-    {
-        for (int x=0; x<width ;++x)
-        {
-            threshold += img.pixelColor(x,y).valueF()/size;
-        }
-    }
-    return 0xff*threshold;
+    return meanThreshold(grayscaleHistogram(image));
 }
 
 /*!
@@ -108,27 +97,9 @@ int meanThreshold(const Histogram& histogram)
     Find a threshold value that make a fraction \a pValue
     of all pixels black.
  */
-int pTileThreshold(const QImage& img, qreal pValue)
+int pTileThreshold(const QImage& image, qreal pValue)
 {
-    Q_ASSERT_X(pValue>=0&&pValue<1,__func__,"p-value is out of range.");
-
-    const int height = img.height();
-    const int width = img.width();
-    const unsigned long total = height*width;
-    const auto histogram = grayscaleHistogram(img);
-
-    int threshold = ColorValueRange;
-    unsigned long partSum = 0;
-    for (uint i=0; i<ColorValueRange; ++i)
-    {
-        partSum += histogram.at(i);
-        if (partSum > total*pValue)
-        {
-            threshold = i;
-            break;
-        }
-    }
-    return threshold;
+    return pTileThreshold(grayscaleHistogram(image),pValue);
 }
 
 /*!
@@ -139,14 +110,10 @@ int pTileThreshold(const Histogram& histogram, qreal pValue)
     Q_ASSERT_X(pValue>=0&&pValue<1,__func__,"p-value is out of range.");
 
     const int histoSize = histogram.length();
-    unsigned long total = 0;
-    for (const auto var : histogram)
-    {
-        total += var;
-    }
+    ulong total = ::std::accumulate(histogram.cbegin(),histogram.cend(),ulong(0));
 
     int threshold = histoSize;
-    unsigned long partSum = 0;
+    ulong partSum = 0;
     for (int i=0; i<histoSize; ++i)
     {
         partSum += histogram.at(i);
@@ -163,7 +130,7 @@ int pTileThreshold(const Histogram& histogram, qreal pValue)
     Perform clustering-based image thresholding, also known
     as Otsu's method.
  */
-int clusterThreshold(const QImage& img)
+int clusterThreshold(const QImage& image)
 {
 /*!
     \quotation
@@ -172,7 +139,7 @@ int clusterThreshold(const QImage& img)
     \endquotation
  */
 
-    return clusterThreshold(grayscaleHistogram(img));
+    return clusterThreshold(grayscaleHistogram(image));
 }
 
 /*!
@@ -181,12 +148,8 @@ int clusterThreshold(const QImage& img)
 int clusterThreshold(const Histogram& histogram)
 {
     const int histoSize = histogram.length();
-    qreal total = 0.;
+    qreal total = ::std::accumulate(histogram.cbegin(),histogram.cend(),qreal(0));
     QVector<qreal> normalizedHistogram(histoSize);
-    for (const auto var : histogram)
-    {
-        total += var;
-    }
 
     qreal globalAverage = 0.;
     for (int i=0; i<histoSize; ++i)
@@ -198,14 +161,14 @@ int clusterThreshold(const Histogram& histogram)
     int threshold = 0;
     qreal maxVariance = 0.;
     qreal average = 0.;
-    qreal foregroundProp = 0.;
+    qreal fraction = 0.;
     for (int i=0; i<histoSize ;++i)
     {
-        foregroundProp += normalizedHistogram.at(i);
+        fraction += normalizedHistogram.at(i);
         average += i*normalizedHistogram.at(i);
-        qreal tmp = average/foregroundProp - globalAverage;
-        qreal variance = tmp*tmp*foregroundProp/(1-foregroundProp);
-        if (variance>maxVariance)
+        qreal distance = average/fraction - globalAverage;
+        qreal variance = distance*distance*fraction/(1-fraction);
+        if (variance > maxVariance)
         {
             maxVariance = variance;
             threshold =i;
@@ -218,7 +181,7 @@ int clusterThreshold(const Histogram& histogram)
 /*!
     Moment-preserving thresholding.
  */
-int momentsThreshold(const QImage& img)
+int momentsThreshold(const QImage& image)
 {
 /*!
     \quotation
@@ -227,7 +190,7 @@ int momentsThreshold(const QImage& img)
     \endquotation
  */
 
-    return momentsThreshold(grayscaleHistogram(img));
+    return momentsThreshold(grayscaleHistogram(image));
 }
 
 /*!
@@ -237,14 +200,11 @@ int momentsThreshold(const Histogram& histogram)
 {
     using ::std::sqrt;
 
-    qreal total = 0.;
+    qreal total = ::std::accumulate(histogram.cbegin(),histogram.cend(),qreal(0));
     const int histoSize = histogram.length();
     QVector<qreal> normalizedHistogram(histoSize);
-    for (const auto var : histogram)
-    {
-        total += var;
-    }
 
+    // calculate the first, second, and third order moments
     qreal m0=1.;
     qreal m1=0, m2=0, m3=0;
     for (int i=0; i<histoSize; ++i)
@@ -262,24 +222,13 @@ int momentsThreshold(const Histogram& histogram)
     qreal z1 = 0.5*( sqrt(c1*c1-4*c0)-c1);
     qreal pt = (z1-m1)/(z1-z0);
 
-    qreal partSum = 0.;
-    int threshold = histoSize;
-    for (int i=0; i<histoSize; ++i)
-    {
-        partSum += normalizedHistogram.at(i);
-        if (partSum > pt)
-        {
-            threshold = i;
-            break;
-        }
-    }
-    return threshold;
+    return pTileThreshold(histogram,pt);
 }
 
 /*!
     Thresholding by minimizing the measures of fuzziness.
  */
-int fuzzinessThreshold(const QImage& img)
+int fuzzinessThreshold(const QImage& image)
 {
 /*!
     \quotation
@@ -288,7 +237,7 @@ int fuzzinessThreshold(const QImage& img)
     \endquotation
  */
 
-    return fuzzinessThreshold(grayscaleHistogram(img));
+    return fuzzinessThreshold(grayscaleHistogram(image));
 }
 
 /*!
@@ -300,13 +249,14 @@ int fuzzinessThreshold(const Histogram& histogram)
     using ::std::abs;
 
     const int histoSize = histogram.length();
+    // find first and last non-empty color
     int first, last;
-
     for (first=0; first<histoSize && histogram[first]==0; ++first);
     for (last=histoSize-1; last>first && histogram[last]==0; --last);
     if (first==last || first+1==last)
         return first;
 
+    // calculate the cumulative density and the weighted cumulative density
     QVector<qreal> s(last+1,0);
     QVector<qreal> w(last+1,0);
     s[0] = histogram[0];
@@ -316,6 +266,7 @@ int fuzzinessThreshold(const Histogram& histogram)
         w[i] = w.at(i-1) + i*histogram.at(i);
     }
 
+    // precalculate the summands of the entropy given the absolute difference x-μ
     qreal c = last-first;
     QVector<qreal> s_mu(last-first+1);
     for (int i=1; i<s_mu.length(); ++i)
@@ -324,6 +275,7 @@ int fuzzinessThreshold(const Histogram& histogram)
         s_mu[i] = -mu*log(mu) - (1-mu)*log(1-mu);
     }
 
+    // find the threshold
     int threshold = 0;
     qreal bestEntropy = ::std::numeric_limits<qreal>::max();
     for (int i=first; i<last; ++i)
