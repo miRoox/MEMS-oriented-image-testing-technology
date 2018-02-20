@@ -54,7 +54,7 @@ public:
     Configuration::ThresholdingMethod thresholdingMethod;
     Configuration::EdgeDetectionMethod edgeMethod;
     Configuration::CircleFitMethod circleFitMethod;
-    Configuration::ErrorEliminateMethod errorEliminateMethod;
+    Configuration::ErrorCorrectionMethod errorCorrectionMethod;
 
     uint filterRadius;
     qreal gaussianSigma;
@@ -72,7 +72,7 @@ public:
           thresholdingMethod(config.thresholdingMethod()),
           edgeMethod(config.edgeDetectionMethod()),
           circleFitMethod(config.circleFitMethod()),
-          errorEliminateMethod(config.errorEliminateMethod()),
+          errorCorrectionMethod(config.errorCorrectionMethod()),
           filterRadius(config.filterRadius()),
           gaussianSigma(config.gaussianSigma()),
           pTileValue(config.pTileValue())
@@ -183,16 +183,16 @@ public:
             Q_UNREACHABLE();
             break;
         }
-        switch (errorEliminateMethod)
+        switch (errorCorrectionMethod)
         {
-        case Configuration::NoEliminate:
-            q->setCircle(noErrorEliminate(fit,edgePixels));
+        case Configuration::NoCorrection:
+            q->setCircle(noCorrection(fit,edgePixels));
             break;
         case Configuration::MedianError:
-            q->setCircle(medianErrorEliminate(fit,edgePixels));
+            q->setCircle(medianErrorCorrection(fit,edgePixels));
             break;
         case Configuration::ConnectivityBased:
-            q->setCircle(connectivityBasedEliminate(fit,edgePixels));
+            q->setCircle(connectivityBasedCorrection(fit,edgePixels));
             break;
         default:
             Q_UNREACHABLE();
@@ -349,6 +349,7 @@ Configuration Processor::configurations() const
             .setThresholdingMethod(d->thresholdingMethod)
             .setEdgeDetectionMethod(d->edgeMethod)
             .setCircleFitMethod(d->circleFitMethod)
+            .setErrorCorrectionMethod(d->errorCorrectionMethod)
             .setFilterRadius(d->filterRadius)
             .setGaussianSigma(d->gaussianSigma)
             .setPTileValue(d->pTileValue);
@@ -364,6 +365,7 @@ void Processor::setConfigurations(const Configuration& config)
     setPTileValue(config.pTileValue());
     setEdgeDetectionMethod(config.edgeDetectionMethod());
     setCircleFitMethod(config.circleFitMethod());
+    setErrorCorrectionMethod(config.errorCorrectionMethod());
 
     d->lazy = false;
     d->updateFilteredImage();
@@ -432,17 +434,17 @@ void Processor::setCircleFitMethod(Configuration::CircleFitMethod method)
     d->updateCircle();
 }
 
-Configuration::ErrorEliminateMethod Processor::errorEliminateMethod() const
+Configuration::ErrorCorrectionMethod Processor::errorCorrectionMethod() const
 {
-    return d->errorEliminateMethod;
+    return d->errorCorrectionMethod;
 }
 
-void Processor::setErrorEliminateMethod(Configuration::ErrorEliminateMethod method)
+void Processor::setErrorCorrectionMethod(Configuration::ErrorCorrectionMethod method)
 {
-    if (d->errorEliminateMethod == method)
+    if (d->errorCorrectionMethod == method)
         return;
-    d->errorEliminateMethod = method;
-    emit errorEliminateMethodChanged(d->errorEliminateMethod);
+    d->errorCorrectionMethod = method;
+    emit errorCorrectionMethodChanged(d->errorCorrectionMethod);
 
     d->updateCircle();
 }

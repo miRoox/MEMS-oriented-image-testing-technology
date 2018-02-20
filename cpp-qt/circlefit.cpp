@@ -276,7 +276,7 @@ static inline qreal geometricError(CircleData circle, const QPoint& point)
 }
 
 // do nothing
-CircleData noErrorEliminate(CircleFitFunction fit, const QVector<QPoint>& points)
+CircleData noCorrection(CircleFitFunction fit, const QVector<QPoint>& points)
 {
     return fit(points);
 }
@@ -285,7 +285,7 @@ CircleData noErrorEliminate(CircleFitFunction fit, const QVector<QPoint>& points
     Using the median error as threshold to eliminate the error points.
     Reduce errors by iteration.
  */
-CircleData medianErrorEliminate(CircleFitFunction fit, const QVector<QPoint>& points)
+CircleData medianErrorCorrection(CircleFitFunction fit, const QVector<QPoint>& points)
 {
     using size_type = typename QVector<QPoint>::size_type;
     constexpr uint maxIter = 99;
@@ -329,7 +329,7 @@ CircleData medianErrorEliminate(CircleFitFunction fit, const QVector<QPoint>& po
 /*!
     Select points to fit based on the connectivity.
  */
-CircleData connectivityBasedEliminate(CircleFitFunction fit, const QVector<QPoint>& points)
+CircleData connectivityBasedCorrection(CircleFitFunction fit, const QVector<QPoint>& points)
 {
     static const auto isNeighborhood = [](const QPoint& a, const QPoint& b)->bool{
         using ::std::abs;

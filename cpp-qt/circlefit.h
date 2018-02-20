@@ -59,10 +59,10 @@ extern CircleData naiveCircleFit(const QVector<QPoint>& points);
 extern CircleData simpleAlgebraicCircleFit(const QVector<QPoint>& points);
 extern CircleData hyperAlgebraicCircleFit(const QVector<QPoint>& points);
 
-// error points elimination functions
-extern CircleData noErrorEliminate(CircleFitFunction fit, const QVector<QPoint>& points);
-extern CircleData medianErrorEliminate(CircleFitFunction fit, const QVector<QPoint>& points);
-extern CircleData connectivityBasedEliminate(CircleFitFunction fit, const QVector<QPoint>& points);
+// error points correction functions
+extern CircleData noCorrection(CircleFitFunction fit, const QVector<QPoint>& points);
+extern CircleData medianErrorCorrection(CircleFitFunction fit, const QVector<QPoint>& points);
+extern CircleData connectivityBasedCorrection(CircleFitFunction fit, const QVector<QPoint>& points);
 
 } // namespace MEMS
 

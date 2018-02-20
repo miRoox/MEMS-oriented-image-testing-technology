@@ -480,14 +480,14 @@
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_12">
                <item alignment="Qt::AlignLeft">
-                <widget class="QLabel" name="labelElim">
+                <widget class="QLabel" name="labelCorr">
                  <property name="text">
-                  <string>Select error points elimination method:</string>
+                  <string>Select error correction method:</string>
                  </property>
                 </widget>
                </item>
                <item alignment="Qt::AlignRight">
-                <widget class="QComboBox" name="comboBoxElim"/>
+                <widget class="QComboBox" name="comboBoxCorr"/>
                </item>
               </layout>
              </item>
