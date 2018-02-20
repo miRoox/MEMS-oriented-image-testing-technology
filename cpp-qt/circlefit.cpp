@@ -279,4 +279,68 @@ CircleData medianErrorEliminate(CircleFitFunction fit, const QVector<QPoint>& po
     return circle;
 }
 
+/*!
+    Select points to fit based on the connectivity.
+ */
+CircleData connectivityBasedEliminate(CircleFitFunction fit, const QVector<QPoint>& points)
+{
+    static const auto isNeighborhood = [](const QPoint& a, const QPoint& b)->bool{
+        using ::std::abs;
+        constexpr int eps = 1;
+        return abs(a.x()-b.x())<=eps && abs(a.y()-b.y())<=eps;
+    };
+
+    using size_type = typename QVector<QPoint>::size_type;
+
+    QVector<QPoint> unclassified = points;
+    QVector<QPoint> candidate;
+    QVector<QPoint> toFind;
+    CircleData circle = fit(points);
+    qreal minOfMaxError = ::std::numeric_limits<qreal>::max();
+    size_type maxSize = 0;
+    while (!unclassified.isEmpty())
+    {
+        // to find candidate
+        QPoint p = unclassified.takeLast();
+        candidate.append(p);
+        toFind.append(p);
+        while (!toFind.isEmpty())
+        {
+            QPoint p = toFind.takeFirst(); // queue like
+            for (const auto& point : qAsConst(unclassified))
+            {
+                if (isNeighborhood(p,point))
+                {
+                    toFind.append(point);
+                }
+            }
+            for (const auto& finded : qAsConst(toFind))
+            {
+                candidate.append(finded);
+                unclassified.removeOne(finded);
+            }
+        }
+
+        // check candidate
+        CircleData tmpCircle = fit(candidate);
+        if (candidate.size() > maxSize)
+        {
+            maxSize = candidate.size();
+            QVector<qreal> errors;
+            ::std::transform(candidate.cbegin(),candidate.cend(),::std::back_inserter(errors),
+                             [&tmpCircle](const QPoint& point){
+                return geometricError(tmpCircle,point);
+            });
+            qreal maxError = *::std::max_element(errors.cbegin(),errors.cend())/tmpCircle.radius;
+            if (maxError < minOfMaxError)
+            {
+                minOfMaxError = maxError;
+                circle = tmpCircle; // accept
+            }
+        }
+        candidate.clear();
+    }
+    return circle;
+}
+
 } // namespace MEMS
