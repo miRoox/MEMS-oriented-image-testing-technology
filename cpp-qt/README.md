@@ -21,15 +21,15 @@
 
 ## 结果预览
 
-![A.out](/cpp-qt/results/A.out.png)
+![A.out](/cpp-qt/preview/A.out.png)
 
 A组
 
-![B.out](/cpp-qt/results/B.out.png)
+![B.out](/cpp-qt/preview/B.out.png)
 
 B组
 
-![C.out](/cpp-qt/results/C.out.png)
+![C.out](/cpp-qt/preview/C.out.png)
 
 C组
 
