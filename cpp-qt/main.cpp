@@ -25,11 +25,45 @@
 
 
 #include <QApplication>
+#include <QTranslator>
+#include <QLocale>
+#include <QLibraryInfo>
+#include <QtDebug>
 #include "mainpanel.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc,argv);
+
+    // load translation
+    QTranslator translator;
+    QTranslator qtTranslator;
+    const QStringList uiLanguages = QLocale::system().uiLanguages();
+    const QString& appTrPath = app.applicationDirPath() + "/translations";
+    const QString& qtTrPath = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+    for (QString locale : uiLanguages)
+    {
+        locale = QLocale(locale).name();
+        if (translator.load(QLatin1String("mems_")+locale,appTrPath))
+        {
+            const QString& qtTrFile = QLatin1String("qt_") + locale;
+            if (qtTranslator.load(qtTrFile,qtTrPath)
+                || qtTranslator.load(qtTrFile,appTrPath))
+            {
+                app.installTranslator(&translator);
+                app.installTranslator(&qtTranslator);
+                qInfo() << "Language locale:" << locale;
+                break;
+            }
+            translator.load(QString()); // unload
+        }
+        else if (locale == QLatin1String("C")
+                   || locale.startsWith(QLatin1String("en")))
+        {
+            break; //english is built-in
+        }
+    }
+
     app.setApplicationDisplayName(QApplication::tr("MEMS oriented image testing technology"));
     MainPanel w;
     w.show();

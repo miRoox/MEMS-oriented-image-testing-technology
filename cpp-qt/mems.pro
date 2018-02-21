@@ -2,6 +2,7 @@
 
 TEMPLATE = app
 TARGET = mems
+DESTDIR = ./
 
 VERSION = 1.0.0
 
@@ -38,3 +39,6 @@ DISTFILES += \
 
 RESOURCES += \
     images.qrc
+
+TRANSLATIONS += \
+    mems_zh_CN.ts
