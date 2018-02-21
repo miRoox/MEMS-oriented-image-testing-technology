@@ -24,12 +24,12 @@
  **/
 
 
-#ifndef ALGORITHM_H
-#define ALGORITHM_H
+#ifndef ALGORITHMS_H
+#define ALGORITHMS_H
 
 #include "imagefilter.h"
 #include "binarize.hpp"
 #include "edgedetect.h"
 #include "circlefit.h"
 
-#endif // ALGORITHM_H
+#endif // ALGORITHMS_H

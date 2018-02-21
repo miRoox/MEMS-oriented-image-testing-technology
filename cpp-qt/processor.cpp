@@ -25,7 +25,7 @@
 
 
 #include "processor.h"
-#include "algorithm.h"
+#include "algorithms.h"
 #include <QImage>
 #include <QPointer>
 #include <QVector>
@@ -54,6 +54,7 @@ public:
     Configuration::ThresholdingMethod thresholdingMethod;
     Configuration::EdgeDetectionMethod edgeMethod;
     Configuration::CircleFitMethod circleFitMethod;
+    Configuration::ErrorCorrectionMethod errorCorrectionMethod;
 
     uint filterRadius;
     qreal gaussianSigma;
@@ -71,6 +72,7 @@ public:
           thresholdingMethod(config.thresholdingMethod()),
           edgeMethod(config.edgeDetectionMethod()),
           circleFitMethod(config.circleFitMethod()),
+          errorCorrectionMethod(config.errorCorrectionMethod()),
           filterRadius(config.filterRadius()),
           gaussianSigma(config.gaussianSigma()),
           pTileValue(config.pTileValue())
@@ -96,6 +98,7 @@ public:
             q->setFilteredImage(medianFilter(origin,filterRadius));
             break;
         default:
+            Q_UNREACHABLE();
             break;
         }
     }
@@ -123,7 +126,9 @@ public:
             break;
         case Configuration::PTile:
             q->setThreshold(pTileThreshold(filteredHisto,pTileValue));
+            break;
         default:
+            Q_UNREACHABLE();
             break;
         }
     }
@@ -150,6 +155,7 @@ public:
             q->setEdgeImage(laplacianOperator(binarized));
             break;
         default:
+            Q_UNREACHABLE();
             break;
         }
     }
@@ -161,18 +167,35 @@ public:
             return;
         if (edge.isNull() || edgePixels.isEmpty())
             return;
+        CircleFitFunction fit = nullptr;
         switch (circleFitMethod)
         {
         case Configuration::NaiveFit:
-            q->setCircle(naiveCircleFit(edgePixels));
+            fit = naiveCircleFit;
             break;
         case Configuration::SimpleAlgebraicFit:
-            q->setCircle(simpleAlgebraicCircleFit(edgePixels));
+            fit = simpleAlgebraicCircleFit;
             break;
         case Configuration::HyperAlgebraicFit:
-            q->setCircle(hyperAlgebraicCircleFit(edgePixels));
+            fit = hyperAlgebraicCircleFit;
             break;
         default:
+            Q_UNREACHABLE();
+            break;
+        }
+        switch (errorCorrectionMethod)
+        {
+        case Configuration::NoCorrection:
+            q->setCircle(noCorrection(fit,edgePixels));
+            break;
+        case Configuration::MedianError:
+            q->setCircle(medianErrorCorrection(fit,edgePixels));
+            break;
+        case Configuration::ConnectivityBased:
+            q->setCircle(connectivityBasedCorrection(fit,edgePixels));
+            break;
+        default:
+            Q_UNREACHABLE();
             break;
         }
         QImage copy = origin.convertToFormat(QImage::Format_RGB32);
@@ -326,6 +349,7 @@ Configuration Processor::configurations() const
             .setThresholdingMethod(d->thresholdingMethod)
             .setEdgeDetectionMethod(d->edgeMethod)
             .setCircleFitMethod(d->circleFitMethod)
+            .setErrorCorrectionMethod(d->errorCorrectionMethod)
             .setFilterRadius(d->filterRadius)
             .setGaussianSigma(d->gaussianSigma)
             .setPTileValue(d->pTileValue);
@@ -341,6 +365,7 @@ void Processor::setConfigurations(const Configuration& config)
     setPTileValue(config.pTileValue());
     setEdgeDetectionMethod(config.edgeDetectionMethod());
     setCircleFitMethod(config.circleFitMethod());
+    setErrorCorrectionMethod(config.errorCorrectionMethod());
 
     d->lazy = false;
     d->updateFilteredImage();
@@ -405,6 +430,21 @@ void Processor::setCircleFitMethod(Configuration::CircleFitMethod method)
         return;
     d->circleFitMethod = method;
     emit circleFitMethodChanged(d->circleFitMethod);
+
+    d->updateCircle();
+}
+
+Configuration::ErrorCorrectionMethod Processor::errorCorrectionMethod() const
+{
+    return d->errorCorrectionMethod;
+}
+
+void Processor::setErrorCorrectionMethod(Configuration::ErrorCorrectionMethod method)
+{
+    if (d->errorCorrectionMethod == method)
+        return;
+    d->errorCorrectionMethod = method;
+    emit errorCorrectionMethodChanged(d->errorCorrectionMethod);
 
     d->updateCircle();
 }

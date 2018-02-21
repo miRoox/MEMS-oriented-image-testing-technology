@@ -27,9 +27,20 @@
 #include "edgedetect.h"
 #include "imagefilter.h"
 
+/*!
+    \headerfile <edgedetect.h>
+    \title Edge Detection Algorithms
+    \brief The <edgedetect.h> header file provide some edge detection operators.
+
+    \sa <imagefilter.h>
+ */
+
 namespace MEMS {
 
-QImage sobelOperator(const QImage& img)
+/*!
+    Sobel operator
+ */
+QImage sobelOperator(const QImage& image)
 {
     static const MatrixKernel sobelX{{ {{-1, 0, 1}},
                                        {{-2, 0, 2}},
@@ -37,10 +48,13 @@ QImage sobelOperator(const QImage& img)
     static const MatrixKernel sobelY{{ {{ 1, 2, 1}},
                                        {{ 0, 0, 0}},
                                        {{-1,-2,-1}} }};
-    return convolveXY(img,sobelX,sobelY,PaddingType::Fixed);
+    return convolveXY(image,sobelX,sobelY,PaddingType::Fixed);
 }
 
-QImage prewittOperator(const QImage& img)
+/*!
+    Prewitt operator
+ */
+QImage prewittOperator(const QImage& image)
 {
     static const MatrixKernel prewittX{{ {{-1, 0, 1}},
                                          {{-1, 0, 1}},
@@ -48,10 +62,13 @@ QImage prewittOperator(const QImage& img)
     static const MatrixKernel prewittY{{ {{-1,-1,-1}},
                                          {{ 0, 0, 0}},
                                          {{ 1, 1, 1}} }};
-    return convolveXY(img,prewittX,prewittY,PaddingType::Fixed);
+    return convolveXY(image,prewittX,prewittY,PaddingType::Fixed);
 }
 
-QImage scharrOperator(const QImage& img)
+/*!
+    Scharr operator
+ */
+QImage scharrOperator(const QImage& image)
 {
     static const MatrixKernel scharrX{{ {{  3, 10,  3}},
                                         {{  0,  0,  0}},
@@ -59,15 +76,18 @@ QImage scharrOperator(const QImage& img)
     static const MatrixKernel scharrY{{ {{  3,  0, -3}},
                                         {{ 10,  0,-10}},
                                         {{  3,  0, -3}} }};
-    return convolveXY(img,scharrX,scharrY,PaddingType::Fixed);
+    return convolveXY(image,scharrX,scharrY,PaddingType::Fixed);
 }
 
-QImage laplacianOperator(const QImage& img)
+/*!
+    Laplacian operator
+ */
+QImage laplacianOperator(const QImage& image)
 {
     static const MatrixKernel laplacian{{ {{ 0, 1, 0}},
                                           {{ 1,-4, 1}},
                                           {{ 0, 1, 0}} }};
-    return convolve(img,laplacian,PaddingType::Fixed);
+    return convolve(image,laplacian,PaddingType::Fixed);
 }
 
 } // namespace MEMS

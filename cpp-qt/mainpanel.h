@@ -57,6 +57,7 @@ signals:
     void changeThresholdingMethodRequest(Configuration::ThresholdingMethod method);
     void changeEdgeDetectionMethodRequest(Configuration::EdgeDetectionMethod method);
     void changeCircleFitMethodRequest(Configuration::CircleFitMethod method);
+    void changeErrorCorrectionMethodRequest(Configuration::ErrorCorrectionMethod method);
     void changeFilterRadiusRequest(uint radius);
     void changeGaussianSigmaRequest(qreal sigma);
     void changePTileValueRequest(qreal value);
@@ -87,6 +88,7 @@ private slots:
     void on_comboBoxThres_currentIndexChanged(const QString& arg1);
     void on_comboBoxEdge_currentIndexChanged(const QString& arg1);
     void on_comboBoxFit_currentIndexChanged(const QString& arg1);
+    void on_comboBoxCorr_currentIndexChanged(const QString& arg1);
     void on_spinBoxPT_valueChanged(int arg1);
     void on_pushButtonSaveConfig_clicked();
     void on_pushButtonLoadConfig_clicked();
@@ -106,6 +108,7 @@ private:
     const QMap<QString, Configuration::ThresholdingMethod> MapThresMethod;
     const QMap<QString, Configuration::EdgeDetectionMethod> MapEdgeMethod;
     const QMap<QString, Configuration::CircleFitMethod> MapFitMethod;
+    const QMap<QString, Configuration::ErrorCorrectionMethod> MapErrCorrMethod;
 };
 
 #endif // MAINPANEL_H

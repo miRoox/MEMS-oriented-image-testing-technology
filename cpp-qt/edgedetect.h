@@ -31,10 +31,10 @@ class QImage;
 
 namespace MEMS {
 
-extern QImage sobelOperator(const QImage& img);
-extern QImage prewittOperator(const QImage& img);
-extern QImage scharrOperator(const QImage& img);
-extern QImage laplacianOperator(const QImage& img);
+extern QImage sobelOperator(const QImage& image);
+extern QImage prewittOperator(const QImage& image);
+extern QImage scharrOperator(const QImage& image);
+extern QImage laplacianOperator(const QImage& image);
 
 } // namespace MEMS
 

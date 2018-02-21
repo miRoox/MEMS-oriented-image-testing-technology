@@ -42,62 +42,62 @@ enum class PaddingType
     Reflected = 3,
 };
 
-extern QImage convolve(const QImage& origin,
+extern QImage convolve(const QImage& image,
                        const MatrixKernel& kernel,
                        PaddingType padding = PaddingType::Fixed);
-extern QImage convolve(const QImage& origin,
+extern QImage convolve(const QImage& image,
                        const MatrixKernel& kernel,
                        QRgb padding);
-extern QImage convolve(const QImage& origin,
+extern QImage convolve(const QImage& image,
                        const MatrixKernel& kernel,
                        const QColor& padding);
 
-extern QImage convolveXY(const QImage& origin,
+extern QImage convolveXY(const QImage& image,
                          const MatrixKernel& kerX,
                          const MatrixKernel& kerY,
                          PaddingType padding = PaddingType::Fixed);
-extern QImage convolveXY(const QImage& origin,
+extern QImage convolveXY(const QImage& image,
                          const MatrixKernel& kerX,
                          const MatrixKernel& kerY,
                          QRgb padding);
-extern QImage convolveXY(const QImage& origin,
+extern QImage convolveXY(const QImage& image,
                          const MatrixKernel& kerX,
                          const MatrixKernel& kerY,
                          const QColor& padding);
 
-extern QImage boxFilter(const QImage& origin,
+extern QImage boxFilter(const QImage& image,
                         uint radius = 2,
                         PaddingType padding = PaddingType::Fixed);
-extern QImage boxFilter(const QImage& origin,
+extern QImage boxFilter(const QImage& image,
                         uint radius,
                         QRgb padding);
-extern QImage boxFilter(const QImage& origin,
+extern QImage boxFilter(const QImage& image,
                         uint radius,
                         const QColor& padding);
 
-extern QImage gaussianFilter(const QImage& origin,
+extern QImage gaussianFilter(const QImage& image,
                              uint radius = 2,
                              PaddingType padding = PaddingType::Fixed);
-extern QImage gaussianFilter(const QImage& origin,
+extern QImage gaussianFilter(const QImage& image,
                              uint radius,
                              qreal sigma,
                              PaddingType padding = PaddingType::Fixed);
-extern QImage gaussianFilter(const QImage& origin,
+extern QImage gaussianFilter(const QImage& image,
                              uint radius,
                              QRgb padding);
-extern QImage gaussianFilter(const QImage& origin,
+extern QImage gaussianFilter(const QImage& image,
                              uint radius,
                              qreal sigma,
                              QRgb padding);
-extern QImage gaussianFilter(const QImage& origin,
+extern QImage gaussianFilter(const QImage& image,
                              uint radius,
                              const QColor& padding);
-extern QImage gaussianFilter(const QImage& origin,
+extern QImage gaussianFilter(const QImage& image,
                              uint radius,
                              qreal sigma,
                              const QColor& padding);
 
-extern QImage medianFilter(const QImage& origin, uint radius);
+extern QImage medianFilter(const QImage& image, uint radius);
 
 } // namespace MEMS
 

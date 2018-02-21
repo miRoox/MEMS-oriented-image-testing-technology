@@ -162,7 +162,7 @@
              <item>
               <widget class="QStackedWidget" name="stackedWidgetFilter">
                <property name="currentIndex">
-                <number>1</number>
+                <number>0</number>
                </property>
                <widget class="QWidget" name="pageFilter">
                 <layout class="QFormLayout" name="formLayout_2">
@@ -184,7 +184,7 @@
                  <item row="0" column="0">
                   <widget class="QLabel" name="labelFR">
                    <property name="text">
-                    <string>Filter radius: </string>
+                    <string>Filter radius:</string>
                    </property>
                   </widget>
                  </item>
@@ -246,7 +246,7 @@
                  <item row="0" column="0">
                   <widget class="QLabel" name="labelFRG">
                    <property name="text">
-                    <string>Filter radius: </string>
+                    <string>Filter radius:</string>
                    </property>
                   </widget>
                  </item>
@@ -390,7 +390,7 @@
                  <item row="0" column="0">
                   <widget class="QLabel" name="labelPT">
                    <property name="text">
-                    <string>P-Tile value:</string>
+                    <string>Black fraction:</string>
                    </property>
                   </widget>
                  </item>
@@ -415,7 +415,7 @@
                    <item>
                     <widget class="QSpinBox" name="spinBoxPT">
                      <property name="suffix">
-                      <string>%</string>
+                      <string notr="true">%</string>
                      </property>
                      <property name="minimum">
                       <number>1</number>
@@ -474,6 +474,20 @@
                </item>
                <item alignment="Qt::AlignRight">
                 <widget class="QComboBox" name="comboBoxFit"/>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_12">
+               <item alignment="Qt::AlignLeft">
+                <widget class="QLabel" name="labelCorr">
+                 <property name="text">
+                  <string>Select error correction method:</string>
+                 </property>
+                </widget>
+               </item>
+               <item alignment="Qt::AlignRight">
+                <widget class="QComboBox" name="comboBoxCorr"/>
                </item>
               </layout>
              </item>

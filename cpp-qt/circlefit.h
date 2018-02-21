@@ -50,11 +50,19 @@ Q_DECL_CONSTEXPR inline bool operator==(const CircleData& a, const CircleData& b
     return a.center==b.center && qFuzzyIsNull(a.radius-b.radius);
 }
 
-extern QVector<QPoint> whitePixelPositions(const QImage& img);
+extern QVector<QPoint> whitePixelPositions(const QImage& monochrome);
 
+using CircleFitFunction = CircleData (*)(const QVector<QPoint>&);
+
+// circle fit functions
 extern CircleData naiveCircleFit(const QVector<QPoint>& points);
 extern CircleData simpleAlgebraicCircleFit(const QVector<QPoint>& points);
 extern CircleData hyperAlgebraicCircleFit(const QVector<QPoint>& points);
+
+// error points correction functions
+extern CircleData noCorrection(CircleFitFunction fit, const QVector<QPoint>& points);
+extern CircleData medianErrorCorrection(CircleFitFunction fit, const QVector<QPoint>& points);
+extern CircleData connectivityBasedCorrection(CircleFitFunction fit, const QVector<QPoint>& points);
 
 } // namespace MEMS
 

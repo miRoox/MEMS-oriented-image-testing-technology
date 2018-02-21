@@ -27,6 +27,7 @@
 #include "mainpanel.h"
 #include "ui_mainpanel.h"  // generate from mainpanel.ui
 #include "processor.h"
+#include <cmath>
 #include <QImage>
 #include <QIcon>
 #include <QPixmap>
@@ -68,6 +69,11 @@ MainPanel::MainPanel(QWidget *parent) :
         {tr("Naive fit"), Configuration::NaiveFit},
         {tr("Simple algebraic fit"), Configuration::SimpleAlgebraicFit},
         {tr("Hyper algebraic fit"), Configuration::HyperAlgebraicFit}
+    },
+    MapErrCorrMethod{
+        {tr("No correction"), Configuration::NoCorrection},
+        {tr("Median error correction"), Configuration::MedianError},
+        {tr("Connectivity-based correction"), Configuration::ConnectivityBased}
     }
 {
     ui->setupUi(this);
@@ -76,6 +82,7 @@ MainPanel::MainPanel(QWidget *parent) :
     ui->comboBoxThres->addItems(MapThresMethod.keys());
     ui->comboBoxEdge->addItems(MapEdgeMethod.keys());
     ui->comboBoxFit->addItems(MapFitMethod.keys());
+    ui->comboBoxCorr->addItems(MapErrCorrMethod.keys());
     // init ui connection
     connect(ui->spinBoxFR,qOverload<int>(&QSpinBox::valueChanged),
             ui->spinBoxFRG,&QSpinBox::setValue);
@@ -110,6 +117,8 @@ MainPanel::MainPanel(QWidget *parent) :
             processor,&Processor::setEdgeDetectionMethod);
     connect(this,&MainPanel::changeCircleFitMethodRequest,
             processor,&Processor::setCircleFitMethod);
+    connect(this,&MainPanel::changeErrorCorrectionMethodRequest,
+            processor,&Processor::setErrorCorrectionMethod);
     connect(this,&MainPanel::changeFilterRadiusRequest,
             processor,&Processor::setFilterRadius);
     connect(this,&MainPanel::changeGaussianSigmaRequest,
@@ -154,9 +163,10 @@ void MainPanel::setByConfig(const Configuration& config)
     ui->comboBoxThres->setCurrentText(MapThresMethod.key(config.thresholdingMethod()));
     ui->comboBoxEdge->setCurrentText(MapEdgeMethod.key(config.edgeDetectionMethod()));
     ui->comboBoxFit->setCurrentText(MapFitMethod.key(config.circleFitMethod()));
+    ui->comboBoxCorr->setCurrentText(MapErrCorrMethod.key(config.errorCorrectionMethod()));
     ui->spinBoxFR->setValue(config.filterRadius());
     ui->doubleSpinBoxGS->setValue(config.gaussianSigma());
-    ui->spinBoxPT->setValue(config.pTileValue());
+    ui->spinBoxPT->setValue(::std::round(100*config.pTileValue()));
 }
 
 void MainPanel::setOrigin(const QString& key)
@@ -301,6 +311,11 @@ void MainPanel::on_comboBoxEdge_currentIndexChanged(const QString& arg1)
 void MainPanel::on_comboBoxFit_currentIndexChanged(const QString& arg1)
 {
     emit changeCircleFitMethodRequest(MapFitMethod.value(arg1,Configuration::defaultCircleFitMethod()));
+}
+
+void MainPanel::on_comboBoxCorr_currentIndexChanged(const QString& arg1)
+{
+    emit changeErrorCorrectionMethodRequest(MapErrCorrMethod.value(arg1,Configuration::defaultErrorCorrectionMethod()));
 }
 
 void MainPanel::on_spinBoxPT_valueChanged(int arg1)
