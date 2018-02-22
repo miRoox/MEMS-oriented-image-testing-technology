@@ -15,7 +15,7 @@
     </message>
     <message>
         <location filename="mainpanel.ui" line="91"/>
-        <location filename="mainpanel.cpp" line="180"/>
+        <location filename="mainpanel.cpp" line="182"/>
         <source>A</source>
         <translation>A</translation>
     </message>
@@ -26,7 +26,7 @@
     </message>
     <message>
         <location filename="mainpanel.ui" line="108"/>
-        <location filename="mainpanel.cpp" line="185"/>
+        <location filename="mainpanel.cpp" line="187"/>
         <source>B</source>
         <translation>B</translation>
     </message>
@@ -37,7 +37,7 @@
     </message>
     <message>
         <location filename="mainpanel.ui" line="125"/>
-        <location filename="mainpanel.cpp" line="191"/>
+        <location filename="mainpanel.cpp" line="193"/>
         <source>C</source>
         <translation>C</translation>
     </message>
@@ -140,6 +140,11 @@
     </message>
     <message>
         <location filename="mainpanel.ui" line="686"/>
+        <source>Export Edge</source>
+        <translation type="unfinished">导出边缘</translation>
+    </message>
+    <message>
+        <location filename="mainpanel.ui" line="693"/>
         <source>Export Result</source>
         <translation>导出结果</translation>
     </message>
@@ -234,19 +239,25 @@
         <translation>基于连通性的误差校正</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="199"/>
+        <location filename="mainpanel.cpp" line="201"/>
         <source>The center of the circle is (%1, %2), and the radius is %3</source>
         <translation>圆心为(%1, %2)，半径为%3</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="340"/>
+        <location filename="mainpanel.cpp" line="342"/>
         <source>Export result</source>
         <translation>导出结果</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="342"/>
+        <location filename="mainpanel.cpp" line="344"/>
+        <location filename="mainpanel.cpp" line="355"/>
         <source>Images (*.png *.jpg *.jpeg *.bmp *.xpm)</source>
         <translation>图像 (*.png *.jpg *.jpeg *.bmp *.xpm)</translation>
+    </message>
+    <message>
+        <location filename="mainpanel.cpp" line="353"/>
+        <source>Export edge</source>
+        <translation>导出边缘</translation>
     </message>
 </context>
 <context>
@@ -262,7 +273,7 @@ Radius: %3</source>
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="main.cpp" line="64"/>
+        <location filename="main.cpp" line="67"/>
         <source>MEMS oriented image testing technology</source>
         <translation>面向微系统的图像测试技术</translation>
     </message>

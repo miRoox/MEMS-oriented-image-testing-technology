@@ -127,6 +127,8 @@ MainPanel::MainPanel(QWidget *parent) :
             processor,&Processor::setPTileValue);
     connect(this,&MainPanel::saveConfigurationsRequest,
             processor,&Processor::saveConfigurations);
+    connect(this,&MainPanel::exportEdgeRequest,
+            processor,&Processor::exportEdge);
     connect(this,&MainPanel::exportResultRequest,
             processor,&Processor::exportResult);
 
@@ -343,5 +345,16 @@ void MainPanel::on_pushButtonExport_clicked()
     if (!fileName.isEmpty())
     {
         emit exportResultRequest(fileName);
+    }
+}
+
+void MainPanel::on_pushButtonEdge_clicked()
+{
+    QString fileName = QFileDialog::getSaveFileName(this,tr("Export edge"),
+                                                    currentOriginKey + ".edge.png",
+                                                    tr("Images (*.png *.jpg *.jpeg *.bmp *.xpm)"));
+    if (!fileName.isEmpty())
+    {
+        emit exportEdgeRequest(fileName);
     }
 }

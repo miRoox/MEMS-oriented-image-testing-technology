@@ -216,6 +216,20 @@ public:
         q->setCircleImage(copy);
     }
 
+    void exportImage(const QString& fileName, const QImage& image) const
+    {
+        if (image.save(fileName))
+        {
+            qInfo() << "Export file"
+                    << QFileInfo(fileName).canonicalFilePath()
+                    << "successfully";
+        }
+        else
+        {
+            qWarning() << "Export file" << fileName << "failed";
+        }
+    }
+
 }; // class Processor::Impl
 
 Processor::Processor(QObject* parent)
@@ -516,16 +530,12 @@ void Processor::setThreshold(int threshold)
     setBinaryImage(MEMS::binarize(d->filtered,d->threshold));
 }
 
+void Processor::exportEdge(const QString& fileName) const
+{
+    d->exportImage(fileName,d->edge);
+}
+
 void Processor::exportResult(const QString& fileName) const
 {
-    if (d->circle.save(fileName))
-    {
-        qInfo() << "Export file"
-                << QFileInfo(fileName).canonicalFilePath()
-                << "successfully";
-    }
-    else
-    {
-        qWarning() << "Export file" << fileName << "failed";
-    }
+    d->exportImage(fileName,d->circle);
 }

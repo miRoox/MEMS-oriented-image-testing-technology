@@ -63,6 +63,7 @@ signals:
     void changePTileValueRequest(qreal value);
     void saveConfigurationsRequest(const QString& group);
     void exportResultRequest(const QString& fileName);
+    void exportEdgeRequest(const QString& fileName);
 
 private:
     void setByConfig(const Configuration& config);
@@ -93,6 +94,7 @@ private slots:
     void on_pushButtonSaveConfig_clicked();
     void on_pushButtonLoadConfig_clicked();
     void on_pushButtonExport_clicked();
+    void on_pushButtonEdge_clicked();
 
 private:
     QScopedPointer<Ui::MainPanel> ui;
