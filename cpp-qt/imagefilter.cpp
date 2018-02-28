@@ -42,11 +42,9 @@
 namespace MEMS {
 
 /*!
-    \typedef MatrixKernel
+    \class MatrixKernel
 
-    Type of kernel for convolution.
-
-    Synonym for QVector<QVector<qreal>> .
+    \brief Type of kernel for convolution.
  */
 
 /*!
@@ -66,6 +64,105 @@ namespace MEMS {
     \omitvalue Periodic
     \omitvalue Reflected
  */
+
+MatrixKernel::MatrixKernel(const MatrixKernel& other)
+    : data(other.data)
+{
+}
+
+MatrixKernel::MatrixKernel(int rows, int columns, qreal value)
+    : data(rows, QVector<qreal>(columns,value))
+{
+}
+
+MatrixKernel::MatrixKernel(const QVector<QVector<qreal>>& args)
+    : data(args)
+{
+    const int cols = columns();
+    for (const auto& row : data)
+    {
+        Q_ASSERT_X(row.size()==cols,__func__,"Kernel is not a matrix");
+    }
+}
+
+MatrixKernel::MatrixKernel(QVector<QVector<qreal>>&& args)
+    : data(args)
+{
+    const int cols = columns();
+    for (const auto& row : data)
+    {
+        Q_ASSERT_X(row.size()==cols,__func__,"Kernel is not a matrix");
+    }
+}
+
+int MatrixKernel::rows() const
+{
+    return data.size();
+}
+
+int MatrixKernel::columns() const
+{
+    return data.first().size();
+}
+
+qreal MatrixKernel::at(int row, int column) const
+{
+    return data.at(row).at(column);
+}
+
+qreal &MatrixKernel::operator()(int row, int column)
+{
+    return data[row][column];
+}
+
+qreal MatrixKernel::operator()(int row, int column) const
+{
+    return data[row][column];
+}
+
+MatrixKernel& MatrixKernel::operator =(const MatrixKernel& other)
+{
+    data = other.data;
+    return *this;
+}
+
+MatrixKernel& MatrixKernel::operator *=(qreal scaler)
+{
+    for (auto& row : data)
+    {
+        for (auto& val : row)
+        {
+            val *= scaler;
+        }
+    }
+    return *this;
+}
+
+MatrixKernel& MatrixKernel::operator /=(qreal scaler)
+{
+    for (auto& row : data)
+    {
+        for (auto& val : row)
+        {
+            val /= scaler;
+        }
+    }
+    return *this;
+}
+
+MatrixKernel MatrixKernel::operator *(qreal scaler) const
+{
+    MatrixKernel mat(*this);
+    mat *= scaler;
+    return mat;
+}
+
+MatrixKernel MatrixKernel::operator /(qreal scaler) const
+{
+    MatrixKernel mat(*this);
+    mat /= scaler;
+    return mat;
+}
 
 /*!
     \internal
@@ -142,16 +239,12 @@ QImage convolve(const QImage& image, const MatrixKernel& kernel, PaddingType pad
 
     const int width = image.width();
     const int height = image.height();
-    const int kerRows = kernel.size();
-    const int kerCols = kernel.first().size();
+    const int kerRows = kernel.rows();
+    const int kerCols = kernel.columns();
     Q_ASSERT_X(kerRows%2==1,__func__,"Row of kernel must be odd");
     Q_ASSERT_X(kerCols%2==1,__func__,"Column of kernel must be odd");
     const int kerCenterX = kerCols/2;
     const int kerCenterY = kerRows/2;
-    for (const auto& row : kernel)
-    {
-        Q_ASSERT_X(row.size()==kerCols,__func__,"Kernel is not a matrix");
-    }
 
     for (int y=0; y<height; ++y)
     {
@@ -166,7 +259,7 @@ QImage convolve(const QImage& image, const MatrixKernel& kernel, PaddingType pad
                 for (int j=0; j<kerCols; ++j)
                 {
                     const int xx = calcPaddingX(width,x+j-kerCenterX,padding);
-                    const auto kerVar = kernel.at(kerRows-1-i).at(kerCols-1-j);
+                    const auto kerVar = kernel.at(kerRows-1-i,kerCols-1-j);
                     rr += qRed(iLine[xx])*kerVar;
                     gg += qGreen(iLine[xx])*kerVar;
                     bb += qBlue(iLine[xx])*kerVar;
@@ -192,16 +285,12 @@ QImage convolve(const QImage& image, const MatrixKernel& kernel, QRgb padding)
 
     const int width = image.width();
     const int height = image.height();
-    const int kerRows = kernel.size();
-    const int kerCols = kernel.first().size();
+    const int kerRows = kernel.rows();
+    const int kerCols = kernel.columns();
     Q_ASSERT_X(kerRows%2==1,__func__,"Row of kernel must be odd");
     Q_ASSERT_X(kerCols%2==1,__func__,"Column of kernel must be odd");
     const int kerCenterX = kerCols/2;
     const int kerCenterY = kerRows/2;
-    for (const auto& row : kernel)
-    {
-        Q_ASSERT_X(row.size()==kerCols,__func__,"Kernel is not a matrix");
-    }
 
     for (int y=0; y<height; ++y)
     {
@@ -216,7 +305,7 @@ QImage convolve(const QImage& image, const MatrixKernel& kernel, QRgb padding)
                     const QRgb pix = image.valid(x+j-kerCenterX,y+i-kerCenterY)
                                     ? image.pixel(x+j-kerCenterX,y+i-kerCenterY)
                                     : padding;
-                    const auto kerVar = kernel.at(kerRows-1-i).at(kerCols-1-j);
+                    const auto kerVar = kernel.at(kerRows-1-i,kerCols-1-j);
                     rr += qRed(pix)*kerVar;
                     gg += qGreen(pix)*kerVar;
                     bb += qBlue(pix)*kerVar;
@@ -254,22 +343,14 @@ QImage convolveXY(const QImage& image, const MatrixKernel& kerX, const MatrixKer
 
     const int width = image.width();
     const int height = image.height();
-    Q_ASSERT_X(kerX.size()==kerY.size(),__func__,"Size of Kernel X and Kernel Y must be same");
-    Q_ASSERT_X(kerX.first().size()==kerY.first().size(),__func__,"Size of Kernel X and Kernel Y must be same");
-    const int kerRows = kerX.size();
-    const int kerCols = kerX.first().size();
+    Q_ASSERT_X(kerX.rows()==kerY.rows(),__func__,"Size of Kernel X and Kernel Y must be same");
+    Q_ASSERT_X(kerX.columns()==kerY.columns(),__func__,"Size of Kernel X and Kernel Y must be same");
+    const int kerRows = kerX.rows();
+    const int kerCols = kerX.columns();
     Q_ASSERT_X(kerRows%2==1,__func__,"Row of kernels must be odd");
     Q_ASSERT_X(kerCols%2==1,__func__,"Column of kernels must be odd");
     const int kerCenterX = kerCols/2;
     const int kerCenterY = kerRows/2;
-    for (const auto& row : kerX)
-    {
-        Q_ASSERT_X(row.size()==kerCols,__func__,"Kernel X is not a matrix");
-    }
-    for (const auto& row : kerY)
-    {
-        Q_ASSERT_X(row.size()==kerCols,__func__,"Kernel Y is not a matrix");
-    }
 
     for (int y=0; y<height; ++y)
     {
@@ -285,8 +366,8 @@ QImage convolveXY(const QImage& image, const MatrixKernel& kerX, const MatrixKer
                 for (int j=0; j<kerCols; ++j)
                 {
                     const int xx = calcPaddingX(width,x+j-kerCenterX,padding);
-                    const auto kerXVar = kerX.at(kerRows-1-i).at(kerCols-1-j);
-                    const auto kerYVar = kerY.at(kerRows-1-i).at(kerCols-1-j);
+                    const auto kerXVar = kerX.at(kerRows-1-i,kerCols-1-j);
+                    const auto kerYVar = kerY.at(kerRows-1-i,kerCols-1-j);
                     rx += qRed(iLine[xx])*kerXVar;
                     gx += qGreen(iLine[xx])*kerXVar;
                     bx += qBlue(iLine[xx])*kerXVar;
@@ -318,22 +399,14 @@ QImage convolveXY(const QImage& image, const MatrixKernel& kerX, const MatrixKer
 
     const int width = image.width();
     const int height = image.height();
-    Q_ASSERT_X(kerX.size()==kerY.size(),__func__,"Size of Kernel X and Kernel Y must be same");
-    Q_ASSERT_X(kerX.first().size()==kerY.first().size(),__func__,"Size of Kernel X and Kernel Y must be same");
-    const int kerRows = kerX.size();
-    const int kerCols = kerX.first().size();
+    Q_ASSERT_X(kerX.rows()==kerY.rows(),__func__,"Size of Kernel X and Kernel Y must be same");
+    Q_ASSERT_X(kerX.columns()==kerY.columns(),__func__,"Size of Kernel X and Kernel Y must be same");
+    const int kerRows = kerX.rows();
+    const int kerCols = kerX.columns();
     Q_ASSERT_X(kerRows%2==1,__func__,"Row of kernels must be odd");
     Q_ASSERT_X(kerCols%2==1,__func__,"Column of kernels must be odd");
     const int kerCenterX = kerCols/2;
     const int kerCenterY = kerRows/2;
-    for (const auto& row : kerX)
-    {
-        Q_ASSERT_X(row.size()==kerCols,__func__,"Kernel X is not a matrix");
-    }
-    for (const auto& row : kerY)
-    {
-        Q_ASSERT_X(row.size()==kerCols,__func__,"Kernel Y is not a matrix");
-    }
 
     for (int y=0; y<height; ++y)
     {
@@ -349,8 +422,8 @@ QImage convolveXY(const QImage& image, const MatrixKernel& kerX, const MatrixKer
                     const QRgb pix = image.valid(x+j-kerCenterX,y+i-kerCenterY)
                                     ? image.pixel(x+j-kerCenterX,y+i-kerCenterY)
                                     : padding;
-                    const auto kerXVar = kerX.at(kerRows-1-i).at(kerCols-1-j);
-                    const auto kerYVar = kerY.at(kerRows-1-i).at(kerCols-1-j);
+                    const auto kerXVar = kerX.at(kerRows-1-i,kerCols-1-j);
+                    const auto kerYVar = kerY.at(kerRows-1-i,kerCols-1-j);
                     rx += qRed(pix)*kerXVar;
                     gx += qGreen(pix)*kerXVar;
                     bx += qBlue(pix)*kerXVar;
@@ -386,8 +459,8 @@ QImage convolveXY(const QImage& image, const MatrixKernel& kerX, const MatrixKer
  */
 QImage boxFilter(const QImage& image, uint radius, PaddingType padding)
 {
-    auto boxKer = QVector<QVector<qreal>>(2*radius+1,QVector<qreal>(2*radius+1,
-                                                         1./(2*radius+1)/(2*radius+1)));
+    MatrixKernel boxKer(2*radius+1,2*radius+1,
+                        1./(2*radius+1)/(2*radius+1));
     return convolve(image,boxKer,padding);
 }
 
@@ -396,8 +469,8 @@ QImage boxFilter(const QImage& image, uint radius, PaddingType padding)
  */
 QImage boxFilter(const QImage& image, uint radius, QRgb padding)
 {
-    auto boxKer = QVector<QVector<qreal>>(2*radius+1,QVector<qreal>(2*radius+1,
-                                                         1./(2*radius+1)/(2*radius+1)));
+    MatrixKernel boxKer(2*radius+1,2*radius+1,
+                        1./(2*radius+1)/(2*radius+1));
     return convolve(image,boxKer,padding);
 }
 
@@ -406,8 +479,8 @@ QImage boxFilter(const QImage& image, uint radius, QRgb padding)
  */
 QImage boxFilter(const QImage& image, uint radius, const QColor& padding)
 {
-    auto boxKer = QVector<QVector<qreal>>(2*radius+1,QVector<qreal>(2*radius+1,
-                                                         1./(2*radius+1)/(2*radius+1)));
+    MatrixKernel boxKer(2*radius+1,2*radius+1,
+                        1./(2*radius+1)/(2*radius+1));
     return convolve(image,boxKer,padding);
 }
 
@@ -420,7 +493,7 @@ static inline MatrixKernel gaussianKernel(uint radius, qreal sigma)
 {
     constexpr qreal PI = 3.14159265358979323846;
 
-    MatrixKernel ker(2*radius+1,QVector<qreal>(2*radius+1,0));
+    MatrixKernel ker(2*radius+1,2*radius+1,0);
     const int r = radius;
     const qreal s = 2*sigma*sigma;
     qreal sum = 0;
@@ -429,18 +502,11 @@ static inline MatrixKernel gaussianKernel(uint radius, qreal sigma)
     {
         for (int y=-r; y<=r; ++y)
         {
-            sum += ker[x+radius][y+radius] = ::std::exp(-(x*x+y*y)/s)/s/PI;
-        }
-    }
-    for (auto& row : ker)
-    {
-        for (auto& val : row)
-        {
-            val /= sum;
+            sum += ker(x+r,y+r) = ::std::exp(-(x*x+y*y)/s)/s/PI;
         }
     }
 
-    return ker;
+    return ker/sum;
 }
 
 /*!
