@@ -129,6 +129,11 @@ extern QImage gaussianFilter(const QImage& image,
 
 extern QImage medianFilter(const QImage& image, uint radius);
 
+extern QImage meanShiftFilter(const QImage& image,
+                              uint spatialRadius,
+                              qreal colorRadius,
+                              uint maxLevel = 1);
+
 } // namespace MEMS
 
 #endif // IMAGEFILTER_H

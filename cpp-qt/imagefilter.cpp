@@ -744,4 +744,71 @@ QImage medianFilter(const QImage& image, uint radius)
               : medianFilter_ColorLarge(image,radius);
 }
 
+/*!
+    \internal
+ */
+static inline qreal colorDistance(QRgb a, QRgb b)
+{
+    return ::std::abs(qGray(a)-qGray(b))/qreal(0xff);
+}
+
+/*!
+    \internal
+ */
+static QImage meanShiftFilter_Impl(const QImage& image, uint spatialRadius, qreal colorRadius)
+{
+    QImage output(image.size(),QImage::Format_RGB32);
+
+    const int width = image.width();
+    const int height = image.height();
+    const int r = spatialRadius;
+
+    for (int y=0; y<height; ++y)
+    {
+        QRgb* line = reinterpret_cast<QRgb*>(output.scanLine(y));
+        const QRgb* iLineCenter = reinterpret_cast<const QRgb*>(image.constScanLine(y));
+        for (int x=0; x<width; ++x)
+        {
+            int rr=0, gg=0, bb=0;
+            int sum=0;
+            for (int i=-r; i<=r; ++i)
+            {
+                const int yy = y+i;
+                if (yy<0 || yy>=height)
+                    continue;
+                const QRgb* iLine = reinterpret_cast<const QRgb*>(image.constScanLine(yy));
+                for (int j=-r; j<=r; ++j)
+                {
+                    const int xx = x+j;
+                    if (xx<0 || xx>=width)
+                        continue;
+                    if (colorDistance(iLineCenter[x],iLine[xx]) > colorRadius)
+                        continue;
+                    rr += qRed(iLine[xx]);
+                    gg += qGreen(iLine[xx]);
+                    bb += qBlue(iLine[xx]);
+                    ++sum;
+                }
+            }
+            line[x] = qRgb(rr/sum,gg/sum,bb/sum);
+        }
+    }
+
+    return output;
+}
+
+/*!
+    Filter \a image by replacing every value by the mean of the pixels
+    in a range \a spatialRadius neighborhood and whose value is within \a colorRadius.
+ */
+QImage meanShiftFilter(const QImage& image, uint spatialRadius, qreal colorRadius, uint maxLevel)
+{
+    QImage output = image.convertToFormat(QImage::Format_RGB32);
+    for (uint i=0; i<maxLevel; ++i)
+    {
+        output = meanShiftFilter_Impl(output,spatialRadius,colorRadius);
+    }
+    return output.convertToFormat(image.format());
+}
+
 } // namespace MEMS
