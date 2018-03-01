@@ -49,6 +49,7 @@ public:
         BoxFilter,
         GaussianFilter,
         MedianFilter,
+        MeanShiftFilter,
     };
     Q_ENUM(FilterMethod)
 
@@ -94,6 +95,8 @@ public:
     ErrorCorrectionMethod errorCorrectionMethod() const;
     uint filterRadius() const;
     qreal gaussianSigma() const;
+    qreal colorRadius() const;
+    uint maxLevel() const;
     qreal pTileValue() const;
 
     Configuration& setFilterMethod(FilterMethod method);
@@ -103,6 +106,8 @@ public:
     Configuration& setErrorCorrectionMethod(ErrorCorrectionMethod method);
     Configuration& setFilterRadius(uint radius);
     Configuration& setGaussianSigma(qreal sigma);
+    Configuration& setColorRadius(qreal radius);
+    Configuration& setMaxLevel(uint level);
     Configuration& setPTileValue(qreal value);
 
     static FilterMethod defaultFilterMethod();
@@ -112,6 +117,8 @@ public:
     static ErrorCorrectionMethod defaultErrorCorrectionMethod();
     static uint defaultFilterRadius();
     static qreal defaultGaussianSigma();
+    static qreal defaultColorRadius();
+    static qreal defaultMaxLevel();
     static qreal defaultPTileValue();
 
     friend bool operator!=(const Configuration& lhs, const Configuration& rhs);

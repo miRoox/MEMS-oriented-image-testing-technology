@@ -50,7 +50,8 @@ MainPanel::MainPanel(QWidget *parent) :
     MapFilterMethod{
         {tr("Box filter"), Configuration::BoxFilter},
         {tr("Gaussian filter"), Configuration::GaussianFilter},
-        {tr("Median filter"), Configuration::MedianFilter}
+        {tr("Median filter"), Configuration::MedianFilter},
+        {tr("Mean shift filter"), Configuration::MeanShiftFilter}
     },
     MapThresMethod{
         {tr("Otsu's threshold clustering algorithm"), Configuration::Cluster},
@@ -89,9 +90,17 @@ MainPanel::MainPanel(QWidget *parent) :
     connect(ui->spinBoxFRG,qOverload<int>(&QSpinBox::valueChanged),
             ui->spinBoxFR,&QSpinBox::setValue);
     connect(ui->spinBoxFR,qOverload<int>(&QSpinBox::valueChanged),
+            ui->spinBoxFRMS,&QSpinBox::setValue);
+    connect(ui->spinBoxFRMS,qOverload<int>(&QSpinBox::valueChanged),
+            ui->spinBoxFR,&QSpinBox::setValue);
+    connect(ui->spinBoxFR,qOverload<int>(&QSpinBox::valueChanged),
             this,&MainPanel::changeFilterRadiusRequest);
     connect(ui->doubleSpinBoxGS,qOverload<double>(&QDoubleSpinBox::valueChanged),
             this,&MainPanel::changeGaussianSigmaRequest);
+    connect(ui->doubleSpinBoxCRMS,qOverload<double>(&QDoubleSpinBox::valueChanged),
+            this,&MainPanel::changeColorRadiusRequest);
+    connect(ui->spinBoxMLMS,qOverload<int>(&QSpinBox::valueChanged),
+            this,&MainPanel::changeMaxLevelRequest);
 
     // load config
     auto config = loadConfigs(DefaultOriginKey);
@@ -123,6 +132,10 @@ MainPanel::MainPanel(QWidget *parent) :
             processor,&Processor::setFilterRadius);
     connect(this,&MainPanel::changeGaussianSigmaRequest,
             processor,&Processor::setGaussianSigma);
+    connect(this,&MainPanel::changeColorRadiusRequest,
+            processor,&Processor::setColorRadius);
+    connect(this,&MainPanel::changeMaxLevelRequest,
+            processor,&Processor::setMaxLevel);
     connect(this,&MainPanel::changePTileValueRequest,
             processor,&Processor::setPTileValue);
     connect(this,&MainPanel::saveConfigurationsRequest,
@@ -251,6 +264,16 @@ void MainPanel::on_doubleSpinBoxGS_valueChanged(double arg1)
     ui->horizontalSliderGS->setValue(static_cast<int>(10*arg1));
 }
 
+void MainPanel::on_horizontalSliderCRMS_valueChanged(int value)
+{
+    ui->doubleSpinBoxCRMS->setValue(value/100.);
+}
+
+void MainPanel::on_doubleSpinBoxCRMS_valueChanged(double arg1)
+{
+    ui->horizontalSliderCRMS->setValue(static_cast<int>(100*arg1));
+}
+
 void MainPanel::on_radioButtonA_toggled(bool checked)
 {
     if (checked)
@@ -283,6 +306,9 @@ void MainPanel::on_comboBoxFilter_currentIndexChanged(const QString& arg1)
     {
     case Configuration::GaussianFilter:
         ui->stackedWidgetFilter->setCurrentWidget(ui->pageFilterG);
+        break;
+    case Configuration::MeanShiftFilter:
+        ui->stackedWidgetFilter->setCurrentWidget(ui->pageFilterMS);
         break;
     default:
         ui->stackedWidgetFilter->setCurrentWidget(ui->pageFilter);

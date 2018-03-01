@@ -60,6 +60,8 @@ signals:
     void changeErrorCorrectionMethodRequest(Configuration::ErrorCorrectionMethod method);
     void changeFilterRadiusRequest(uint radius);
     void changeGaussianSigmaRequest(qreal sigma);
+    void changeColorRadiusRequest(qreal radius);
+    void changeMaxLevelRequest(uint level);
     void changePTileValueRequest(qreal value);
     void saveConfigurationsRequest(const QString& group);
     void exportResultRequest(const QString& fileName);
@@ -82,6 +84,8 @@ private slots:
 private slots:
     void on_horizontalSliderGS_valueChanged(int value);
     void on_doubleSpinBoxGS_valueChanged(double arg1);
+    void on_horizontalSliderCRMS_valueChanged(int value);
+    void on_doubleSpinBoxCRMS_valueChanged(double arg1);
     void on_radioButtonA_toggled(bool checked);
     void on_radioButtonB_toggled(bool checked);
     void on_radioButtonC_toggled(bool checked);
@@ -97,7 +101,7 @@ private slots:
     void on_pushButtonEdge_clicked();
 
 private:
-    QScopedPointer<Ui::MainPanel> ui;
+    Ui::MainPanel* ui;
     QThread workerThread;
     QPointer<Processor> processor;
     Q_DISABLE_COPY(MainPanel)

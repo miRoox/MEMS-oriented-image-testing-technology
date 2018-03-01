@@ -15,7 +15,7 @@
     </message>
     <message>
         <location filename="mainpanel.ui" line="91"/>
-        <location filename="mainpanel.cpp" line="182"/>
+        <location filename="mainpanel.cpp" line="195"/>
         <source>A</source>
         <translation>A</translation>
     </message>
@@ -26,7 +26,7 @@
     </message>
     <message>
         <location filename="mainpanel.ui" line="108"/>
-        <location filename="mainpanel.cpp" line="187"/>
+        <location filename="mainpanel.cpp" line="200"/>
         <source>B</source>
         <translation>B</translation>
     </message>
@@ -37,7 +37,7 @@
     </message>
     <message>
         <location filename="mainpanel.ui" line="125"/>
-        <location filename="mainpanel.cpp" line="193"/>
+        <location filename="mainpanel.cpp" line="206"/>
         <source>C</source>
         <translation>C</translation>
     </message>
@@ -69,82 +69,97 @@
         <translation>高斯标准差：</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="350"/>
+        <location filename="mainpanel.ui" line="348"/>
+        <source>Spatial radius:</source>
+        <translation>空间滤波半径：</translation>
+    </message>
+    <message>
+        <location filename="mainpanel.ui" line="391"/>
+        <source>Color radius:</source>
+        <translation>色彩滤波半径：</translation>
+    </message>
+    <message>
+        <location filename="mainpanel.ui" line="443"/>
+        <source>Max level:</source>
+        <translation>最大等级：</translation>
+    </message>
+    <message>
+        <location filename="mainpanel.ui" line="492"/>
         <source>Step 2: Binarize</source>
         <translation>第二步：二值化</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="361"/>
+        <location filename="mainpanel.ui" line="503"/>
         <source>Select thresholding method:</source>
         <translation>选择阈值分割方法：</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="393"/>
+        <location filename="mainpanel.ui" line="535"/>
         <source>Black fraction:</source>
         <translation>背景比例：</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="439"/>
+        <location filename="mainpanel.ui" line="581"/>
         <source>Step 3: Edge detection</source>
         <translation>第三步：边缘检测</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="448"/>
+        <location filename="mainpanel.ui" line="590"/>
         <source>Select edge detection method:</source>
         <translation>选择边缘检测方法：</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="460"/>
+        <location filename="mainpanel.ui" line="602"/>
         <source>Step 4: Circle fit</source>
         <translation>第四步：圆拟合</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="471"/>
+        <location filename="mainpanel.ui" line="613"/>
         <source>Select fit method:</source>
         <translation>选择拟合方法：</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="485"/>
+        <location filename="mainpanel.ui" line="627"/>
         <source>Select error correction method:</source>
         <translation>选择误差校正方法：</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="552"/>
+        <location filename="mainpanel.ui" line="694"/>
         <source>Filtered Image</source>
         <translation>滤波图像</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="576"/>
+        <location filename="mainpanel.ui" line="718"/>
         <source>Binarized Image</source>
         <translation>二值化图像</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="600"/>
+        <location filename="mainpanel.ui" line="742"/>
         <source>Edge Image</source>
         <translation>边缘图像</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="624"/>
+        <location filename="mainpanel.ui" line="766"/>
         <source>Circle Image</source>
         <translation>拟合圆图像</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="659"/>
+        <location filename="mainpanel.ui" line="801"/>
         <source>Save Configuration</source>
         <translation>保存配置</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="666"/>
+        <location filename="mainpanel.ui" line="808"/>
         <source>Load Configuration</source>
         <translation>加载配置</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="686"/>
+        <location filename="mainpanel.ui" line="828"/>
         <source>Export Edge</source>
-        <translation type="unfinished">导出边缘</translation>
+        <translation>导出边缘</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="693"/>
+        <location filename="mainpanel.ui" line="835"/>
         <source>Export Result</source>
         <translation>导出结果</translation>
     </message>
@@ -164,98 +179,103 @@
         <translation>中值滤波器</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="56"/>
+        <location filename="mainpanel.cpp" line="54"/>
+        <source>Mean shift filter</source>
+        <translation>均值平移滤波器</translation>
+    </message>
+    <message>
+        <location filename="mainpanel.cpp" line="57"/>
         <source>Otsu&apos;s threshold clustering algorithm</source>
         <translation>大津法</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="57"/>
+        <location filename="mainpanel.cpp" line="58"/>
         <source>Mean of gray levels</source>
         <translation>灰度平均值</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="58"/>
+        <location filename="mainpanel.cpp" line="59"/>
         <source>Moment-preserving thresholding method</source>
         <translation>力矩保持法</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="59"/>
+        <location filename="mainpanel.cpp" line="60"/>
         <source>Huang&apos;s fuzzy thresholding method</source>
         <translation>模糊度阈值分割方法</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="60"/>
+        <location filename="mainpanel.cpp" line="61"/>
         <source>P-tile thresholding</source>
         <translation>P-Tile比例阈值分割</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="63"/>
+        <location filename="mainpanel.cpp" line="64"/>
         <source>Sobel operator</source>
         <translation>Sobel算子</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="64"/>
+        <location filename="mainpanel.cpp" line="65"/>
         <source>Prewitt operator</source>
         <translation>Prewitt算子</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="65"/>
+        <location filename="mainpanel.cpp" line="66"/>
         <source>Scharr operator</source>
         <translation>Scharr算子</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="66"/>
+        <location filename="mainpanel.cpp" line="67"/>
         <source>Laplacian operator</source>
         <translation>拉普拉斯算子</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="69"/>
+        <location filename="mainpanel.cpp" line="70"/>
         <source>Naive fit</source>
         <translation>幼稚的拟合法</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="70"/>
+        <location filename="mainpanel.cpp" line="71"/>
         <source>Simple algebraic fit</source>
         <translation>简单的代数拟合法</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="71"/>
+        <location filename="mainpanel.cpp" line="72"/>
         <source>Hyper algebraic fit</source>
         <translation>超级代数拟合法</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="74"/>
+        <location filename="mainpanel.cpp" line="75"/>
         <source>No correction</source>
         <translation>无校正</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="75"/>
+        <location filename="mainpanel.cpp" line="76"/>
         <source>Median error correction</source>
         <translation>中位误差校正</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="76"/>
+        <location filename="mainpanel.cpp" line="77"/>
         <source>Connectivity-based correction</source>
         <translation>基于连通性的误差校正</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="201"/>
+        <location filename="mainpanel.cpp" line="214"/>
         <source>The center of the circle is (%1, %2), and the radius is %3</source>
         <translation>圆心为(%1, %2)，半径为%3</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="342"/>
+        <location filename="mainpanel.cpp" line="368"/>
         <source>Export result</source>
         <translation>导出结果</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="344"/>
-        <location filename="mainpanel.cpp" line="355"/>
+        <location filename="mainpanel.cpp" line="370"/>
+        <location filename="mainpanel.cpp" line="381"/>
         <source>Images (*.png *.jpg *.jpeg *.bmp *.xpm)</source>
         <translation>图像 (*.png *.jpg *.jpeg *.bmp *.xpm)</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="353"/>
+        <location filename="mainpanel.cpp" line="379"/>
         <source>Export edge</source>
         <translation>导出边缘</translation>
     </message>
@@ -263,7 +283,7 @@
 <context>
     <name>Processor</name>
     <message>
-        <location filename="processor.cpp" line="212"/>
+        <location filename="processor.cpp" line="219"/>
         <source>Center: (%1, %2)
 Radius: %3</source>
         <translation>圆心：(%1, %2)

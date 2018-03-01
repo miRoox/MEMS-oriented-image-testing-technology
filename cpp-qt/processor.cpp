@@ -58,6 +58,8 @@ public:
 
     uint filterRadius;
     qreal gaussianSigma;
+    qreal colorRadius;
+    uint maxLevel;
 
     qreal pTileValue;
 
@@ -75,6 +77,8 @@ public:
           errorCorrectionMethod(config.errorCorrectionMethod()),
           filterRadius(config.filterRadius()),
           gaussianSigma(config.gaussianSigma()),
+          colorRadius(config.colorRadius()),
+          maxLevel(config.maxLevel()),
           pTileValue(config.pTileValue())
     {
     }
@@ -96,6 +100,9 @@ public:
             break;
         case Configuration::MedianFilter:
             q->setFilteredImage(medianFilter(origin,filterRadius));
+            break;
+        case Configuration::MeanShiftFilter:
+            q->setFilteredImage(meanShiftFilter(origin,filterRadius,colorRadius,maxLevel));
             break;
         default:
             Q_UNREACHABLE();
@@ -366,6 +373,8 @@ Configuration Processor::configurations() const
             .setErrorCorrectionMethod(d->errorCorrectionMethod)
             .setFilterRadius(d->filterRadius)
             .setGaussianSigma(d->gaussianSigma)
+            .setColorRadius(d->colorRadius)
+            .setMaxLevel(d->maxLevel)
             .setPTileValue(d->pTileValue);
 }
 
@@ -375,6 +384,8 @@ void Processor::setConfigurations(const Configuration& config)
     setFilterMethod(config.filterMethod());
     setFilterRadius(config.filterRadius());
     setGaussianSigma(config.gaussianSigma());
+    setColorRadius(config.colorRadius());
+    setMaxLevel(config.maxLevel());
     setThresholdingMethod(config.thresholdingMethod());
     setPTileValue(config.pTileValue());
     setEdgeDetectionMethod(config.edgeDetectionMethod());
@@ -489,6 +500,36 @@ void Processor::setGaussianSigma(qreal sigma)
         return;
     d->gaussianSigma = sigma;
     emit gaussianSigmaChanged(d->gaussianSigma);
+
+    d->updateFilteredImage();
+}
+
+qreal Processor::colorRadius() const
+{
+    return d->colorRadius;
+}
+
+void Processor::setColorRadius(qreal radius)
+{
+    if (qFuzzyIsNull(d->colorRadius - radius))
+        return;
+    d->colorRadius = radius;
+    emit colorRadiusChanged(d->colorRadius);
+
+    d->updateFilteredImage();
+}
+
+uint Processor::maxLevel() const
+{
+    return d->maxLevel;
+}
+
+void Processor::setMaxLevel(uint level)
+{
+    if (d->maxLevel == level)
+        return;
+    d->maxLevel = level;
+    emit maxLevelChanged(d->maxLevel);
 
     d->updateFilteredImage();
 }
