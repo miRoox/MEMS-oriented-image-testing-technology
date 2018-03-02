@@ -256,6 +256,8 @@ QImage convolve(const QImage& image, const MatrixKernel& kernel, PaddingType pad
                 const QRgb* iLine = reinterpret_cast<const QRgb*>(input.constScanLine(yy));
                 for (int j=0; j<kerCols; ++j)
                 {
+                    MAYBE_INTERRUPT();
+
                     const int xx = calcPaddingX(width,x+j-kerCenterX,padding);
                     const auto kerVar = kernel.at(kerRows-1-i,kerCols-1-j);
                     rr += qRed(iLine[xx])*kerVar;
@@ -266,8 +268,6 @@ QImage convolve(const QImage& image, const MatrixKernel& kernel, PaddingType pad
             line[x] = qRgb(qBound(0,static_cast<int>(rr),0xff),
                            qBound(0,static_cast<int>(gg),0xff),
                            qBound(0,static_cast<int>(bb),0xff));
-
-            MAYBE_INTERRUPT();
         }
     }
 
@@ -302,6 +302,8 @@ QImage convolve(const QImage& image, const MatrixKernel& kernel, QRgb padding)
             {
                 for (int j=0; j<kerCols; ++j)
                 {
+                    MAYBE_INTERRUPT();
+
                     const QRgb pix = image.valid(x+j-kerCenterX,y+i-kerCenterY)
                                     ? image.pixel(x+j-kerCenterX,y+i-kerCenterY)
                                     : padding;
@@ -314,8 +316,6 @@ QImage convolve(const QImage& image, const MatrixKernel& kernel, QRgb padding)
             line[x] = qRgb(qBound(0,static_cast<int>(rr),0xff),
                            qBound(0,static_cast<int>(gg),0xff),
                            qBound(0,static_cast<int>(bb),0xff));
-
-            MAYBE_INTERRUPT();
         }
     }
 
@@ -367,6 +367,8 @@ QImage convolveXY(const QImage& image, const MatrixKernel& kerX, const MatrixKer
                 const QRgb* iLine = reinterpret_cast<const QRgb*>(input.constScanLine(yy));
                 for (int j=0; j<kerCols; ++j)
                 {
+                    MAYBE_INTERRUPT();
+
                     const int xx = calcPaddingX(width,x+j-kerCenterX,padding);
                     const auto kerXVar = kerX.at(kerRows-1-i,kerCols-1-j);
                     const auto kerYVar = kerY.at(kerRows-1-i,kerCols-1-j);
@@ -381,8 +383,6 @@ QImage convolveXY(const QImage& image, const MatrixKernel& kerX, const MatrixKer
             line[x] = qRgb(qBound(0,static_cast<int>(hypot(rx,ry)),0xff),
                            qBound(0,static_cast<int>(hypot(gx,gy)),0xff),
                            qBound(0,static_cast<int>(hypot(bx,by)),0xff));
-
-            MAYBE_INTERRUPT();
         }
     }
 
@@ -423,6 +423,8 @@ QImage convolveXY(const QImage& image, const MatrixKernel& kerX, const MatrixKer
             {
                 for (int j=0; j<kerCols; ++j)
                 {
+                    MAYBE_INTERRUPT();
+
                     const QRgb pix = image.valid(x+j-kerCenterX,y+i-kerCenterY)
                                     ? image.pixel(x+j-kerCenterX,y+i-kerCenterY)
                                     : padding;
@@ -439,8 +441,6 @@ QImage convolveXY(const QImage& image, const MatrixKernel& kerX, const MatrixKer
             line[x] = qRgb(qBound(0,static_cast<int>(hypot(rx,ry)),0xff),
                            qBound(0,static_cast<int>(hypot(gx,gy)),0xff),
                            qBound(0,static_cast<int>(hypot(bx,by)),0xff));
-
-            MAYBE_INTERRUPT();
         }
     }
 
@@ -600,6 +600,8 @@ static QImage medianFilter_Grayscale(const QImage& image, uint radius)
                 const QRgb* iLine = reinterpret_cast<const QRgb*>(input.constScanLine(yy));
                 for (int j=-r; j<=r; ++j)
                 {
+                    MAYBE_INTERRUPT();
+
                     const int xx = x+j;
                     if (xx<0 || xx>=width)
                         continue;
@@ -619,8 +621,6 @@ static QImage medianFilter_Grayscale(const QImage& image, uint radius)
                     break;
                 }
             }
-
-            MAYBE_INTERRUPT();
         }
     }
 
@@ -656,6 +656,8 @@ static QImage medianFilter_ColorSmall(const QImage& image, uint radius)
                 const QRgb* iLine = reinterpret_cast<const QRgb*>(input.constScanLine(yy));
                 for (int j=-r; j<=r; ++j)
                 {
+                    MAYBE_INTERRUPT();
+
                     const int xx = x+j;
                     if (xx<0 || xx>=width)
                         continue;
@@ -673,8 +675,6 @@ static QImage medianFilter_ColorSmall(const QImage& image, uint radius)
             });
             line[x] = medianCandidate.at(medianIndex);
             medianCandidate.clear();
-
-            MAYBE_INTERRUPT();
         }
     }
 
@@ -714,6 +714,8 @@ static QImage medianFilter_ColorLarge(const QImage& image, uint radius)
                 const QRgb* iLine = reinterpret_cast<const QRgb*>(input.constScanLine(yy));
                 for (int j=-r; j<=r; ++j)
                 {
+                    MAYBE_INTERRUPT();
+
                     const int xx = x+j;
                     if (xx<0 || xx>=width)
                         continue;
@@ -736,8 +738,6 @@ static QImage medianFilter_ColorLarge(const QImage& image, uint radius)
                 partSum = nextSum;
                 histogram[i].clear();
             }
-
-            MAYBE_INTERRUPT();
         }
     }
 
@@ -791,6 +791,8 @@ static QImage meanShiftFilter_Impl(const QImage& image, uint spatialRadius, qrea
                 const QRgb* iLine = reinterpret_cast<const QRgb*>(image.constScanLine(yy));
                 for (int j=-r; j<=r; ++j)
                 {
+                    MAYBE_INTERRUPT();
+
                     const int xx = x+j;
                     if (xx<0 || xx>=width)
                         continue;
@@ -818,9 +820,9 @@ QImage meanShiftFilter(const QImage& image, uint spatialRadius, qreal colorRadiu
     QImage output = image.convertToFormat(QImage::Format_RGB32);
     for (uint i=0; i<maxLevel; ++i)
     {
-        output = meanShiftFilter_Impl(output,spatialRadius,colorRadius);
-
         MAYBE_INTERRUPT();
+
+        output = meanShiftFilter_Impl(output,spatialRadius,colorRadius);
     }
     return output.convertToFormat(image.format());
 }

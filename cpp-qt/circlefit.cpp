@@ -296,6 +296,8 @@ CircleData medianErrorCorrection(CircleFitFunction fit, const QVector<QPoint>& p
     qreal lastMedianError = ::std::numeric_limits<qreal>::max();
     for (uint iter=0; iter<maxIter; ++iter)
     {
+        MAYBE_INTERRUPT();
+
         // get median error
         ::std::transform(points.begin(),points.end(),errors.begin(),
                          [&circle](const QPoint& point){
@@ -318,8 +320,6 @@ CircleData medianErrorCorrection(CircleFitFunction fit, const QVector<QPoint>& p
             return geometricError(circle,point) < medianError;
         });
         circle = fit(validPoints);
-
-        MAYBE_INTERRUPT();
     }
     qWarning() << __func__ << ": Unable to converge to the proposal error";
     return circle;
@@ -346,15 +346,21 @@ CircleData connectivityBasedCorrection(CircleFitFunction fit, const QVector<QPoi
     size_type maxSize = 0;
     while (!unclassified.isEmpty())
     {
+        MAYBE_INTERRUPT();
+
         // to find candidate
         QPoint p = unclassified.takeLast();
         candidate.append(p);
         toFind.append(p);
         while (!toFind.isEmpty())
         {
+            MAYBE_INTERRUPT();
+
             QPoint p = toFind.takeFirst(); // queue like
             for (const auto& point : qAsConst(unclassified))
             {
+                MAYBE_INTERRUPT();
+
                 if (isNeighborhood(p,point))
                 {
                     toFind.append(point);
@@ -362,6 +368,8 @@ CircleData connectivityBasedCorrection(CircleFitFunction fit, const QVector<QPoi
             }
             for (const auto& finded : qAsConst(toFind))
             {
+                MAYBE_INTERRUPT();
+
                 candidate.append(finded);
                 unclassified.removeOne(finded);
             }
@@ -385,8 +393,6 @@ CircleData connectivityBasedCorrection(CircleFitFunction fit, const QVector<QPoi
             }
         }
         candidate.clear();
-
-        MAYBE_INTERRUPT();
     }
     return circle;
 }
