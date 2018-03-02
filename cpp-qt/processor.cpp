@@ -352,6 +352,8 @@ qreal Processor::circleRadius() const
 
 void Processor::setCircle(const MEMS::CircleData& circle)
 {
+    if (circle.isNull())
+        return;
     if (d->circleData == circle)
         return;
     d->circleData = circle;

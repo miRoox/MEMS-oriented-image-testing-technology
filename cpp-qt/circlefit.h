@@ -28,6 +28,7 @@
 #define CIRCLEFIT_H
 
 #include <QPointF>
+#include <cmath>
 
 class QImage;
 class QPoint;
@@ -38,7 +39,8 @@ namespace MEMS {
 
 struct CircleData
 {
-    Q_DECL_CONSTEXPR CircleData() : center(0,0),radius(0) {}
+    Q_DECL_CONSTEXPR CircleData() : center(0,0),radius(NAN) {}
+    Q_DECL_CONSTEXPR bool isNull() const {return ::std::isnan(radius);}
     friend Q_DECL_CONSTEXPR inline bool operator==(const CircleData&, const CircleData&);
 
     QPointF center;
