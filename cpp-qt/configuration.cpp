@@ -357,11 +357,9 @@ static constexpr const char ColorRadiusKey[] = "ColorRadius";
 static constexpr const char MaxLevelKey[] = "MaxLevel";
 static constexpr const char PTileValueKey[] = "PTileValue";
 
-static constexpr const char SettingFile[] = "/config.ini";
-
 void saveConfigs(const Configuration& config, QString group)
 {
-    QSettings settings(qApp->applicationDirPath() + SettingFile, QSettings::IniFormat);
+    QSettings settings(qApp->applicationDirPath() + "/" + SettingFile, QSettings::IniFormat);
     settings.beginGroup(group);
     settings.setValue(FilterMethodKey,valueToKey(config.filterMethod()));
     settings.setValue(ThresholdingMethodKey,valueToKey(config.thresholdingMethod()));
@@ -378,7 +376,7 @@ void saveConfigs(const Configuration& config, QString group)
 
 Configuration loadConfigs(QString group)
 {
-    QSettings settings(qApp->applicationDirPath() + SettingFile, QSettings::IniFormat);
+    QSettings settings(qApp->applicationDirPath() + "/" + SettingFile, QSettings::IniFormat);
     Configuration config;
     settings.beginGroup(group);
     config.setFilterMethod(keyToValue(settings.value(FilterMethodKey).toString(),DefaultFilterMethod))
