@@ -166,6 +166,7 @@ MainPanel::MainPanel(QWidget *parent) :
 
 MainPanel::~MainPanel()
 {
+    workerThread.requestInterruption();
     workerThread.quit();
     bool quited = workerThread.wait();
     Q_ASSERT(quited);

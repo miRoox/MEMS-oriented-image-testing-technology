@@ -35,9 +35,7 @@
 #include <QImage>
 #include <QPoint>
 #include <QColor>
-#include <cmath>
-
-#include <QtDebug>
+#include "global.h"
 
 namespace MEMS {
 
@@ -268,6 +266,8 @@ QImage convolve(const QImage& image, const MatrixKernel& kernel, PaddingType pad
             line[x] = qRgb(qBound(0,static_cast<int>(rr),0xff),
                            qBound(0,static_cast<int>(gg),0xff),
                            qBound(0,static_cast<int>(bb),0xff));
+
+            MAYBE_INTERRUPT();
         }
     }
 
@@ -314,6 +314,8 @@ QImage convolve(const QImage& image, const MatrixKernel& kernel, QRgb padding)
             line[x] = qRgb(qBound(0,static_cast<int>(rr),0xff),
                            qBound(0,static_cast<int>(gg),0xff),
                            qBound(0,static_cast<int>(bb),0xff));
+
+            MAYBE_INTERRUPT();
         }
     }
 
@@ -379,6 +381,8 @@ QImage convolveXY(const QImage& image, const MatrixKernel& kerX, const MatrixKer
             line[x] = qRgb(qBound(0,static_cast<int>(hypot(rx,ry)),0xff),
                            qBound(0,static_cast<int>(hypot(gx,gy)),0xff),
                            qBound(0,static_cast<int>(hypot(bx,by)),0xff));
+
+            MAYBE_INTERRUPT();
         }
     }
 
@@ -435,6 +439,8 @@ QImage convolveXY(const QImage& image, const MatrixKernel& kerX, const MatrixKer
             line[x] = qRgb(qBound(0,static_cast<int>(hypot(rx,ry)),0xff),
                            qBound(0,static_cast<int>(hypot(gx,gy)),0xff),
                            qBound(0,static_cast<int>(hypot(bx,by)),0xff));
+
+            MAYBE_INTERRUPT();
         }
     }
 
@@ -613,6 +619,8 @@ static QImage medianFilter_Grayscale(const QImage& image, uint radius)
                     break;
                 }
             }
+
+            MAYBE_INTERRUPT();
         }
     }
 
@@ -665,6 +673,8 @@ static QImage medianFilter_ColorSmall(const QImage& image, uint radius)
             });
             line[x] = medianCandidate.at(medianIndex);
             medianCandidate.clear();
+
+            MAYBE_INTERRUPT();
         }
     }
 
@@ -726,6 +736,8 @@ static QImage medianFilter_ColorLarge(const QImage& image, uint radius)
                 partSum = nextSum;
                 histogram[i].clear();
             }
+
+            MAYBE_INTERRUPT();
         }
     }
 
@@ -807,6 +819,8 @@ QImage meanShiftFilter(const QImage& image, uint spatialRadius, qreal colorRadiu
     for (uint i=0; i<maxLevel; ++i)
     {
         output = meanShiftFilter_Impl(output,spatialRadius,colorRadius);
+
+        MAYBE_INTERRUPT();
     }
     return output.convertToFormat(image.format());
 }

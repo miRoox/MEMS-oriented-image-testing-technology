@@ -15,7 +15,7 @@
     </message>
     <message>
         <location filename="mainpanel.ui" line="91"/>
-        <location filename="mainpanel.cpp" line="195"/>
+        <location filename="mainpanel.cpp" line="196"/>
         <source>A</source>
         <translation>A</translation>
     </message>
@@ -26,7 +26,7 @@
     </message>
     <message>
         <location filename="mainpanel.ui" line="108"/>
-        <location filename="mainpanel.cpp" line="200"/>
+        <location filename="mainpanel.cpp" line="201"/>
         <source>B</source>
         <translation>B</translation>
     </message>
@@ -37,7 +37,7 @@
     </message>
     <message>
         <location filename="mainpanel.ui" line="125"/>
-        <location filename="mainpanel.cpp" line="206"/>
+        <location filename="mainpanel.cpp" line="207"/>
         <source>C</source>
         <translation>C</translation>
     </message>
@@ -259,23 +259,23 @@
         <translation>基于连通性的误差校正</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="214"/>
+        <location filename="mainpanel.cpp" line="215"/>
         <source>The center of the circle is (%1, %2), and the radius is %3</source>
         <translation>圆心为(%1, %2)，半径为%3</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="368"/>
+        <location filename="mainpanel.cpp" line="369"/>
         <source>Export result</source>
         <translation>导出结果</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="370"/>
-        <location filename="mainpanel.cpp" line="381"/>
+        <location filename="mainpanel.cpp" line="371"/>
+        <location filename="mainpanel.cpp" line="382"/>
         <source>Images (*.png *.jpg *.jpeg *.bmp *.xpm)</source>
         <translation>图像 (*.png *.jpg *.jpeg *.bmp *.xpm)</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="379"/>
+        <location filename="mainpanel.cpp" line="380"/>
         <source>Export edge</source>
         <translation>导出边缘</translation>
     </message>

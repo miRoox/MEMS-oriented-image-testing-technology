@@ -36,10 +36,7 @@
 #include <QPoint>
 #include <QVector>
 #include <QColor>
-#include <cmath>
-#include <limits>
-#include <algorithm>
-#include <QtDebug>
+#include "global.h"
 
 namespace MEMS {
 
@@ -321,6 +318,8 @@ CircleData medianErrorCorrection(CircleFitFunction fit, const QVector<QPoint>& p
             return geometricError(circle,point) < medianError;
         });
         circle = fit(validPoints);
+
+        MAYBE_INTERRUPT();
     }
     qWarning() << __func__ << ": Unable to converge to the proposal error";
     return circle;
@@ -386,6 +385,8 @@ CircleData connectivityBasedCorrection(CircleFitFunction fit, const QVector<QPoi
             }
         }
         candidate.clear();
+
+        MAYBE_INTERRUPT();
     }
     return circle;
 }

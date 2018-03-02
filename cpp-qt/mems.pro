@@ -34,7 +34,8 @@ HEADERS += \
     circlefit.h \
     processor.h \
     configuration.h \
-    algorithms.h
+    algorithms.h \
+    global.h
 
 FORMS += \
     mainpanel.ui
