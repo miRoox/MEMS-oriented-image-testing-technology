@@ -69,97 +69,97 @@
         <translation>高斯标准差：</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="348"/>
+        <location filename="mainpanel.ui" line="360"/>
         <source>Spatial radius:</source>
         <translation>空间滤波半径：</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="391"/>
+        <location filename="mainpanel.ui" line="403"/>
         <source>Color radius:</source>
         <translation>色彩滤波半径：</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="443"/>
+        <location filename="mainpanel.ui" line="455"/>
         <source>Max level:</source>
         <translation>最大等级：</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="492"/>
+        <location filename="mainpanel.ui" line="504"/>
         <source>Step 2: Binarize</source>
         <translation>第二步：二值化</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="503"/>
+        <location filename="mainpanel.ui" line="515"/>
         <source>Select thresholding method:</source>
         <translation>选择阈值分割方法：</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="535"/>
+        <location filename="mainpanel.ui" line="547"/>
         <source>Black fraction:</source>
         <translation>背景比例：</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="581"/>
+        <location filename="mainpanel.ui" line="593"/>
         <source>Step 3: Edge detection</source>
         <translation>第三步：边缘检测</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="590"/>
+        <location filename="mainpanel.ui" line="602"/>
         <source>Select edge detection method:</source>
         <translation>选择边缘检测方法：</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="602"/>
+        <location filename="mainpanel.ui" line="614"/>
         <source>Step 4: Circle fit</source>
         <translation>第四步：圆拟合</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="613"/>
+        <location filename="mainpanel.ui" line="625"/>
         <source>Select fit method:</source>
         <translation>选择拟合方法：</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="627"/>
+        <location filename="mainpanel.ui" line="639"/>
         <source>Select error correction method:</source>
         <translation>选择误差校正方法：</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="694"/>
+        <location filename="mainpanel.ui" line="706"/>
         <source>Filtered Image</source>
         <translation>滤波图像</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="718"/>
+        <location filename="mainpanel.ui" line="730"/>
         <source>Binarized Image</source>
         <translation>二值化图像</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="742"/>
+        <location filename="mainpanel.ui" line="754"/>
         <source>Edge Image</source>
         <translation>边缘图像</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="766"/>
+        <location filename="mainpanel.ui" line="778"/>
         <source>Circle Image</source>
         <translation>拟合圆图像</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="801"/>
+        <location filename="mainpanel.ui" line="813"/>
         <source>Save Configuration</source>
         <translation>保存配置</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="808"/>
+        <location filename="mainpanel.ui" line="820"/>
         <source>Load Configuration</source>
         <translation>加载配置</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="828"/>
+        <location filename="mainpanel.ui" line="840"/>
         <source>Export Edge</source>
         <translation>导出边缘</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="835"/>
+        <location filename="mainpanel.ui" line="847"/>
         <source>Export Result</source>
         <translation>导出结果</translation>
     </message>

@@ -216,8 +216,8 @@ public:
         font.setPointSize(2*font.pointSize());
         painter.setFont(font);
         painter.drawText(4,4,copy.width()/8.,copy.height()/8.,Qt::AlignLeft | Qt::TextDontClip,
-                         q->tr("Center: (%1, %2)\n"
-                               "Radius: %3")
+                         Processor::tr("Center: (%1, %2)\n"
+                                       "Radius: %3")
                          .arg(circleData.center.x()).arg(circleData.center.y())
                          .arg(circleData.radius));
         q->setCircleImage(copy);
