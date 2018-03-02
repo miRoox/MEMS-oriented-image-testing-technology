@@ -360,9 +360,9 @@ void Processor::setCircle(const MEMS::CircleData& circle)
     emit circleCenterChanged(d->circleData.center);
     emit circleRadiusChanged(d->circleData.radius);
 
-    qInfo() << "The center of the circle is" << d->circleData.center
-            << "and the radius is" << d->circleData.radius
-            << ", with the" << configurations();
+    qDebug() << "The center of the circle is" << d->circleData.center
+             << "and the radius is" << d->circleData.radius
+             << ", with the" << configurations();
 }
 
 Configuration Processor::configurations() const
