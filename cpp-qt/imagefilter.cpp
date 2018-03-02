@@ -239,8 +239,8 @@ QImage convolve(const QImage& image, const MatrixKernel& kernel, PaddingType pad
     const int height = image.height();
     const int kerRows = kernel.rows();
     const int kerCols = kernel.columns();
-    Q_ASSERT_X(kerRows%2==1,__func__,"Row of kernel must be odd");
-    Q_ASSERT_X(kerCols%2==1,__func__,"Column of kernel must be odd");
+    Q_ASSUME(kerRows%2==1);
+    Q_ASSUME(kerCols%2==1);
     const int kerCenterX = kerCols/2;
     const int kerCenterY = kerRows/2;
 
@@ -287,8 +287,8 @@ QImage convolve(const QImage& image, const MatrixKernel& kernel, QRgb padding)
     const int height = image.height();
     const int kerRows = kernel.rows();
     const int kerCols = kernel.columns();
-    Q_ASSERT_X(kerRows%2==1,__func__,"Row of kernel must be odd");
-    Q_ASSERT_X(kerCols%2==1,__func__,"Column of kernel must be odd");
+    Q_ASSUME(kerRows%2==1);
+    Q_ASSUME(kerCols%2==1);
     const int kerCenterX = kerCols/2;
     const int kerCenterY = kerRows/2;
 
@@ -345,12 +345,12 @@ QImage convolveXY(const QImage& image, const MatrixKernel& kerX, const MatrixKer
 
     const int width = image.width();
     const int height = image.height();
-    Q_ASSERT_X(kerX.rows()==kerY.rows(),__func__,"Size of Kernel X and Kernel Y must be same");
-    Q_ASSERT_X(kerX.columns()==kerY.columns(),__func__,"Size of Kernel X and Kernel Y must be same");
+    Q_ASSUME(kerX.rows()==kerY.rows());
+    Q_ASSUME(kerX.columns()==kerY.columns());
     const int kerRows = kerX.rows();
     const int kerCols = kerX.columns();
-    Q_ASSERT_X(kerRows%2==1,__func__,"Row of kernels must be odd");
-    Q_ASSERT_X(kerCols%2==1,__func__,"Column of kernels must be odd");
+    Q_ASSUME(kerRows%2==1);
+    Q_ASSUME(kerCols%2==1);
     const int kerCenterX = kerCols/2;
     const int kerCenterY = kerRows/2;
 
@@ -403,12 +403,12 @@ QImage convolveXY(const QImage& image, const MatrixKernel& kerX, const MatrixKer
 
     const int width = image.width();
     const int height = image.height();
-    Q_ASSERT_X(kerX.rows()==kerY.rows(),__func__,"Size of Kernel X and Kernel Y must be same");
-    Q_ASSERT_X(kerX.columns()==kerY.columns(),__func__,"Size of Kernel X and Kernel Y must be same");
+    Q_ASSUME(kerX.rows()==kerY.rows());
+    Q_ASSUME(kerX.columns()==kerY.columns());
     const int kerRows = kerX.rows();
     const int kerCols = kerX.columns();
-    Q_ASSERT_X(kerRows%2==1,__func__,"Row of kernels must be odd");
-    Q_ASSERT_X(kerCols%2==1,__func__,"Column of kernels must be odd");
+    Q_ASSUME(kerRows%2==1);
+    Q_ASSUME(kerCols%2==1);
     const int kerCenterX = kerCols/2;
     const int kerCenterY = kerRows/2;
 
@@ -574,8 +574,7 @@ QImage gaussianFilter(const QImage& image, uint radius, qreal sigma, const QColo
  */
 static QImage medianFilter_Grayscale(const QImage& image, uint radius)
 {
-    Q_ASSERT_X(image.isGrayscale(),__func__,
-               "Only grayscale image can use this algorithm.");
+    Q_ASSUME(image.isGrayscale());
 
     QImage output(image.size(),QImage::Format_RGB32);
     const QImage input = image.convertToFormat(QImage::Format_RGB32);
@@ -769,6 +768,8 @@ static inline qreal colorDistance(QRgb a, QRgb b)
  */
 static QImage meanShiftFilter_Impl(const QImage& image, uint spatialRadius, qreal colorRadius)
 {
+    Q_ASSUME(image.format()==QImage::Format_RGB32);
+
     QImage output(image.size(),QImage::Format_RGB32);
 
     const int width = image.width();

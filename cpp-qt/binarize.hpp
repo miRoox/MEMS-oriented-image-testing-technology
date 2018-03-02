@@ -83,8 +83,7 @@ QImage binarize(const QImage& origin, Predicate predicate)
  */
 inline QImage binarize(const QImage& origin, int threshold)
 {
-    Q_ASSERT_X(threshold>=0&&threshold<0x100,
-               __func__,"threshold is out of range");
+    Q_ASSUME(threshold>=0&&threshold<0x100);
     return binarize(origin,[=](QRgb pixel){return qGray(pixel)>threshold;});
 }
 

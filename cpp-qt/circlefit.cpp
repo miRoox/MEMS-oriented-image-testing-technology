@@ -72,9 +72,8 @@ namespace MEMS {
  */
 QVector<QPoint> whitePixelPositions(const QImage& monochrome)
 {
-    Q_ASSERT_X(monochrome.format()==QImage::Format_Mono
-               || monochrome.format()==QImage::Format_MonoLSB,
-               __func__,"Only monochrome image is valid.");
+    Q_ASSUME(monochrome.format()==QImage::Format_Mono
+               || monochrome.format()==QImage::Format_MonoLSB);
     const int whiteIndex = monochrome.colorTable().first() == QColor(Qt::white).rgba() ? 0 : 1;
 
     QVector<QPoint> result;
