@@ -54,7 +54,8 @@ FILES_TO_COPY = \
 
 QMAKE_PRE_LINK += $$[QT_INSTALL_BINS]/lupdate $$_PRO_FILE_ $$escape_expand(\\n\\t)
 
-QMAKE_PRE_LINK += mkdir $$shell_path($$shadowed($${translationDir})) $$escape_expand(\\n\\t)
+!exists($$shadowed($${translationDir})): \
+    QMAKE_PRE_LINK += mkdir $$shell_path($$shadowed($${translationDir})) $$escape_expand(\\n\\t)
 
 # Copies the given files to the destination directory
 for(FILE, FILES_TO_COPY) {
