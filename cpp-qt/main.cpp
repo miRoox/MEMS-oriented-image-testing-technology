@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     QTranslator translator;
     QTranslator qtTranslator;
     const QStringList uiLanguages = QLocale::system().uiLanguages();
-    const QString& appTrPath = app.applicationDirPath() + "/translations";
+    const QString& appTrPath = app.applicationDirPath() + "/" + TRANSLATIONS_DIR;
     const QString& qtTrPath = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
     for (QString locale : uiLanguages)
     {

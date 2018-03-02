@@ -10,6 +10,9 @@ CONFIG += c++14
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000 # disables all the APIs deprecated before Qt 6.0.0
 QT += core gui widgets
 
+translationDir = translations
+DEFINES += $$shell_quote(TRANSLATIONS_DIR=\"$$translationDir\")
+
 # Copies the given files to the destination directory
 defineTest(copyToDestdir) {
     FILES = $$1
@@ -22,8 +25,6 @@ defineTest(copyToDestdir) {
     }
     export(QMAKE_POST_LINK)
 }
-
-copyToDestdir($$absolute_path(config.ini))
 
 SOURCES += main.cpp \
     mainpanel.cpp \
@@ -55,5 +56,17 @@ DISTFILES += \
 RESOURCES += \
     images.qrc
 
-TRANSLATIONS += \
-    mems_zh_CN.ts
+LOCALES += \
+    zh_CN
+
+QMAKE_PRE_LINK += $$[QT_INSTALL_BINS]/lupdate $$_PRO_FILE_ $$escape_expand(\\n\\t)
+
+QMAKE_PRE_LINK += mkdir $$shell_path($$shadowed($${translationDir})) $$escape_expand(\\n\\t)
+
+copyToDestdir($$absolute_path(config.ini))
+
+for(LOCALE, LOCALES) {
+    TRANSLATIONS += mems_$${LOCALE}.ts
+    QMAKE_POST_LINK += $$[QT_INSTALL_BINS]/lrelease $$absolute_path(mems_$${LOCALE}.ts) \
+         -qm $$shadowed($${translationDir}/mems_$${LOCALE}.qm) $$escape_expand(\\n\\t)
+}
