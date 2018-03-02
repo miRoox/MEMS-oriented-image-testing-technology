@@ -62,10 +62,12 @@ for(FILE, FILES_TO_COPY) {
     DDIR = $$shadowed($$FILE)
     QMAKE_POST_LINK += $$QMAKE_COPY $$quote($$shell_path($$FILE)) \
          $$quote($$shell_path($$DDIR)) $$escape_expand(\\n\\t)
+    QMAKE_CLEAN += $$shell_path($$DDIR)
 }
 
 for(LOCALE, LOCALES) {
     TRANSLATIONS += mems_$${LOCALE}.ts
     QMAKE_POST_LINK += $$[QT_INSTALL_BINS]/lrelease $$absolute_path(mems_$${LOCALE}.ts) \
          -qm $$shadowed($${translationDir}/mems_$${LOCALE}.qm) $$escape_expand(\\n\\t)
+    QMAKE_CLEAN += $$shadowed($${translationDir}/mems_$${LOCALE}.qm)
 }
