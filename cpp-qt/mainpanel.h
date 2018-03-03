@@ -30,7 +30,6 @@
 #include <QWidget>
 #include <QThread>
 #include <QPointer>
-#include <QScopedPointer>
 #include <QString>
 #include <QPointF>
 #include <QMap>
