@@ -34,7 +34,7 @@
 #include <QPen>
 #include <QFont>
 #include <QFileInfo>
-#include <global.h>
+#include <utils.h>
 
 /*!
     \internal

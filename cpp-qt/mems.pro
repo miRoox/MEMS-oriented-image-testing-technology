@@ -39,7 +39,7 @@ HEADERS += \
     processor.h \
     configuration.h \
     algorithms.h \
-    global.h
+    utils.h
 
 FORMS += \
     mainpanel.ui
