@@ -301,37 +301,42 @@ Radius: %3</source>
 <context>
     <name>SnapshotView</name>
     <message>
-        <location filename="snapshotview.cpp" line="43"/>
+        <location filename="snapshotview.cpp" line="20"/>
+        <source>Save</source>
+        <translation>保存</translation>
+    </message>
+    <message>
+        <location filename="snapshotview.cpp" line="46"/>
         <source>&lt;html&gt;&lt;body&gt;&lt;p style=&quot;color:gray&quot;&gt;No Image&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;body&gt;&lt;p style=&quot;color:gray&quot;&gt;无图像&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="snapshotview.cpp" line="73"/>
+        <location filename="snapshotview.cpp" line="76"/>
         <source>Save Image</source>
         <translation>保存图像</translation>
     </message>
     <message>
-        <location filename="snapshotview.cpp" line="75"/>
+        <location filename="snapshotview.cpp" line="78"/>
         <source>Images (*.png *.jpg *.jpeg *.bmp *.xpm)</source>
         <translation>图像 (*.png *.jpg *.jpeg *.bmp *.xpm)</translation>
     </message>
     <message>
-        <location filename="snapshotview.cpp" line="82"/>
+        <location filename="snapshotview.cpp" line="85"/>
         <source>Image saved sucessfully!</source>
         <translation>图像保存成功！</translation>
     </message>
     <message>
-        <location filename="snapshotview.cpp" line="83"/>
+        <location filename="snapshotview.cpp" line="86"/>
         <source>Image sucessfully saved to %1.</source>
         <translation>图像成功保存到%1。</translation>
     </message>
     <message>
-        <location filename="snapshotview.cpp" line="90"/>
+        <location filename="snapshotview.cpp" line="93"/>
         <source>Image save failed!</source>
         <translation>图像保存失败！</translation>
     </message>
     <message>
-        <location filename="snapshotview.cpp" line="91"/>
+        <location filename="snapshotview.cpp" line="94"/>
         <source>Do you want to retry?</source>
         <translation>是否需要重试？</translation>
     </message>

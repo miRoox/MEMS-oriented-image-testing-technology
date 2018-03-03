@@ -1,6 +1,7 @@
 #include "snapshotview.h"
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QAction>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QString>
@@ -16,8 +17,10 @@ SnapshotView::SnapshotView(QWidget *parent)
     layout->addWidget(view);
     setLayout(layout);
     setAttribute(Qt::WA_Hover);
-    setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(this,&SnapshotView::customContextMenuRequested,
+    auto actionSave = new QAction(tr("Save"),this);
+    addAction(actionSave);
+    setContextMenuPolicy(Qt::ActionsContextMenu);
+    connect(actionSave,&QAction::triggered,
             this,&SnapshotView::saveImage);
     setPixmap( {} );
 }
