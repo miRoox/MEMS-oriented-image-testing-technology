@@ -205,7 +205,7 @@ public:
             Q_UNREACHABLE();
             break;
         }
-        QImage copy = origin.convertToFormat(QImage::Format_RGB32);
+        QImage copy = origin.convertToFormat(QImage::Format_ARGB32_Premultiplied);
         QPainter painter(&copy);
         QPen pen(Qt::red);
         pen.setWidth(2);
