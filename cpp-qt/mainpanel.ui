@@ -691,14 +691,7 @@
            <item row="0" column="0">
             <layout class="QVBoxLayout" name="verticalLayout1">
              <item>
-              <widget class="QLabel" name="labelImage1">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
+              <widget class="SnapshotView" name="snapshot1" native="true"/>
              </item>
              <item>
               <widget class="QLabel" name="labelText1">
@@ -715,14 +708,7 @@
            <item row="0" column="1">
             <layout class="QVBoxLayout" name="verticalLayout2">
              <item>
-              <widget class="QLabel" name="labelImage2">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
+              <widget class="SnapshotView" name="snapshot2" native="true"/>
              </item>
              <item>
               <widget class="QLabel" name="labelText2">
@@ -739,14 +725,7 @@
            <item row="1" column="0">
             <layout class="QVBoxLayout" name="verticalLayout3">
              <item>
-              <widget class="QLabel" name="labelImage3">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
+              <widget class="SnapshotView" name="snapshot3" native="true"/>
              </item>
              <item>
               <widget class="QLabel" name="labelText3">
@@ -763,14 +742,7 @@
            <item row="1" column="1">
             <layout class="QVBoxLayout" name="verticalLayout4">
              <item>
-              <widget class="QLabel" name="labelImage4">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
+              <widget class="SnapshotView" name="snapshot4" native="true"/>
              </item>
              <item>
               <widget class="QLabel" name="labelText4">
@@ -852,6 +824,14 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>SnapshotView</class>
+   <extends>QWidget</extends>
+   <header>snapshotview.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="images.qrc"/>
  </resources>

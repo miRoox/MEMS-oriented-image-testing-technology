@@ -124,42 +124,42 @@
         <translation>选择误差校正方法：</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="706"/>
+        <location filename="mainpanel.ui" line="699"/>
         <source>Filtered Image</source>
         <translation>滤波图像</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="730"/>
+        <location filename="mainpanel.ui" line="716"/>
         <source>Binarized Image</source>
         <translation>二值化图像</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="754"/>
+        <location filename="mainpanel.ui" line="733"/>
         <source>Edge Image</source>
         <translation>边缘图像</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="778"/>
+        <location filename="mainpanel.ui" line="750"/>
         <source>Circle Image</source>
         <translation>拟合圆图像</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="813"/>
+        <location filename="mainpanel.ui" line="785"/>
         <source>Save Configuration</source>
         <translation>保存配置</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="820"/>
+        <location filename="mainpanel.ui" line="792"/>
         <source>Load Configuration</source>
         <translation>加载配置</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="840"/>
+        <location filename="mainpanel.ui" line="812"/>
         <source>Export Edge</source>
         <translation>导出边缘</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="847"/>
+        <location filename="mainpanel.ui" line="819"/>
         <source>Export Result</source>
         <translation>导出结果</translation>
     </message>
@@ -264,18 +264,18 @@
         <translation>圆心为(%1, %2)，半径为%3</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="370"/>
+        <location filename="mainpanel.cpp" line="368"/>
         <source>Export result</source>
         <translation>导出结果</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="372"/>
-        <location filename="mainpanel.cpp" line="383"/>
+        <location filename="mainpanel.cpp" line="370"/>
+        <location filename="mainpanel.cpp" line="381"/>
         <source>Images (*.png *.jpg *.jpeg *.bmp *.xpm)</source>
         <translation>图像 (*.png *.jpg *.jpeg *.bmp *.xpm)</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="381"/>
+        <location filename="mainpanel.cpp" line="379"/>
         <source>Export edge</source>
         <translation>导出边缘</translation>
     </message>
@@ -296,6 +296,14 @@ Radius: %3</source>
         <location filename="main.cpp" line="67"/>
         <source>MEMS oriented image testing technology</source>
         <translation>面向微系统的图像测试技术</translation>
+    </message>
+</context>
+<context>
+    <name>SnapshotView</name>
+    <message>
+        <location filename="snapshotview.cpp" line="38"/>
+        <source>&lt;html&gt;&lt;body&gt;&lt;p style=&quot;color:gray&quot;&gt;No Image&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;body&gt;&lt;p style=&quot;color:gray&quot;&gt;无图像&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 </TS>

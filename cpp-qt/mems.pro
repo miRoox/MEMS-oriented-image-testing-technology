@@ -26,7 +26,8 @@ SOURCES += main.cpp \
     edgedetect.cpp \
     circlefit.cpp \
     processor.cpp \
-    configuration.cpp
+    configuration.cpp \
+    snapshotview.cpp
 
 
 HEADERS += \
@@ -39,7 +40,8 @@ HEADERS += \
     processor.h \
     configuration.h \
     algorithms.h \
-    utils.h
+    utils.h \
+    snapshotview.h
 
 FORMS += \
     mainpanel.ui

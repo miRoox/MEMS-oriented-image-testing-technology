@@ -222,26 +222,24 @@ void MainPanel::initializeOnRun()
     setOrigin(DefaultOriginKey);
 }
 
-static constexpr QSize snapshotSize{320,240};
-
 void MainPanel::setFilteredImage(const QImage& img)
 {
-    ui->labelImage1->setPixmap(QPixmap::fromImage(img.scaled(snapshotSize,Qt::KeepAspectRatio)));
+    ui->snapshot1->setImage(img);
 }
 
 void MainPanel::setBinaryImage(const QImage& img)
 {
-    ui->labelImage2->setPixmap(QPixmap::fromImage(img.scaled(snapshotSize,Qt::KeepAspectRatio)));
+    ui->snapshot2->setImage(img);
 }
 
 void MainPanel::setEdgeImage(const QImage& img)
 {
-    ui->labelImage3->setPixmap(QPixmap::fromImage(img.scaled(snapshotSize,Qt::KeepAspectRatio)));
+    ui->snapshot3->setImage(img);
 }
 
 void MainPanel::setFitImage(const QImage& img)
 {
-    ui->labelImage4->setPixmap(QPixmap::fromImage(img.scaled(snapshotSize,Qt::KeepAspectRatio)));
+    ui->snapshot4->setImage(img);
 }
 
 void MainPanel::setCircleCenter(const QPointF& center)
