@@ -63,11 +63,11 @@ QImage binarize(const QImage& origin, Predicate predicate)
         {
             if (predicate(origin.pixel(x,y)))
             {
-                line[x>>3] |= (1 << (7-(x & 7)));
+                line[x>>3] |= (1 << (0b111-(x & 0b111)));
             }
             else
             {
-                line[x>>3] &= ~(1 << (7-(x & 7)));
+                line[x>>3] &= ~(1 << (0b111-(x & 0b111)));
             }
         }
     }

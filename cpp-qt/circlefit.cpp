@@ -87,7 +87,7 @@ QVector<QPoint> whitePixelPositions(const QImage& monochrome)
             const uchar* line = monochrome.constScanLine(y);
             for (int x=0; x<width; ++x)
             {
-                if (((line[x>>3] >> (7-(x&7))) & 1) == whiteIndex)
+                if (((line[x>>3] >> (0b111-(x&0b111))) & 1) == whiteIndex)
                 {
                     result.append({x,y});
                 }
@@ -100,7 +100,7 @@ QVector<QPoint> whitePixelPositions(const QImage& monochrome)
             const uchar* line = monochrome.constScanLine(y);
             for (int x=0; x<width; ++x)
             {
-                if (((line[x>>3] >> (x&7)) & 1) == whiteIndex)
+                if (((line[x>>3] >> (x&0b111)) & 1) == whiteIndex)
                 {
                     result.append({x,y});
                 }
