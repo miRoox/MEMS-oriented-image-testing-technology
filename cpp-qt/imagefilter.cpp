@@ -576,8 +576,8 @@ static QImage medianFilter_Grayscale(const QImage& image, uint radius)
 {
     Q_ASSUME(image.isGrayscale());
 
-    QImage output(image.size(),QImage::Format_RGB32);
-    const QImage input = image.convertToFormat(QImage::Format_RGB32);
+    QImage output(image.size(),QImage::Format_Grayscale8);
+    const QImage input = image.convertToFormat(QImage::Format_Grayscale8);
     QVector<uint> histogram(0x100,0);
 
     const int width = image.width();
@@ -586,7 +586,7 @@ static QImage medianFilter_Grayscale(const QImage& image, uint radius)
 
     for (int y=0; y<height; ++y)
     {
-        QRgb* line = reinterpret_cast<QRgb*>(output.scanLine(y));
+        uchar* line = output.scanLine(y);
         for (int x=0; x<width; ++x)
         {
             uint sum = 0;
@@ -596,7 +596,7 @@ static QImage medianFilter_Grayscale(const QImage& image, uint radius)
                 const int yy = y+i;
                 if (yy<0 || yy>=height)
                     continue;
-                const QRgb* iLine = reinterpret_cast<const QRgb*>(input.constScanLine(yy));
+                const uchar* iLine = input.constScanLine(yy);
                 for (int j=-r; j<=r; ++j)
                 {
                     MAYBE_INTERRUPT();
@@ -604,7 +604,7 @@ static QImage medianFilter_Grayscale(const QImage& image, uint radius)
                     const int xx = x+j;
                     if (xx<0 || xx>=width)
                         continue;
-                    ++histogram[qGray(iLine[xx])];
+                    ++histogram[iLine[xx]];
                     ++sum;
                 }
             }
@@ -616,7 +616,7 @@ static QImage medianFilter_Grayscale(const QImage& image, uint radius)
                 partSum += histogram.at(i);
                 if (partSum>=sum/2)
                 {
-                    line[x] = qRgb(i,i,i);
+                    line[x] = i;
                     break;
                 }
             }
