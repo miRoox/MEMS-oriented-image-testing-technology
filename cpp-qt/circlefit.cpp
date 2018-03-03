@@ -150,7 +150,7 @@ CircleData simpleAlgebraicCircleFit(const QVector<QPoint>& points)
     if (num<3)
     {
         qWarning() << __func__ << ": Fitting a circle requires at least three points";
-        return naiveCircleFit(points);
+        return {};
     }
 
     CircleData circle;
@@ -205,7 +205,7 @@ CircleData hyperAlgebraicCircleFit(const QVector<QPoint>& points)
     if (num<3)
     {
         qWarning() << __func__ << ": Fitting a circle requires at least three points";
-        return naiveCircleFit(points);
+        return {};
     }
 
     CircleData circle;
@@ -297,6 +297,9 @@ CircleData medianErrorCorrection(CircleFitFunction fit, const QVector<QPoint>& p
     {
         MAYBE_INTERRUPT();
 
+        if (circle.isNull())
+            break; // not converge
+
         // get median error
         ::std::transform(points.begin(),points.end(),errors.begin(),
                          [&circle](const QPoint& point){
@@ -336,6 +339,17 @@ CircleData connectivityBasedCorrection(CircleFitFunction fit, const QVector<QPoi
     };
 
     using size_type = typename QVector<QPoint>::size_type;
+    const int rangeX = (*::std::max_element(points.cbegin(),points.cend(),
+                                           [](const QPoint& a, const QPoint& b){
+        return a.x() < b.x();
+    })).x();
+    const int rangeY = (*::std::max_element(points.cbegin(),points.cend(),
+                                           [](const QPoint& a, const QPoint& b){
+        return a.y() < b.y();
+    })).y();
+    const auto isValid = [rangeX,rangeY](const QPointF& p)->bool{
+        return p.x()>=0 && p.y()>=0 && p.x()<=rangeX && p.y()<=rangeY;
+    };
 
     QVector<QPoint> unclassified = points;
     QVector<QPoint> candidate;
@@ -376,7 +390,7 @@ CircleData connectivityBasedCorrection(CircleFitFunction fit, const QVector<QPoi
 
         // check candidate
         CircleData tmpCircle = fit(candidate);
-        if (candidate.size() > maxSize)
+        if (!tmpCircle.isNull() && isValid(tmpCircle.center) && candidate.size() > maxSize)
         {
             maxSize = candidate.size();
             QVector<qreal> errors;
