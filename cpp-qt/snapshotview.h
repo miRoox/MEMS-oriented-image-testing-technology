@@ -25,6 +25,9 @@ protected:
     virtual void enterEvent(QEvent* e) override;
     virtual void leaveEvent(QEvent* e) override;
 
+private slots:
+    void saveImage();
+
 private:
     QLabel* view;
     QPixmap image;

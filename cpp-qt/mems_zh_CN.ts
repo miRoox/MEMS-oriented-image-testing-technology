@@ -301,9 +301,39 @@ Radius: %3</source>
 <context>
     <name>SnapshotView</name>
     <message>
-        <location filename="snapshotview.cpp" line="38"/>
+        <location filename="snapshotview.cpp" line="43"/>
         <source>&lt;html&gt;&lt;body&gt;&lt;p style=&quot;color:gray&quot;&gt;No Image&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;body&gt;&lt;p style=&quot;color:gray&quot;&gt;无图像&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="snapshotview.cpp" line="73"/>
+        <source>Save Image</source>
+        <translation>保存图像</translation>
+    </message>
+    <message>
+        <location filename="snapshotview.cpp" line="75"/>
+        <source>Images (*.png *.jpg *.jpeg *.bmp *.xpm)</source>
+        <translation>图像 (*.png *.jpg *.jpeg *.bmp *.xpm)</translation>
+    </message>
+    <message>
+        <location filename="snapshotview.cpp" line="82"/>
+        <source>Image saved sucessfully!</source>
+        <translation>图像保存成功！</translation>
+    </message>
+    <message>
+        <location filename="snapshotview.cpp" line="83"/>
+        <source>Image sucessfully saved to %1.</source>
+        <translation>图像成功保存到%1。</translation>
+    </message>
+    <message>
+        <location filename="snapshotview.cpp" line="90"/>
+        <source>Image save failed!</source>
+        <translation>图像保存失败！</translation>
+    </message>
+    <message>
+        <location filename="snapshotview.cpp" line="91"/>
+        <source>Do you want to retry?</source>
+        <translation>是否需要重试？</translation>
     </message>
 </context>
 </TS>

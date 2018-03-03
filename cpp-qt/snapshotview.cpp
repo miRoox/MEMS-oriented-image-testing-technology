@@ -1,7 +1,9 @@
 #include "snapshotview.h"
 #include <QLabel>
 #include <QHBoxLayout>
-#include <QAction>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QString>
 #include <QSize>
 
 static constexpr QSize snapshotSize{320,240};
@@ -14,6 +16,9 @@ SnapshotView::SnapshotView(QWidget *parent)
     layout->addWidget(view);
     setLayout(layout);
     setAttribute(Qt::WA_Hover);
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this,&SnapshotView::customContextMenuRequested,
+            this,&SnapshotView::saveImage);
     setPixmap( {} );
 }
 
@@ -60,4 +65,34 @@ void SnapshotView::leaveEvent(QEvent* e)
     if (!image.isNull())
         view->setPixmap(image.scaled(snapshotSize,Qt::KeepAspectRatio));
     return QWidget::leaveEvent(e);
+}
+
+void SnapshotView::saveImage()
+{
+    QString key = window()->windowTitle();
+    QString fileName = QFileDialog::getSaveFileName(this,tr("Save Image"),
+                                                    key + ".out.png",
+                                                    tr("Images (*.png *.jpg *.jpeg *.bmp *.xpm)"));
+    if (!fileName.isEmpty())
+    {
+        bool retry = false;
+        do {
+            if (image.save(fileName))
+            {
+                QMessageBox::information(this,tr("Image saved sucessfully!"),
+                                         tr("Image sucessfully saved to %1.").arg(fileName),
+                                         QMessageBox::Ok);
+                retry = false;
+            }
+            else
+            {
+                auto button =
+                        QMessageBox::warning(this,tr("Image save failed!"),
+                                             tr("Do you want to retry?"),
+                                             QMessageBox::Retry,QMessageBox::Cancel);
+                retry = button==QMessageBox::Retry;
+            }
+        }
+        while(retry);
+    }
 }
