@@ -34,7 +34,7 @@
 #include <QPen>
 #include <QFont>
 #include <QFileInfo>
-#include <QtDebug>
+#include <global.h>
 
 /*!
     \internal
@@ -93,16 +93,16 @@ public:
         switch (filterMethod)
         {
         case Configuration::BoxFilter:
-            q->setFilteredImage(boxFilter(origin,filterRadius));
+            q->setFilteredImage(TIMING(boxFilter(origin,filterRadius)));
             break;
         case Configuration::GaussianFilter:
-            q->setFilteredImage(gaussianFilter(origin,filterRadius,gaussianSigma));
+            q->setFilteredImage(TIMING(gaussianFilter(origin,filterRadius,gaussianSigma)));
             break;
         case Configuration::MedianFilter:
-            q->setFilteredImage(medianFilter(origin,filterRadius));
+            q->setFilteredImage(TIMING(medianFilter(origin,filterRadius)));
             break;
         case Configuration::MeanShiftFilter:
-            q->setFilteredImage(meanShiftFilter(origin,filterRadius,colorRadius,maxLevel));
+            q->setFilteredImage(TIMING(meanShiftFilter(origin,filterRadius,colorRadius,maxLevel)));
             break;
         default:
             Q_UNREACHABLE();
@@ -120,19 +120,19 @@ public:
         switch (thresholdingMethod)
         {
         case Configuration::Cluster:
-            q->setThreshold(clusterThreshold(filteredHisto));
+            q->setThreshold(TIMING(clusterThreshold(filteredHisto)));
             break;
         case Configuration::Mean:
-            q->setThreshold(meanThreshold(filteredHisto));
+            q->setThreshold(TIMING(meanThreshold(filteredHisto)));
             break;
         case Configuration::Moments:
-            q->setThreshold(momentsThreshold(filteredHisto));
+            q->setThreshold(TIMING(momentsThreshold(filteredHisto)));
             break;
         case Configuration::Fuzziness:
-            q->setThreshold(fuzzinessThreshold(filteredHisto));
+            q->setThreshold(TIMING(fuzzinessThreshold(filteredHisto)));
             break;
         case Configuration::PTile:
-            q->setThreshold(pTileThreshold(filteredHisto,pTileValue));
+            q->setThreshold(TIMING(pTileThreshold(filteredHisto,pTileValue)));
             break;
         default:
             Q_UNREACHABLE();
@@ -150,16 +150,16 @@ public:
         switch (edgeMethod)
         {
         case Configuration::Sobel:
-            q->setEdgeImage(sobelOperator(binarized));
+            q->setEdgeImage(TIMING(sobelOperator(binarized)));
             break;
         case Configuration::Prewitt:
-            q->setEdgeImage(prewittOperator(binarized));
+            q->setEdgeImage(TIMING(prewittOperator(binarized)));
             break;
         case Configuration::Scharr:
-            q->setEdgeImage(scharrOperator(binarized));
+            q->setEdgeImage(TIMING(scharrOperator(binarized)));
             break;
         case Configuration::Laplacian:
-            q->setEdgeImage(laplacianOperator(binarized));
+            q->setEdgeImage(TIMING(laplacianOperator(binarized)));
             break;
         default:
             Q_UNREACHABLE();
@@ -193,13 +193,13 @@ public:
         switch (errorCorrectionMethod)
         {
         case Configuration::NoCorrection:
-            q->setCircle(noCorrection(fit,edgePixels));
+            q->setCircle(TIMING(noCorrection(fit,edgePixels)));
             break;
         case Configuration::MedianError:
-            q->setCircle(medianErrorCorrection(fit,edgePixels));
+            q->setCircle(TIMING(medianErrorCorrection(fit,edgePixels)));
             break;
         case Configuration::ConnectivityBased:
-            q->setCircle(connectivityBasedCorrection(fit,edgePixels));
+            q->setCircle(TIMING(connectivityBasedCorrection(fit,edgePixels)));
             break;
         default:
             Q_UNREACHABLE();
