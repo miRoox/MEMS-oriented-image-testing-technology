@@ -15,7 +15,7 @@
     </message>
     <message>
         <location filename="mainpanel.ui" line="91"/>
-        <location filename="mainpanel.cpp" line="218"/>
+        <location filename="mainpanel.cpp" line="224"/>
         <source>A</source>
         <translation>A</translation>
     </message>
@@ -26,7 +26,7 @@
     </message>
     <message>
         <location filename="mainpanel.ui" line="108"/>
-        <location filename="mainpanel.cpp" line="223"/>
+        <location filename="mainpanel.cpp" line="229"/>
         <source>B</source>
         <translation>B</translation>
     </message>
@@ -37,7 +37,7 @@
     </message>
     <message>
         <location filename="mainpanel.ui" line="125"/>
-        <location filename="mainpanel.cpp" line="229"/>
+        <location filename="mainpanel.cpp" line="235"/>
         <source>C</source>
         <translation>C</translation>
     </message>
@@ -154,102 +154,102 @@
         <translation>加载配置</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="52"/>
+        <location filename="mainpanel.cpp" line="54"/>
         <source>Box filter</source>
         <translation>均值滤波器</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="53"/>
+        <location filename="mainpanel.cpp" line="55"/>
         <source>Gaussian filter</source>
         <translation>高斯滤波器</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="54"/>
+        <location filename="mainpanel.cpp" line="56"/>
         <source>Median filter</source>
         <translation>中值滤波器</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="55"/>
+        <location filename="mainpanel.cpp" line="57"/>
         <source>Mean shift filter</source>
         <translation>均值平移滤波器</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="58"/>
+        <location filename="mainpanel.cpp" line="60"/>
         <source>Otsu&apos;s threshold clustering algorithm</source>
         <translation>大津法</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="59"/>
+        <location filename="mainpanel.cpp" line="61"/>
         <source>Mean of gray levels</source>
         <translation>灰度平均值</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="60"/>
+        <location filename="mainpanel.cpp" line="62"/>
         <source>Moment-preserving thresholding method</source>
         <translation>力矩保持法</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="61"/>
+        <location filename="mainpanel.cpp" line="63"/>
         <source>Huang&apos;s fuzzy thresholding method</source>
         <translation>模糊度阈值分割方法</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="62"/>
+        <location filename="mainpanel.cpp" line="64"/>
         <source>P-tile thresholding</source>
         <translation>P-Tile比例阈值分割</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="65"/>
+        <location filename="mainpanel.cpp" line="67"/>
         <source>Sobel operator</source>
         <translation>Sobel算子</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="66"/>
+        <location filename="mainpanel.cpp" line="68"/>
         <source>Prewitt operator</source>
         <translation>Prewitt算子</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="67"/>
+        <location filename="mainpanel.cpp" line="69"/>
         <source>Scharr operator</source>
         <translation>Scharr算子</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="68"/>
+        <location filename="mainpanel.cpp" line="70"/>
         <source>Laplacian operator</source>
         <translation>拉普拉斯算子</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="71"/>
+        <location filename="mainpanel.cpp" line="73"/>
         <source>Naive fit</source>
         <translation>幼稚的拟合法</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="72"/>
+        <location filename="mainpanel.cpp" line="74"/>
         <source>Simple algebraic fit</source>
         <translation>简单的代数拟合法</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="73"/>
+        <location filename="mainpanel.cpp" line="75"/>
         <source>Hyper algebraic fit</source>
         <translation>超级代数拟合法</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="76"/>
+        <location filename="mainpanel.cpp" line="78"/>
         <source>No correction</source>
         <translation>无校正</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="77"/>
+        <location filename="mainpanel.cpp" line="79"/>
         <source>Median error correction</source>
         <translation>中位误差校正</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="78"/>
+        <location filename="mainpanel.cpp" line="80"/>
         <source>Connectivity-based correction</source>
         <translation>基于连通性的误差校正</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="237"/>
+        <location filename="mainpanel.cpp" line="243"/>
         <source>The center of the circle is (%1, %2), and the radius is %3</source>
         <translation>圆心为(%1, %2)，半径为%3</translation>
     </message>

@@ -78,6 +78,8 @@ private slots:
     void setFitImage(const QImage& img);
     void setCircleCenter(const QPointF& center);
     void setCircleRadius(qreal radius);
+    void overrideBusyCursor();
+    void restoreCursor();
 
 private slots:
     void on_horizontalSliderGS_valueChanged(int value);

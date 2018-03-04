@@ -35,6 +35,8 @@
 #include <QSize>
 #include <QStringList>
 #include <QFileDialog>
+#include <QCursor>
+#include <QApplication>
 #include <QtDebug>
 
 static constexpr const char DefaultOriginKey[] = "A";
@@ -116,12 +118,16 @@ MainPanel::MainPanel(QWidget *parent) :
             ui->progressBar,&QProgressBar::show);
     connect(progressUpdater,&ProgressUpdater::beginRequest,
             ui->progressLabel,&QProgressBar::show);
+    connect(progressUpdater,&ProgressUpdater::beginRequest,
+            this,&MainPanel::overrideBusyCursor);
     connect(progressUpdater,&ProgressUpdater::endRequest,
             ui->progressBar,&QProgressBar::hide);
     connect(progressUpdater,&ProgressUpdater::endRequest,
             ui->progressLabel,&QProgressBar::hide);
     connect(progressUpdater,&ProgressUpdater::endRequest,
             ui->progressBar,&QProgressBar::reset);
+    connect(progressUpdater,&ProgressUpdater::endRequest,
+            this,&MainPanel::restoreCursor);
     connect(progressUpdater,&ProgressUpdater::valueChange,
             ui->progressBar,&QProgressBar::setValue);
     connect(progressUpdater,&ProgressUpdater::textTipChange,
@@ -273,6 +279,16 @@ void MainPanel::setCircleRadius(qreal radius)
 {
     this->radius = radius;
     updateCircle();
+}
+
+void MainPanel::overrideBusyCursor()
+{
+    QApplication::setOverrideCursor(QCursor(Qt::BusyCursor));
+}
+
+void MainPanel::restoreCursor()
+{
+    QApplication::restoreOverrideCursor();
 }
 
 void MainPanel::on_horizontalSliderGS_valueChanged(int value)
