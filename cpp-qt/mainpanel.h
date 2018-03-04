@@ -36,6 +36,7 @@
 #include "configuration.h"
 
 class Processor;
+class ProgressUpdater;
 
 namespace Ui {
 class MainPanel;
@@ -99,6 +100,7 @@ private:
     Ui::MainPanel* ui;
     QThread workerThread;
     QPointer<Processor> processor;
+    ProgressUpdater* progressUpdater;
     Q_DISABLE_COPY(MainPanel)
 
     QString currentOriginKey;

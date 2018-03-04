@@ -90,24 +90,28 @@ public:
             return;
         if (origin.isNull())
             return;
+        ProgressUpdaterContext context(Processor::tr("filtering..."));
+        QImage nextImage;
         switch (filterMethod)
         {
         case Configuration::BoxFilter:
-            q->setFilteredImage(TIMING(boxFilter(origin,filterRadius)));
+            nextImage = TIMING(boxFilter(origin,filterRadius));
             break;
         case Configuration::GaussianFilter:
-            q->setFilteredImage(TIMING(gaussianFilter(origin,filterRadius,gaussianSigma)));
+            nextImage = TIMING(gaussianFilter(origin,filterRadius,gaussianSigma));
             break;
         case Configuration::MedianFilter:
-            q->setFilteredImage(TIMING(medianFilter(origin,filterRadius)));
+            nextImage = TIMING(medianFilter(origin,filterRadius));
             break;
         case Configuration::MeanShiftFilter:
-            q->setFilteredImage(TIMING(meanShiftFilter(origin,filterRadius,colorRadius,maxLevel)));
+            nextImage = TIMING(meanShiftFilter(origin,filterRadius,colorRadius,maxLevel));
             break;
         default:
             Q_UNREACHABLE();
             break;
         }
+        context.end();
+        q->setFilteredImage(nextImage);
     }
 
     void updateThreshold()
@@ -117,27 +121,31 @@ public:
             return;
         if (filtered.isNull() || filteredHisto.isEmpty())
             return;
+        ProgressUpdaterContext context(Processor::tr("thresholding..."));
+        int nextThres;
         switch (thresholdingMethod)
         {
         case Configuration::Cluster:
-            q->setThreshold(TIMING(clusterThreshold(filteredHisto)));
+            nextThres = TIMING(clusterThreshold(filteredHisto));
             break;
         case Configuration::Mean:
-            q->setThreshold(TIMING(meanThreshold(filteredHisto)));
+            nextThres = TIMING(meanThreshold(filteredHisto));
             break;
         case Configuration::Moments:
-            q->setThreshold(TIMING(momentsThreshold(filteredHisto)));
+            nextThres = TIMING(momentsThreshold(filteredHisto));
             break;
         case Configuration::Fuzziness:
-            q->setThreshold(TIMING(fuzzinessThreshold(filteredHisto)));
+            nextThres = TIMING(fuzzinessThreshold(filteredHisto));
             break;
         case Configuration::PTile:
-            q->setThreshold(TIMING(pTileThreshold(filteredHisto,pTileValue)));
+            nextThres = TIMING(pTileThreshold(filteredHisto,pTileValue));
             break;
         default:
             Q_UNREACHABLE();
             break;
         }
+        context.end();
+        q->setThreshold(nextThres);
     }
 
     void updateEdgeImage()
@@ -147,24 +155,28 @@ public:
             return;
         if (binarized.isNull())
             return;
+        ProgressUpdaterContext context(Processor::tr("edge-detecting..."));
+        QImage nextImage;
         switch (edgeMethod)
         {
         case Configuration::Sobel:
-            q->setEdgeImage(TIMING(sobelOperator(binarized)));
+            nextImage = TIMING(sobelOperator(binarized));
             break;
         case Configuration::Prewitt:
-            q->setEdgeImage(TIMING(prewittOperator(binarized)));
+            nextImage = TIMING(prewittOperator(binarized));
             break;
         case Configuration::Scharr:
-            q->setEdgeImage(TIMING(scharrOperator(binarized)));
+            nextImage = TIMING(scharrOperator(binarized));
             break;
         case Configuration::Laplacian:
-            q->setEdgeImage(TIMING(laplacianOperator(binarized)));
+            nextImage = TIMING(laplacianOperator(binarized));
             break;
         default:
             Q_UNREACHABLE();
             break;
         }
+        context.end();
+        q->setEdgeImage(nextImage);
     }
 
     void updateCircle()
@@ -175,6 +187,7 @@ public:
         if (edge.isNull() || edgePixels.isEmpty())
             return;
         CircleFitFunction fit = nullptr;
+        ProgressUpdaterContext context(Processor::tr("circle fitting..."));
         switch (circleFitMethod)
         {
         case Configuration::NaiveFit:

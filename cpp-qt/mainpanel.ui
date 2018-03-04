@@ -858,6 +858,23 @@
        </property>
       </spacer>
      </item>
+     <item>
+      <widget class="QLabel" name="progressLabel">
+       <property name="text">
+        <string notr="true">placeholder</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QProgressBar" name="progressBar">
+       <property name="value">
+        <number>0</number>
+       </property>
+       <property name="format">
+        <string notr="true">%p%</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>

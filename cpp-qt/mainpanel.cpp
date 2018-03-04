@@ -27,6 +27,7 @@
 #include "mainpanel.h"
 #include "ui_mainpanel.h"  // generate from mainpanel.ui
 #include "processor.h"
+#include "progressupdater.h"
 #include <cmath>
 #include <QImage>
 #include <QIcon>
@@ -78,6 +79,8 @@ MainPanel::MainPanel(QWidget *parent) :
     }
 {
     ui->setupUi(this);
+    ui->progressBar->hide();
+    ui->progressLabel->hide();
     // init combo box
     ui->comboBoxFilter->addItems(MapFilterMethod.keys());
     ui->comboBoxThres->addItems(MapThresMethod.keys());
@@ -101,6 +104,28 @@ MainPanel::MainPanel(QWidget *parent) :
             this,&MainPanel::changeColorRadiusRequest);
     connect(ui->spinBoxMLMS,qOverload<int>(&QSpinBox::valueChanged),
             this,&MainPanel::changeMaxLevelRequest);
+
+    // init progress
+    progressUpdater = new ProgressUpdater;
+    progressUpdater->moveToThread(&workerThread);
+    connect(&workerThread,&QThread::finished,
+            progressUpdater,&ProgressUpdater::deleteLater);
+
+    // recieve from progressUpdater
+    connect(progressUpdater,&ProgressUpdater::beginRequest,
+            ui->progressBar,&QProgressBar::show);
+    connect(progressUpdater,&ProgressUpdater::beginRequest,
+            ui->progressLabel,&QProgressBar::show);
+    connect(progressUpdater,&ProgressUpdater::endRequest,
+            ui->progressBar,&QProgressBar::hide);
+    connect(progressUpdater,&ProgressUpdater::endRequest,
+            ui->progressLabel,&QProgressBar::hide);
+    connect(progressUpdater,&ProgressUpdater::endRequest,
+            ui->progressBar,&QProgressBar::reset);
+    connect(progressUpdater,&ProgressUpdater::valueChange,
+            ui->progressBar,&QProgressBar::setValue);
+    connect(progressUpdater,&ProgressUpdater::textTipChange,
+            ui->progressLabel,&QLabel::setText);
 
     // load config
     auto config = loadConfigs(DefaultOriginKey);
