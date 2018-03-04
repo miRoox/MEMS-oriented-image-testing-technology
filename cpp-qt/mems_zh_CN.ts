@@ -15,7 +15,7 @@
     </message>
     <message>
         <location filename="mainpanel.ui" line="91"/>
-        <location filename="mainpanel.cpp" line="224"/>
+        <location filename="mainpanel.cpp" line="226"/>
         <source>A</source>
         <translation>A</translation>
     </message>
@@ -26,7 +26,7 @@
     </message>
     <message>
         <location filename="mainpanel.ui" line="108"/>
-        <location filename="mainpanel.cpp" line="229"/>
+        <location filename="mainpanel.cpp" line="231"/>
         <source>B</source>
         <translation>B</translation>
     </message>
@@ -37,7 +37,7 @@
     </message>
     <message>
         <location filename="mainpanel.ui" line="125"/>
-        <location filename="mainpanel.cpp" line="235"/>
+        <location filename="mainpanel.cpp" line="237"/>
         <source>C</source>
         <translation>C</translation>
     </message>
@@ -249,7 +249,7 @@
         <translation>基于连通性的误差校正</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="243"/>
+        <location filename="mainpanel.cpp" line="245"/>
         <source>The center of the circle is (%1, %2), and the radius is %3</source>
         <translation>圆心为(%1, %2)，半径为%3</translation>
     </message>

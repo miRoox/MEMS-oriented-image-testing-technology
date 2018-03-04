@@ -210,6 +210,8 @@ void MainPanel::setByConfig(const Configuration& config)
     ui->comboBoxCorr->setCurrentText(MapErrCorrMethod.key(config.errorCorrectionMethod()));
     ui->spinBoxFR->setValue(config.filterRadius());
     ui->doubleSpinBoxGS->setValue(config.gaussianSigma());
+    ui->doubleSpinBoxCRMS->setValue(config.colorRadius());
+    ui->spinBoxMLMS->setValue(config.maxLevel());
     ui->spinBoxPT->setValue(::std::round(100*config.pTileValue()));
 }
 
