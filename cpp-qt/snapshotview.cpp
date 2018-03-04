@@ -6,6 +6,8 @@
 #include <QMessageBox>
 #include <QString>
 #include <QSize>
+#include <QClipboard>
+#include <QApplication>
 
 static constexpr QSize snapshotSize{320,240};
 
@@ -17,9 +19,14 @@ SnapshotView::SnapshotView(QWidget *parent)
     layout->addWidget(view);
     setLayout(layout);
     setAttribute(Qt::WA_Hover);
+    auto actionCopy = new QAction(tr("Copy"),this);
     auto actionSave = new QAction(tr("Save"),this);
+    addAction(actionCopy);
     addAction(actionSave);
     setContextMenuPolicy(Qt::ActionsContextMenu);
+    connect(actionCopy,&QAction::triggered,[this]{
+        QApplication::clipboard()->setPixmap(image);
+    });
     connect(actionSave,&QAction::triggered,
             this,&SnapshotView::saveImage);
     setPixmap( {} );
