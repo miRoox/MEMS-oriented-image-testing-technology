@@ -8,6 +8,7 @@
 #include <chrono>
 #include <QtDebug>
 #include <QThread>
+#include "progressupdater.h"
 
 #define MAYBE_INTERRUPT_X(ret)  \
     if (QThread::currentThread()->isInterruptionRequested()) do { \
@@ -29,5 +30,8 @@
 #undef TIMING
 #define TIMING(expr) expr
 #endif
+
+#define PROGRESS_UPDATE(percentage) \
+    ProgressUpdater::instance()->increaseToValue(100.*percentage)
 
 #endif // UTILS_H
