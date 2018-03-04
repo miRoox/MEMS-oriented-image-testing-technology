@@ -129,37 +129,37 @@
         <translation>滤波图像</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="716"/>
+        <location filename="mainpanel.ui" line="729"/>
         <source>Binarized Image</source>
         <translation>二值化图像</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="733"/>
+        <location filename="mainpanel.ui" line="759"/>
         <source>Edge Image</source>
         <translation>边缘图像</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="750"/>
+        <location filename="mainpanel.ui" line="789"/>
         <source>Circle Image</source>
         <translation>拟合圆图像</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="785"/>
+        <location filename="mainpanel.ui" line="837"/>
         <source>Save Configuration</source>
         <translation>保存配置</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="792"/>
+        <location filename="mainpanel.ui" line="844"/>
         <source>Load Configuration</source>
         <translation>加载配置</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="812"/>
+        <location filename="mainpanel.ui" line="864"/>
         <source>Export Edge</source>
         <translation>导出边缘</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="819"/>
+        <location filename="mainpanel.ui" line="871"/>
         <source>Export Result</source>
         <translation>导出结果</translation>
     </message>
