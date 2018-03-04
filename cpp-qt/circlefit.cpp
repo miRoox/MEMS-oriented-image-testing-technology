@@ -274,6 +274,7 @@ static inline qreal geometricError(CircleData circle, const QPoint& point)
 // do nothing
 CircleData noCorrection(CircleFitFunction fit, const QVector<QPoint>& points)
 {
+    PROGRESS_UPDATE(0.99);
     return fit(points);
 }
 
@@ -310,7 +311,10 @@ CircleData medianErrorCorrection(CircleFitFunction fit, const QVector<QPoint>& p
 
         // check
         if (medianError < proposalError)
+        {
+            PROGRESS_UPDATE(1);
             return circle; // accept
+        }
         if (qFuzzyIsNull(medianError-lastMedianError))
             break; // not converge
         lastMedianError = medianError;
@@ -322,6 +326,8 @@ CircleData medianErrorCorrection(CircleFitFunction fit, const QVector<QPoint>& p
             return geometricError(circle,point) < medianError;
         });
         circle = fit(validPoints);
+
+        PROGRESS_UPDATE(iter/maxIter);
     }
     qWarning() << __func__ << ": Unable to converge to the proposal error";
     return circle;
@@ -351,6 +357,7 @@ CircleData connectivityBasedCorrection(CircleFitFunction fit, const QVector<QPoi
         return p.x()>=0 && p.y()>=0 && p.x()<=rangeX && p.y()<=rangeY;
     };
 
+    const auto total = points.size();
     QVector<QPoint> unclassified = points;
     QVector<QPoint> candidate;
     QVector<QPoint> toFind;
@@ -406,6 +413,8 @@ CircleData connectivityBasedCorrection(CircleFitFunction fit, const QVector<QPoi
             }
         }
         candidate.clear();
+
+        PROGRESS_UPDATE((total-unclassified.size())/total);
     }
     return circle;
 }

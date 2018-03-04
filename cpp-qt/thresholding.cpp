@@ -39,7 +39,7 @@
 #include <cmath>
 #include <limits>
 #include <algorithm>
-#include <QtDebug>
+#include <utils.h>
 
 namespace MEMS {
 
@@ -89,6 +89,8 @@ int meanThreshold(const Histogram& histogram)
     {
         total += histogram.at(i);
         weighted += i*histogram.at(i);
+
+        PROGRESS_UPDATE(i/histoSize);
     }
     return weighted/total;
 }
@@ -122,7 +124,11 @@ int pTileThreshold(const Histogram& histogram, qreal pValue)
             threshold = i;
             break;
         }
+
+        PROGRESS_UPDATE(i/histoSize);
     }
+    PROGRESS_UPDATE(0.99);
+
     return threshold;
 }
 
@@ -157,6 +163,7 @@ int clusterThreshold(const Histogram& histogram)
         normalizedHistogram[i] = histogram.at(i)/total;
         globalAverage += i*normalizedHistogram.at(i);
     }
+    PROGRESS_UPDATE(0.5);
 
     int threshold = 0;
     qreal maxVariance = 0.;
@@ -174,6 +181,7 @@ int clusterThreshold(const Histogram& histogram)
             threshold =i;
         }
     }
+    PROGRESS_UPDATE(0.99);
 
     return threshold;
 }
@@ -255,6 +263,7 @@ int fuzzinessThreshold(const Histogram& histogram)
     for (last=histoSize-1; last>first && histogram[last]==0; --last);
     if (first==last || first+1==last)
         return first;
+    PROGRESS_UPDATE(0.1);
 
     // calculate the cumulative density and the weighted cumulative density
     QVector<qreal> s(last+1,0);
@@ -265,6 +274,7 @@ int fuzzinessThreshold(const Histogram& histogram)
         s[i] = s.at(i-1) + histogram.at(i);
         w[i] = w.at(i-1) + i*histogram.at(i);
     }
+    PROGRESS_UPDATE(0.2);
 
     // precalculate the summands of the entropy given the absolute difference x-μ
     qreal c = last-first;
@@ -274,6 +284,7 @@ int fuzzinessThreshold(const Histogram& histogram)
         qreal mu = 1/(1+i/c);
         s_mu[i] = -mu*log(mu) - (1-mu)*log(1-mu);
     }
+    PROGRESS_UPDATE(0.5);
 
     // find the threshold
     int threshold = 0;
@@ -297,6 +308,8 @@ int fuzzinessThreshold(const Histogram& histogram)
             threshold = i;
         }
     }
+    PROGRESS_UPDATE(0.99);
+
     return threshold;
 }
 

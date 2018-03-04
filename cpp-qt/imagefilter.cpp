@@ -269,6 +269,8 @@ QImage convolve(const QImage& image, const MatrixKernel& kernel, PaddingType pad
                            qBound(0,static_cast<int>(gg),0xff),
                            qBound(0,static_cast<int>(bb),0xff));
         }
+
+        PROGRESS_UPDATE(y/height);
     }
 
     return output.convertToFormat(image.format());
@@ -317,6 +319,8 @@ QImage convolve(const QImage& image, const MatrixKernel& kernel, QRgb padding)
                            qBound(0,static_cast<int>(gg),0xff),
                            qBound(0,static_cast<int>(bb),0xff));
         }
+
+        PROGRESS_UPDATE(y/height);
     }
 
     return output.convertToFormat(image.format());
@@ -384,6 +388,8 @@ QImage convolveXY(const QImage& image, const MatrixKernel& kerX, const MatrixKer
                            qBound(0,static_cast<int>(hypot(gx,gy)),0xff),
                            qBound(0,static_cast<int>(hypot(bx,by)),0xff));
         }
+
+        PROGRESS_UPDATE(y/height);
     }
 
     return output.convertToFormat(image.format());
@@ -442,6 +448,8 @@ QImage convolveXY(const QImage& image, const MatrixKernel& kerX, const MatrixKer
                            qBound(0,static_cast<int>(hypot(gx,gy)),0xff),
                            qBound(0,static_cast<int>(hypot(bx,by)),0xff));
         }
+
+        PROGRESS_UPDATE(y/height);
     }
 
     return output.convertToFormat(image.format());
@@ -621,6 +629,8 @@ static QImage medianFilter_Grayscale(const QImage& image, uint radius)
                 }
             }
         }
+
+        PROGRESS_UPDATE(y/height);
     }
 
     return output.convertToFormat(image.format());
@@ -675,6 +685,8 @@ static QImage medianFilter_ColorSmall(const QImage& image, uint radius)
             line[x] = medianCandidate.at(medianIndex);
             medianCandidate.clear();
         }
+
+        PROGRESS_UPDATE(y/height);
     }
 
     return output.convertToFormat(image.format());
@@ -738,6 +750,8 @@ static QImage medianFilter_ColorLarge(const QImage& image, uint radius)
                 histogram[i].clear();
             }
         }
+
+        PROGRESS_UPDATE(y/height);
     }
 
     return output.convertToFormat(image.format());
@@ -766,7 +780,7 @@ static inline qreal colorDistance(QRgb a, QRgb b)
 /*!
     \internal
  */
-static QImage meanShiftFilter_Impl(const QImage& image, uint spatialRadius, qreal colorRadius)
+static QImage meanShiftFilter_Impl(const QImage& image, uint spatialRadius, qreal colorRadius, uint level, uint maxlevel)
 {
     Q_ASSUME(image.format()==QImage::Format_RGB32);
 
@@ -807,6 +821,8 @@ static QImage meanShiftFilter_Impl(const QImage& image, uint spatialRadius, qrea
             }
             line[x] = qRgb(rr/sum,gg/sum,bb/sum);
         }
+
+        PROGRESS_UPDATE((level+1.*y/height)/maxlevel);
     }
 
     return output;
@@ -823,7 +839,7 @@ QImage meanShiftFilter(const QImage& image, uint spatialRadius, qreal colorRadiu
     {
         MAYBE_INTERRUPT();
 
-        output = meanShiftFilter_Impl(output,spatialRadius,colorRadius);
+        output = meanShiftFilter_Impl(output,spatialRadius,colorRadius,i,maxLevel);
     }
     return output.convertToFormat(image.format());
 }
