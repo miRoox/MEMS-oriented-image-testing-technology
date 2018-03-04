@@ -1,5 +1,5 @@
-#ifndef GLOBAL_H
-#define GLOBAL_H
+#ifndef UTILS_H
+#define UTILS_H
 
 #include <QtGlobal>
 #include <cmath>
@@ -30,4 +30,4 @@
 #define TIMING(expr) expr
 #endif
 
-#endif // GLOBAL_H
+#endif // UTILS_H
