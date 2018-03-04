@@ -858,20 +858,6 @@
        </property>
       </spacer>
      </item>
-     <item>
-      <widget class="QPushButton" name="pushButtonEdge">
-       <property name="text">
-        <string>Export Edge</string>
-       </property>
-      </widget>
-     </item>
-     <item alignment="Qt::AlignRight">
-      <widget class="QPushButton" name="pushButtonExport">
-       <property name="text">
-        <string>Export Result</string>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
   </layout>

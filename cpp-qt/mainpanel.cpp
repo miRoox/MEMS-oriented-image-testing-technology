@@ -140,10 +140,6 @@ MainPanel::MainPanel(QWidget *parent) :
             processor,&Processor::setPTileValue);
     connect(this,&MainPanel::saveConfigurationsRequest,
             processor,&Processor::saveConfigurations);
-    connect(this,&MainPanel::exportEdgeRequest,
-            processor,&Processor::exportEdge);
-    connect(this,&MainPanel::exportResultRequest,
-            processor,&Processor::exportResult);
 
     // recieve data from Processor
     connect(processor,&Processor::filteredImageChanged,
@@ -361,26 +357,4 @@ void MainPanel::on_pushButtonLoadConfig_clicked()
     Configuration config = loadConfigs(currentOriginKey);
     setByConfig(config);
     qInfo() << "For" << currentOriginKey << ", load the" << config;
-}
-
-void MainPanel::on_pushButtonExport_clicked()
-{
-    QString fileName = QFileDialog::getSaveFileName(this,tr("Export result"),
-                                                    currentOriginKey + ".out.png",
-                                                    tr("Images (*.png *.jpg *.jpeg *.bmp *.xpm)"));
-    if (!fileName.isEmpty())
-    {
-        emit exportResultRequest(fileName);
-    }
-}
-
-void MainPanel::on_pushButtonEdge_clicked()
-{
-    QString fileName = QFileDialog::getSaveFileName(this,tr("Export edge"),
-                                                    currentOriginKey + ".edge.png",
-                                                    tr("Images (*.png *.jpg *.jpeg *.bmp *.xpm)"));
-    if (!fileName.isEmpty())
-    {
-        emit exportEdgeRequest(fileName);
-    }
 }

@@ -128,8 +128,6 @@ public slots:
     void setPTileValue(qreal value);
 
     void saveConfigurations(const QString& group) const;
-    void exportEdge(const QString& fileName) const;
-    void exportResult(const QString& fileName) const;
 
 private slots: // internal
     void setFilteredImage(const QImage& filtered);

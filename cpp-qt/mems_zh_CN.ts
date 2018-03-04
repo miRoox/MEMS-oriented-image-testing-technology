@@ -15,7 +15,7 @@
     </message>
     <message>
         <location filename="mainpanel.ui" line="91"/>
-        <location filename="mainpanel.cpp" line="197"/>
+        <location filename="mainpanel.cpp" line="193"/>
         <source>A</source>
         <translation>A</translation>
     </message>
@@ -26,7 +26,7 @@
     </message>
     <message>
         <location filename="mainpanel.ui" line="108"/>
-        <location filename="mainpanel.cpp" line="202"/>
+        <location filename="mainpanel.cpp" line="198"/>
         <source>B</source>
         <translation>B</translation>
     </message>
@@ -37,7 +37,7 @@
     </message>
     <message>
         <location filename="mainpanel.ui" line="125"/>
-        <location filename="mainpanel.cpp" line="208"/>
+        <location filename="mainpanel.cpp" line="204"/>
         <source>C</source>
         <translation>C</translation>
     </message>
@@ -154,16 +154,6 @@
         <translation>加载配置</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="864"/>
-        <source>Export Edge</source>
-        <translation>导出边缘</translation>
-    </message>
-    <message>
-        <location filename="mainpanel.ui" line="871"/>
-        <source>Export Result</source>
-        <translation>导出结果</translation>
-    </message>
-    <message>
         <location filename="mainpanel.cpp" line="51"/>
         <source>Box filter</source>
         <translation>均值滤波器</translation>
@@ -259,25 +249,9 @@
         <translation>基于连通性的误差校正</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="216"/>
+        <location filename="mainpanel.cpp" line="212"/>
         <source>The center of the circle is (%1, %2), and the radius is %3</source>
         <translation>圆心为(%1, %2)，半径为%3</translation>
-    </message>
-    <message>
-        <location filename="mainpanel.cpp" line="368"/>
-        <source>Export result</source>
-        <translation>导出结果</translation>
-    </message>
-    <message>
-        <location filename="mainpanel.cpp" line="370"/>
-        <location filename="mainpanel.cpp" line="381"/>
-        <source>Images (*.png *.jpg *.jpeg *.bmp *.xpm)</source>
-        <translation>图像 (*.png *.jpg *.jpeg *.bmp *.xpm)</translation>
-    </message>
-    <message>
-        <location filename="mainpanel.cpp" line="379"/>
-        <source>Export edge</source>
-        <translation>导出边缘</translation>
     </message>
 </context>
 <context>
