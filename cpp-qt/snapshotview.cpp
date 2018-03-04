@@ -25,6 +25,8 @@ SnapshotView::SnapshotView(QWidget *parent)
     addAction(actionSave);
     setContextMenuPolicy(Qt::ActionsContextMenu);
     connect(actionCopy,&QAction::triggered,[this]{
+        if (image.isNull())
+            return;
         QApplication::clipboard()->setPixmap(image);
     });
     connect(actionSave,&QAction::triggered,
@@ -79,6 +81,13 @@ void SnapshotView::leaveEvent(QEvent* e)
 
 void SnapshotView::saveImage()
 {
+    if (image.isNull())
+    {
+        QMessageBox::information(this,tr("No image to save"),
+                                 tr("There is no image to save, please retry later."),
+                                 QMessageBox::Cancel);
+        return;
+    }
     QString key = window()->windowTitle();
     QString fileName = QFileDialog::getSaveFileName(this,tr("Save Image"),
                                                     key + ".out.png",
