@@ -36,10 +36,7 @@
 #include <QPoint>
 #include <QVector>
 #include <QColor>
-#include <cmath>
-#include <limits>
-#include <algorithm>
-#include <QtDebug>
+#include "utils.h"
 
 namespace MEMS {
 
@@ -75,9 +72,8 @@ namespace MEMS {
  */
 QVector<QPoint> whitePixelPositions(const QImage& monochrome)
 {
-    Q_ASSERT_X(monochrome.format()==QImage::Format_Mono
-               || monochrome.format()==QImage::Format_MonoLSB,
-               __func__,"Only monochrome image is valid.");
+    Q_ASSUME(monochrome.format()==QImage::Format_Mono
+               || monochrome.format()==QImage::Format_MonoLSB);
     const int whiteIndex = monochrome.colorTable().first() == QColor(Qt::white).rgba() ? 0 : 1;
 
     QVector<QPoint> result;
@@ -91,7 +87,7 @@ QVector<QPoint> whitePixelPositions(const QImage& monochrome)
             const uchar* line = monochrome.constScanLine(y);
             for (int x=0; x<width; ++x)
             {
-                if (((line[x>>3] >> (7-(x&7))) & 1) == whiteIndex)
+                if (((line[x>>3] >> (0b111-(x&0b111))) & 1) == whiteIndex)
                 {
                     result.append({x,y});
                 }
@@ -104,7 +100,7 @@ QVector<QPoint> whitePixelPositions(const QImage& monochrome)
             const uchar* line = monochrome.constScanLine(y);
             for (int x=0; x<width; ++x)
             {
-                if (((line[x>>3] >> (x&7)) & 1) == whiteIndex)
+                if (((line[x>>3] >> (x&0b111)) & 1) == whiteIndex)
                 {
                     result.append({x,y});
                 }
@@ -154,7 +150,7 @@ CircleData simpleAlgebraicCircleFit(const QVector<QPoint>& points)
     if (num<3)
     {
         qWarning() << __func__ << ": Fitting a circle requires at least three points";
-        return naiveCircleFit(points);
+        return {};
     }
 
     CircleData circle;
@@ -209,7 +205,7 @@ CircleData hyperAlgebraicCircleFit(const QVector<QPoint>& points)
     if (num<3)
     {
         qWarning() << __func__ << ": Fitting a circle requires at least three points";
-        return naiveCircleFit(points);
+        return {};
     }
 
     CircleData circle;
@@ -278,6 +274,7 @@ static inline qreal geometricError(CircleData circle, const QPoint& point)
 // do nothing
 CircleData noCorrection(CircleFitFunction fit, const QVector<QPoint>& points)
 {
+    PROGRESS_UPDATE(0.99);
     return fit(points);
 }
 
@@ -299,6 +296,11 @@ CircleData medianErrorCorrection(CircleFitFunction fit, const QVector<QPoint>& p
     qreal lastMedianError = ::std::numeric_limits<qreal>::max();
     for (uint iter=0; iter<maxIter; ++iter)
     {
+        MAYBE_INTERRUPT();
+
+        if (circle.isNull())
+            break; // not converge
+
         // get median error
         ::std::transform(points.begin(),points.end(),errors.begin(),
                          [&circle](const QPoint& point){
@@ -309,7 +311,10 @@ CircleData medianErrorCorrection(CircleFitFunction fit, const QVector<QPoint>& p
 
         // check
         if (medianError < proposalError)
+        {
+            PROGRESS_UPDATE(1);
             return circle; // accept
+        }
         if (qFuzzyIsNull(medianError-lastMedianError))
             break; // not converge
         lastMedianError = medianError;
@@ -321,6 +326,8 @@ CircleData medianErrorCorrection(CircleFitFunction fit, const QVector<QPoint>& p
             return geometricError(circle,point) < medianError;
         });
         circle = fit(validPoints);
+
+        PROGRESS_UPDATE(iter/maxIter);
     }
     qWarning() << __func__ << ": Unable to converge to the proposal error";
     return circle;
@@ -338,7 +345,19 @@ CircleData connectivityBasedCorrection(CircleFitFunction fit, const QVector<QPoi
     };
 
     using size_type = typename QVector<QPoint>::size_type;
+    const int rangeX = (*::std::max_element(points.cbegin(),points.cend(),
+                                           [](const QPoint& a, const QPoint& b){
+        return a.x() < b.x();
+    })).x();
+    const int rangeY = (*::std::max_element(points.cbegin(),points.cend(),
+                                           [](const QPoint& a, const QPoint& b){
+        return a.y() < b.y();
+    })).y();
+    const auto isValid = [rangeX,rangeY](const QPointF& p)->bool{
+        return p.x()>=0 && p.y()>=0 && p.x()<=rangeX && p.y()<=rangeY;
+    };
 
+    const auto total = points.size();
     QVector<QPoint> unclassified = points;
     QVector<QPoint> candidate;
     QVector<QPoint> toFind;
@@ -347,15 +366,21 @@ CircleData connectivityBasedCorrection(CircleFitFunction fit, const QVector<QPoi
     size_type maxSize = 0;
     while (!unclassified.isEmpty())
     {
+        MAYBE_INTERRUPT();
+
         // to find candidate
         QPoint p = unclassified.takeLast();
         candidate.append(p);
         toFind.append(p);
         while (!toFind.isEmpty())
         {
+            MAYBE_INTERRUPT();
+
             QPoint p = toFind.takeFirst(); // queue like
             for (const auto& point : qAsConst(unclassified))
             {
+                MAYBE_INTERRUPT();
+
                 if (isNeighborhood(p,point))
                 {
                     toFind.append(point);
@@ -363,6 +388,8 @@ CircleData connectivityBasedCorrection(CircleFitFunction fit, const QVector<QPoi
             }
             for (const auto& finded : qAsConst(toFind))
             {
+                MAYBE_INTERRUPT();
+
                 candidate.append(finded);
                 unclassified.removeOne(finded);
             }
@@ -370,7 +397,7 @@ CircleData connectivityBasedCorrection(CircleFitFunction fit, const QVector<QPoi
 
         // check candidate
         CircleData tmpCircle = fit(candidate);
-        if (candidate.size() > maxSize)
+        if (!tmpCircle.isNull() && isValid(tmpCircle.center) && candidate.size() > maxSize)
         {
             maxSize = candidate.size();
             QVector<qreal> errors;
@@ -386,6 +413,8 @@ CircleData connectivityBasedCorrection(CircleFitFunction fit, const QVector<QPoi
             }
         }
         candidate.clear();
+
+        PROGRESS_UPDATE((total-unclassified.size())/total);
     }
     return circle;
 }

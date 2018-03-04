@@ -35,18 +35,14 @@
 #include <QImage>
 #include <QPoint>
 #include <QColor>
-#include <cmath>
-
-#include <QtDebug>
+#include "utils.h"
 
 namespace MEMS {
 
 /*!
-    \typedef MatrixKernel
+    \class MatrixKernel
 
-    Type of kernel for convolution.
-
-    Synonym for QVector<QVector<qreal>> .
+    \brief Type of kernel for convolution.
  */
 
 /*!
@@ -66,6 +62,105 @@ namespace MEMS {
     \omitvalue Periodic
     \omitvalue Reflected
  */
+
+MatrixKernel::MatrixKernel(const MatrixKernel& other)
+    : data(other.data)
+{
+}
+
+MatrixKernel::MatrixKernel(int rows, int columns, qreal value)
+    : data(rows, QVector<qreal>(columns,value))
+{
+}
+
+MatrixKernel::MatrixKernel(const QVector<QVector<qreal>>& args)
+    : data(args)
+{
+    const int cols = columns();
+    for (const auto& row : data)
+    {
+        Q_ASSERT_X(row.size()==cols,__func__,"Kernel is not a matrix");
+    }
+}
+
+MatrixKernel::MatrixKernel(QVector<QVector<qreal>>&& args)
+    : data(args)
+{
+    const int cols = columns();
+    for (const auto& row : data)
+    {
+        Q_ASSERT_X(row.size()==cols,__func__,"Kernel is not a matrix");
+    }
+}
+
+int MatrixKernel::rows() const
+{
+    return data.size();
+}
+
+int MatrixKernel::columns() const
+{
+    return data.first().size();
+}
+
+qreal MatrixKernel::at(int row, int column) const
+{
+    return data.at(row).at(column);
+}
+
+qreal &MatrixKernel::operator()(int row, int column)
+{
+    return data[row][column];
+}
+
+qreal MatrixKernel::operator()(int row, int column) const
+{
+    return data[row][column];
+}
+
+MatrixKernel& MatrixKernel::operator =(const MatrixKernel& other)
+{
+    data = other.data;
+    return *this;
+}
+
+MatrixKernel& MatrixKernel::operator *=(qreal scaler)
+{
+    for (auto& row : data)
+    {
+        for (auto& val : row)
+        {
+            val *= scaler;
+        }
+    }
+    return *this;
+}
+
+MatrixKernel& MatrixKernel::operator /=(qreal scaler)
+{
+    for (auto& row : data)
+    {
+        for (auto& val : row)
+        {
+            val /= scaler;
+        }
+    }
+    return *this;
+}
+
+MatrixKernel MatrixKernel::operator *(qreal scaler) const
+{
+    MatrixKernel mat(*this);
+    mat *= scaler;
+    return mat;
+}
+
+MatrixKernel MatrixKernel::operator /(qreal scaler) const
+{
+    MatrixKernel mat(*this);
+    mat /= scaler;
+    return mat;
+}
 
 /*!
     \internal
@@ -142,16 +237,12 @@ QImage convolve(const QImage& image, const MatrixKernel& kernel, PaddingType pad
 
     const int width = image.width();
     const int height = image.height();
-    const int kerRows = kernel.size();
-    const int kerCols = kernel.first().size();
-    Q_ASSERT_X(kerRows%2==1,__func__,"Row of kernel must be odd");
-    Q_ASSERT_X(kerCols%2==1,__func__,"Column of kernel must be odd");
+    const int kerRows = kernel.rows();
+    const int kerCols = kernel.columns();
+    Q_ASSUME(kerRows%2==1);
+    Q_ASSUME(kerCols%2==1);
     const int kerCenterX = kerCols/2;
     const int kerCenterY = kerRows/2;
-    for (const auto& row : kernel)
-    {
-        Q_ASSERT_X(row.size()==kerCols,__func__,"Kernel is not a matrix");
-    }
 
     for (int y=0; y<height; ++y)
     {
@@ -165,8 +256,10 @@ QImage convolve(const QImage& image, const MatrixKernel& kernel, PaddingType pad
                 const QRgb* iLine = reinterpret_cast<const QRgb*>(input.constScanLine(yy));
                 for (int j=0; j<kerCols; ++j)
                 {
+                    MAYBE_INTERRUPT();
+
                     const int xx = calcPaddingX(width,x+j-kerCenterX,padding);
-                    const auto kerVar = kernel.at(kerRows-1-i).at(kerCols-1-j);
+                    const auto kerVar = kernel.at(kerRows-1-i,kerCols-1-j);
                     rr += qRed(iLine[xx])*kerVar;
                     gg += qGreen(iLine[xx])*kerVar;
                     bb += qBlue(iLine[xx])*kerVar;
@@ -176,6 +269,8 @@ QImage convolve(const QImage& image, const MatrixKernel& kernel, PaddingType pad
                            qBound(0,static_cast<int>(gg),0xff),
                            qBound(0,static_cast<int>(bb),0xff));
         }
+
+        PROGRESS_UPDATE(y/height);
     }
 
     return output.convertToFormat(image.format());
@@ -192,16 +287,12 @@ QImage convolve(const QImage& image, const MatrixKernel& kernel, QRgb padding)
 
     const int width = image.width();
     const int height = image.height();
-    const int kerRows = kernel.size();
-    const int kerCols = kernel.first().size();
-    Q_ASSERT_X(kerRows%2==1,__func__,"Row of kernel must be odd");
-    Q_ASSERT_X(kerCols%2==1,__func__,"Column of kernel must be odd");
+    const int kerRows = kernel.rows();
+    const int kerCols = kernel.columns();
+    Q_ASSUME(kerRows%2==1);
+    Q_ASSUME(kerCols%2==1);
     const int kerCenterX = kerCols/2;
     const int kerCenterY = kerRows/2;
-    for (const auto& row : kernel)
-    {
-        Q_ASSERT_X(row.size()==kerCols,__func__,"Kernel is not a matrix");
-    }
 
     for (int y=0; y<height; ++y)
     {
@@ -213,10 +304,12 @@ QImage convolve(const QImage& image, const MatrixKernel& kernel, QRgb padding)
             {
                 for (int j=0; j<kerCols; ++j)
                 {
+                    MAYBE_INTERRUPT();
+
                     const QRgb pix = image.valid(x+j-kerCenterX,y+i-kerCenterY)
                                     ? image.pixel(x+j-kerCenterX,y+i-kerCenterY)
                                     : padding;
-                    const auto kerVar = kernel.at(kerRows-1-i).at(kerCols-1-j);
+                    const auto kerVar = kernel.at(kerRows-1-i,kerCols-1-j);
                     rr += qRed(pix)*kerVar;
                     gg += qGreen(pix)*kerVar;
                     bb += qBlue(pix)*kerVar;
@@ -226,6 +319,8 @@ QImage convolve(const QImage& image, const MatrixKernel& kernel, QRgb padding)
                            qBound(0,static_cast<int>(gg),0xff),
                            qBound(0,static_cast<int>(bb),0xff));
         }
+
+        PROGRESS_UPDATE(y/height);
     }
 
     return output.convertToFormat(image.format());
@@ -254,22 +349,14 @@ QImage convolveXY(const QImage& image, const MatrixKernel& kerX, const MatrixKer
 
     const int width = image.width();
     const int height = image.height();
-    Q_ASSERT_X(kerX.size()==kerY.size(),__func__,"Size of Kernel X and Kernel Y must be same");
-    Q_ASSERT_X(kerX.first().size()==kerY.first().size(),__func__,"Size of Kernel X and Kernel Y must be same");
-    const int kerRows = kerX.size();
-    const int kerCols = kerX.first().size();
-    Q_ASSERT_X(kerRows%2==1,__func__,"Row of kernels must be odd");
-    Q_ASSERT_X(kerCols%2==1,__func__,"Column of kernels must be odd");
+    Q_ASSUME(kerX.rows()==kerY.rows());
+    Q_ASSUME(kerX.columns()==kerY.columns());
+    const int kerRows = kerX.rows();
+    const int kerCols = kerX.columns();
+    Q_ASSUME(kerRows%2==1);
+    Q_ASSUME(kerCols%2==1);
     const int kerCenterX = kerCols/2;
     const int kerCenterY = kerRows/2;
-    for (const auto& row : kerX)
-    {
-        Q_ASSERT_X(row.size()==kerCols,__func__,"Kernel X is not a matrix");
-    }
-    for (const auto& row : kerY)
-    {
-        Q_ASSERT_X(row.size()==kerCols,__func__,"Kernel Y is not a matrix");
-    }
 
     for (int y=0; y<height; ++y)
     {
@@ -284,9 +371,11 @@ QImage convolveXY(const QImage& image, const MatrixKernel& kerX, const MatrixKer
                 const QRgb* iLine = reinterpret_cast<const QRgb*>(input.constScanLine(yy));
                 for (int j=0; j<kerCols; ++j)
                 {
+                    MAYBE_INTERRUPT();
+
                     const int xx = calcPaddingX(width,x+j-kerCenterX,padding);
-                    const auto kerXVar = kerX.at(kerRows-1-i).at(kerCols-1-j);
-                    const auto kerYVar = kerY.at(kerRows-1-i).at(kerCols-1-j);
+                    const auto kerXVar = kerX.at(kerRows-1-i,kerCols-1-j);
+                    const auto kerYVar = kerY.at(kerRows-1-i,kerCols-1-j);
                     rx += qRed(iLine[xx])*kerXVar;
                     gx += qGreen(iLine[xx])*kerXVar;
                     bx += qBlue(iLine[xx])*kerXVar;
@@ -299,6 +388,8 @@ QImage convolveXY(const QImage& image, const MatrixKernel& kerX, const MatrixKer
                            qBound(0,static_cast<int>(hypot(gx,gy)),0xff),
                            qBound(0,static_cast<int>(hypot(bx,by)),0xff));
         }
+
+        PROGRESS_UPDATE(y/height);
     }
 
     return output.convertToFormat(image.format());
@@ -318,22 +409,14 @@ QImage convolveXY(const QImage& image, const MatrixKernel& kerX, const MatrixKer
 
     const int width = image.width();
     const int height = image.height();
-    Q_ASSERT_X(kerX.size()==kerY.size(),__func__,"Size of Kernel X and Kernel Y must be same");
-    Q_ASSERT_X(kerX.first().size()==kerY.first().size(),__func__,"Size of Kernel X and Kernel Y must be same");
-    const int kerRows = kerX.size();
-    const int kerCols = kerX.first().size();
-    Q_ASSERT_X(kerRows%2==1,__func__,"Row of kernels must be odd");
-    Q_ASSERT_X(kerCols%2==1,__func__,"Column of kernels must be odd");
+    Q_ASSUME(kerX.rows()==kerY.rows());
+    Q_ASSUME(kerX.columns()==kerY.columns());
+    const int kerRows = kerX.rows();
+    const int kerCols = kerX.columns();
+    Q_ASSUME(kerRows%2==1);
+    Q_ASSUME(kerCols%2==1);
     const int kerCenterX = kerCols/2;
     const int kerCenterY = kerRows/2;
-    for (const auto& row : kerX)
-    {
-        Q_ASSERT_X(row.size()==kerCols,__func__,"Kernel X is not a matrix");
-    }
-    for (const auto& row : kerY)
-    {
-        Q_ASSERT_X(row.size()==kerCols,__func__,"Kernel Y is not a matrix");
-    }
 
     for (int y=0; y<height; ++y)
     {
@@ -346,11 +429,13 @@ QImage convolveXY(const QImage& image, const MatrixKernel& kerX, const MatrixKer
             {
                 for (int j=0; j<kerCols; ++j)
                 {
+                    MAYBE_INTERRUPT();
+
                     const QRgb pix = image.valid(x+j-kerCenterX,y+i-kerCenterY)
                                     ? image.pixel(x+j-kerCenterX,y+i-kerCenterY)
                                     : padding;
-                    const auto kerXVar = kerX.at(kerRows-1-i).at(kerCols-1-j);
-                    const auto kerYVar = kerY.at(kerRows-1-i).at(kerCols-1-j);
+                    const auto kerXVar = kerX.at(kerRows-1-i,kerCols-1-j);
+                    const auto kerYVar = kerY.at(kerRows-1-i,kerCols-1-j);
                     rx += qRed(pix)*kerXVar;
                     gx += qGreen(pix)*kerXVar;
                     bx += qBlue(pix)*kerXVar;
@@ -363,6 +448,8 @@ QImage convolveXY(const QImage& image, const MatrixKernel& kerX, const MatrixKer
                            qBound(0,static_cast<int>(hypot(gx,gy)),0xff),
                            qBound(0,static_cast<int>(hypot(bx,by)),0xff));
         }
+
+        PROGRESS_UPDATE(y/height);
     }
 
     return output.convertToFormat(image.format());
@@ -386,8 +473,8 @@ QImage convolveXY(const QImage& image, const MatrixKernel& kerX, const MatrixKer
  */
 QImage boxFilter(const QImage& image, uint radius, PaddingType padding)
 {
-    auto boxKer = QVector<QVector<qreal>>(2*radius+1,QVector<qreal>(2*radius+1,
-                                                         1./(2*radius+1)/(2*radius+1)));
+    MatrixKernel boxKer(2*radius+1,2*radius+1,
+                        1./(2*radius+1)/(2*radius+1));
     return convolve(image,boxKer,padding);
 }
 
@@ -396,8 +483,8 @@ QImage boxFilter(const QImage& image, uint radius, PaddingType padding)
  */
 QImage boxFilter(const QImage& image, uint radius, QRgb padding)
 {
-    auto boxKer = QVector<QVector<qreal>>(2*radius+1,QVector<qreal>(2*radius+1,
-                                                         1./(2*radius+1)/(2*radius+1)));
+    MatrixKernel boxKer(2*radius+1,2*radius+1,
+                        1./(2*radius+1)/(2*radius+1));
     return convolve(image,boxKer,padding);
 }
 
@@ -406,8 +493,8 @@ QImage boxFilter(const QImage& image, uint radius, QRgb padding)
  */
 QImage boxFilter(const QImage& image, uint radius, const QColor& padding)
 {
-    auto boxKer = QVector<QVector<qreal>>(2*radius+1,QVector<qreal>(2*radius+1,
-                                                         1./(2*radius+1)/(2*radius+1)));
+    MatrixKernel boxKer(2*radius+1,2*radius+1,
+                        1./(2*radius+1)/(2*radius+1));
     return convolve(image,boxKer,padding);
 }
 
@@ -420,7 +507,7 @@ static inline MatrixKernel gaussianKernel(uint radius, qreal sigma)
 {
     constexpr qreal PI = 3.14159265358979323846;
 
-    MatrixKernel ker(2*radius+1,QVector<qreal>(2*radius+1,0));
+    MatrixKernel ker(2*radius+1,2*radius+1,0);
     const int r = radius;
     const qreal s = 2*sigma*sigma;
     qreal sum = 0;
@@ -429,18 +516,11 @@ static inline MatrixKernel gaussianKernel(uint radius, qreal sigma)
     {
         for (int y=-r; y<=r; ++y)
         {
-            sum += ker[x+radius][y+radius] = ::std::exp(-(x*x+y*y)/s)/s/PI;
-        }
-    }
-    for (auto& row : ker)
-    {
-        for (auto& val : row)
-        {
-            val /= sum;
+            sum += ker(x+r,y+r) = ::std::exp(-(x*x+y*y)/s)/s/PI;
         }
     }
 
-    return ker;
+    return ker/sum;
 }
 
 /*!
@@ -502,11 +582,10 @@ QImage gaussianFilter(const QImage& image, uint radius, qreal sigma, const QColo
  */
 static QImage medianFilter_Grayscale(const QImage& image, uint radius)
 {
-    Q_ASSERT_X(image.isGrayscale(),__func__,
-               "Only grayscale image can use this algorithm.");
+    Q_ASSUME(image.isGrayscale());
 
-    QImage output(image.size(),QImage::Format_RGB32);
-    const QImage input = image.convertToFormat(QImage::Format_RGB32);
+    QImage output(image.size(),QImage::Format_Grayscale8);
+    const QImage input = image.convertToFormat(QImage::Format_Grayscale8);
     QVector<uint> histogram(0x100,0);
 
     const int width = image.width();
@@ -515,7 +594,7 @@ static QImage medianFilter_Grayscale(const QImage& image, uint radius)
 
     for (int y=0; y<height; ++y)
     {
-        QRgb* line = reinterpret_cast<QRgb*>(output.scanLine(y));
+        uchar* line = output.scanLine(y);
         for (int x=0; x<width; ++x)
         {
             uint sum = 0;
@@ -525,13 +604,15 @@ static QImage medianFilter_Grayscale(const QImage& image, uint radius)
                 const int yy = y+i;
                 if (yy<0 || yy>=height)
                     continue;
-                const QRgb* iLine = reinterpret_cast<const QRgb*>(input.constScanLine(yy));
+                const uchar* iLine = input.constScanLine(yy);
                 for (int j=-r; j<=r; ++j)
                 {
+                    MAYBE_INTERRUPT();
+
                     const int xx = x+j;
                     if (xx<0 || xx>=width)
                         continue;
-                    ++histogram[qGray(iLine[xx])];
+                    ++histogram[iLine[xx]];
                     ++sum;
                 }
             }
@@ -543,11 +624,13 @@ static QImage medianFilter_Grayscale(const QImage& image, uint radius)
                 partSum += histogram.at(i);
                 if (partSum>=sum/2)
                 {
-                    line[x] = qRgb(i,i,i);
+                    line[x] = i;
                     break;
                 }
             }
         }
+
+        PROGRESS_UPDATE(y/height);
     }
 
     return output.convertToFormat(image.format());
@@ -582,6 +665,8 @@ static QImage medianFilter_ColorSmall(const QImage& image, uint radius)
                 const QRgb* iLine = reinterpret_cast<const QRgb*>(input.constScanLine(yy));
                 for (int j=-r; j<=r; ++j)
                 {
+                    MAYBE_INTERRUPT();
+
                     const int xx = x+j;
                     if (xx<0 || xx>=width)
                         continue;
@@ -600,6 +685,8 @@ static QImage medianFilter_ColorSmall(const QImage& image, uint radius)
             line[x] = medianCandidate.at(medianIndex);
             medianCandidate.clear();
         }
+
+        PROGRESS_UPDATE(y/height);
     }
 
     return output.convertToFormat(image.format());
@@ -638,6 +725,8 @@ static QImage medianFilter_ColorLarge(const QImage& image, uint radius)
                 const QRgb* iLine = reinterpret_cast<const QRgb*>(input.constScanLine(yy));
                 for (int j=-r; j<=r; ++j)
                 {
+                    MAYBE_INTERRUPT();
+
                     const int xx = x+j;
                     if (xx<0 || xx>=width)
                         continue;
@@ -661,6 +750,8 @@ static QImage medianFilter_ColorLarge(const QImage& image, uint radius)
                 histogram[i].clear();
             }
         }
+
+        PROGRESS_UPDATE(y/height);
     }
 
     return output.convertToFormat(image.format());
@@ -676,6 +767,81 @@ QImage medianFilter(const QImage& image, uint radius)
             : radius<10
               ? medianFilter_ColorSmall(image,radius)
               : medianFilter_ColorLarge(image,radius);
+}
+
+/*!
+    \internal
+ */
+static inline qreal colorDistance(QRgb a, QRgb b)
+{
+    return ::std::abs(qGray(a)-qGray(b))/qreal(0xff);
+}
+
+/*!
+    \internal
+ */
+static QImage meanShiftFilter_Impl(const QImage& image, uint spatialRadius, qreal colorRadius, uint level, uint maxlevel)
+{
+    Q_ASSUME(image.format()==QImage::Format_RGB32);
+
+    QImage output(image.size(),QImage::Format_RGB32);
+
+    const int width = image.width();
+    const int height = image.height();
+    const int r = spatialRadius;
+
+    for (int y=0; y<height; ++y)
+    {
+        QRgb* line = reinterpret_cast<QRgb*>(output.scanLine(y));
+        const QRgb* iLineCenter = reinterpret_cast<const QRgb*>(image.constScanLine(y));
+        for (int x=0; x<width; ++x)
+        {
+            int rr=0, gg=0, bb=0;
+            int sum=0;
+            for (int i=-r; i<=r; ++i)
+            {
+                const int yy = y+i;
+                if (yy<0 || yy>=height)
+                    continue;
+                const QRgb* iLine = reinterpret_cast<const QRgb*>(image.constScanLine(yy));
+                for (int j=-r; j<=r; ++j)
+                {
+                    MAYBE_INTERRUPT();
+
+                    const int xx = x+j;
+                    if (xx<0 || xx>=width)
+                        continue;
+                    if (colorDistance(iLineCenter[x],iLine[xx]) > colorRadius)
+                        continue;
+                    rr += qRed(iLine[xx]);
+                    gg += qGreen(iLine[xx]);
+                    bb += qBlue(iLine[xx]);
+                    ++sum;
+                }
+            }
+            line[x] = qRgb(rr/sum,gg/sum,bb/sum);
+        }
+
+        PROGRESS_UPDATE((level+1.*y/height)/maxlevel);
+    }
+
+    return output;
+}
+
+/*!
+    Filter \a image by replacing every value by the mean of the pixels
+    in a range \a spatialRadius neighborhood and whose value is within \a colorRadius.
+ */
+QImage meanShiftFilter(const QImage& image, uint spatialRadius, qreal colorRadius, uint maxLevel)
+{
+    QImage output = image.convertToFormat(QImage::Format_RGB32);
+    for (uint i=0; i<maxLevel; ++i)
+    {
+        MAYBE_INTERRUPT();
+
+        output = meanShiftFilter_Impl(output,spatialRadius,colorRadius,i,maxLevel);
+    }
+    return output.convertToFormat(image.format());
 }
 
 } // namespace MEMS

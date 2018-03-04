@@ -63,11 +63,11 @@ QImage binarize(const QImage& origin, Predicate predicate)
         {
             if (predicate(origin.pixel(x,y)))
             {
-                line[x>>3] |= (1 << (7-(x & 7)));
+                line[x>>3] |= (1 << (0b111-(x & 0b111)));
             }
             else
             {
-                line[x>>3] &= ~(1 << (7-(x & 7)));
+                line[x>>3] &= ~(1 << (0b111-(x & 0b111)));
             }
         }
     }
@@ -83,8 +83,7 @@ QImage binarize(const QImage& origin, Predicate predicate)
  */
 inline QImage binarize(const QImage& origin, int threshold)
 {
-    Q_ASSERT_X(threshold>=0&&threshold<0x100,
-               __func__,"threshold is out of range");
+    Q_ASSUME(threshold>=0&&threshold<0x100);
     return binarize(origin,[=](QRgb pixel){return qGray(pixel)>threshold;});
 }
 

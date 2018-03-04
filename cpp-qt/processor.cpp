@@ -34,7 +34,7 @@
 #include <QPen>
 #include <QFont>
 #include <QFileInfo>
-#include <QtDebug>
+#include <utils.h>
 
 /*!
     \internal
@@ -58,6 +58,8 @@ public:
 
     uint filterRadius;
     qreal gaussianSigma;
+    qreal colorRadius;
+    uint maxLevel;
 
     qreal pTileValue;
 
@@ -75,6 +77,8 @@ public:
           errorCorrectionMethod(config.errorCorrectionMethod()),
           filterRadius(config.filterRadius()),
           gaussianSigma(config.gaussianSigma()),
+          colorRadius(config.colorRadius()),
+          maxLevel(config.maxLevel()),
           pTileValue(config.pTileValue())
     {
     }
@@ -86,21 +90,28 @@ public:
             return;
         if (origin.isNull())
             return;
+        ProgressUpdaterContext context(Processor::tr("filtering..."));
+        QImage nextImage;
         switch (filterMethod)
         {
         case Configuration::BoxFilter:
-            q->setFilteredImage(boxFilter(origin,filterRadius));
+            nextImage = TIMING(boxFilter(origin,filterRadius));
             break;
         case Configuration::GaussianFilter:
-            q->setFilteredImage(gaussianFilter(origin,filterRadius,gaussianSigma));
+            nextImage = TIMING(gaussianFilter(origin,filterRadius,gaussianSigma));
             break;
         case Configuration::MedianFilter:
-            q->setFilteredImage(medianFilter(origin,filterRadius));
+            nextImage = TIMING(medianFilter(origin,filterRadius));
+            break;
+        case Configuration::MeanShiftFilter:
+            nextImage = TIMING(meanShiftFilter(origin,filterRadius,colorRadius,maxLevel));
             break;
         default:
             Q_UNREACHABLE();
             break;
         }
+        context.end();
+        q->setFilteredImage(nextImage);
     }
 
     void updateThreshold()
@@ -110,27 +121,31 @@ public:
             return;
         if (filtered.isNull() || filteredHisto.isEmpty())
             return;
+        ProgressUpdaterContext context(Processor::tr("thresholding..."));
+        int nextThres;
         switch (thresholdingMethod)
         {
         case Configuration::Cluster:
-            q->setThreshold(clusterThreshold(filteredHisto));
+            nextThres = TIMING(clusterThreshold(filteredHisto));
             break;
         case Configuration::Mean:
-            q->setThreshold(meanThreshold(filteredHisto));
+            nextThres = TIMING(meanThreshold(filteredHisto));
             break;
         case Configuration::Moments:
-            q->setThreshold(momentsThreshold(filteredHisto));
+            nextThres = TIMING(momentsThreshold(filteredHisto));
             break;
         case Configuration::Fuzziness:
-            q->setThreshold(fuzzinessThreshold(filteredHisto));
+            nextThres = TIMING(fuzzinessThreshold(filteredHisto));
             break;
         case Configuration::PTile:
-            q->setThreshold(pTileThreshold(filteredHisto,pTileValue));
+            nextThres = TIMING(pTileThreshold(filteredHisto,pTileValue));
             break;
         default:
             Q_UNREACHABLE();
             break;
         }
+        context.end();
+        q->setThreshold(nextThres);
     }
 
     void updateEdgeImage()
@@ -140,24 +155,28 @@ public:
             return;
         if (binarized.isNull())
             return;
+        ProgressUpdaterContext context(Processor::tr("edge-detecting..."));
+        QImage nextImage;
         switch (edgeMethod)
         {
         case Configuration::Sobel:
-            q->setEdgeImage(sobelOperator(binarized));
+            nextImage = TIMING(sobelOperator(binarized));
             break;
         case Configuration::Prewitt:
-            q->setEdgeImage(prewittOperator(binarized));
+            nextImage = TIMING(prewittOperator(binarized));
             break;
         case Configuration::Scharr:
-            q->setEdgeImage(scharrOperator(binarized));
+            nextImage = TIMING(scharrOperator(binarized));
             break;
         case Configuration::Laplacian:
-            q->setEdgeImage(laplacianOperator(binarized));
+            nextImage = TIMING(laplacianOperator(binarized));
             break;
         default:
             Q_UNREACHABLE();
             break;
         }
+        context.end();
+        q->setEdgeImage(nextImage);
     }
 
     void updateCircle()
@@ -168,6 +187,7 @@ public:
         if (edge.isNull() || edgePixels.isEmpty())
             return;
         CircleFitFunction fit = nullptr;
+        ProgressUpdaterContext context(Processor::tr("circle fitting..."));
         switch (circleFitMethod)
         {
         case Configuration::NaiveFit:
@@ -186,19 +206,19 @@ public:
         switch (errorCorrectionMethod)
         {
         case Configuration::NoCorrection:
-            q->setCircle(noCorrection(fit,edgePixels));
+            q->setCircle(TIMING(noCorrection(fit,edgePixels)));
             break;
         case Configuration::MedianError:
-            q->setCircle(medianErrorCorrection(fit,edgePixels));
+            q->setCircle(TIMING(medianErrorCorrection(fit,edgePixels)));
             break;
         case Configuration::ConnectivityBased:
-            q->setCircle(connectivityBasedCorrection(fit,edgePixels));
+            q->setCircle(TIMING(connectivityBasedCorrection(fit,edgePixels)));
             break;
         default:
             Q_UNREACHABLE();
             break;
         }
-        QImage copy = origin.convertToFormat(QImage::Format_RGB32);
+        QImage copy = origin.convertToFormat(QImage::Format_ARGB32_Premultiplied);
         QPainter painter(&copy);
         QPen pen(Qt::red);
         pen.setWidth(2);
@@ -209,8 +229,8 @@ public:
         font.setPointSize(2*font.pointSize());
         painter.setFont(font);
         painter.drawText(4,4,copy.width()/8.,copy.height()/8.,Qt::AlignLeft | Qt::TextDontClip,
-                         q->tr("Center: (%1, %2)\n"
-                               "Radius: %3")
+                         Processor::tr("Center: (%1, %2)\n"
+                                       "Radius: %3")
                          .arg(circleData.center.x()).arg(circleData.center.y())
                          .arg(circleData.radius));
         q->setCircleImage(copy);
@@ -331,15 +351,17 @@ qreal Processor::circleRadius() const
 
 void Processor::setCircle(const MEMS::CircleData& circle)
 {
+    if (circle.isNull())
+        return;
     if (d->circleData == circle)
         return;
     d->circleData = circle;
     emit circleCenterChanged(d->circleData.center);
     emit circleRadiusChanged(d->circleData.radius);
 
-    qInfo() << "The center of the circle is" << d->circleData.center
-            << "and the radius is" << d->circleData.radius
-            << ", with the" << configurations();
+    qDebug() << "The center of the circle is" << d->circleData.center
+             << "and the radius is" << d->circleData.radius
+             << ", with the" << configurations();
 }
 
 Configuration Processor::configurations() const
@@ -352,6 +374,8 @@ Configuration Processor::configurations() const
             .setErrorCorrectionMethod(d->errorCorrectionMethod)
             .setFilterRadius(d->filterRadius)
             .setGaussianSigma(d->gaussianSigma)
+            .setColorRadius(d->colorRadius)
+            .setMaxLevel(d->maxLevel)
             .setPTileValue(d->pTileValue);
 }
 
@@ -361,6 +385,8 @@ void Processor::setConfigurations(const Configuration& config)
     setFilterMethod(config.filterMethod());
     setFilterRadius(config.filterRadius());
     setGaussianSigma(config.gaussianSigma());
+    setColorRadius(config.colorRadius());
+    setMaxLevel(config.maxLevel());
     setThresholdingMethod(config.thresholdingMethod());
     setPTileValue(config.pTileValue());
     setEdgeDetectionMethod(config.edgeDetectionMethod());
@@ -479,6 +505,36 @@ void Processor::setGaussianSigma(qreal sigma)
     d->updateFilteredImage();
 }
 
+qreal Processor::colorRadius() const
+{
+    return d->colorRadius;
+}
+
+void Processor::setColorRadius(qreal radius)
+{
+    if (qFuzzyIsNull(d->colorRadius - radius))
+        return;
+    d->colorRadius = radius;
+    emit colorRadiusChanged(d->colorRadius);
+
+    d->updateFilteredImage();
+}
+
+uint Processor::maxLevel() const
+{
+    return d->maxLevel;
+}
+
+void Processor::setMaxLevel(uint level)
+{
+    if (d->maxLevel == level)
+        return;
+    d->maxLevel = level;
+    emit maxLevelChanged(d->maxLevel);
+
+    d->updateFilteredImage();
+}
+
 qreal Processor::pTileValue() const
 {
     return d->pTileValue;
@@ -514,18 +570,4 @@ void Processor::setThreshold(int threshold)
     emit thresholdChanged(d->threshold);
 
     setBinaryImage(MEMS::binarize(d->filtered,d->threshold));
-}
-
-void Processor::exportResult(const QString& fileName) const
-{
-    if (d->circle.save(fileName))
-    {
-        qInfo() << "Export file"
-                << QFileInfo(fileName).canonicalFilePath()
-                << "successfully";
-    }
-    else
-    {
-        qWarning() << "Export file" << fileName << "failed";
-    }
 }

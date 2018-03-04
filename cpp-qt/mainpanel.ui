@@ -162,7 +162,7 @@
              <item>
               <widget class="QStackedWidget" name="stackedWidgetFilter">
                <property name="currentIndex">
-                <number>0</number>
+                <number>2</number>
                </property>
                <widget class="QWidget" name="pageFilter">
                 <layout class="QFormLayout" name="formLayout_2">
@@ -333,6 +333,160 @@
                      </property>
                      <property name="value">
                       <double>1.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </widget>
+               <widget class="QWidget" name="pageFilterMS">
+                <layout class="QFormLayout" name="formLayout_5">
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="labelFRMS">
+                   <property name="text">
+                    <string>Spatial radius:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <layout class="QHBoxLayout" name="horizontalLayout_13">
+                   <item>
+                    <widget class="QSlider" name="horizontalSliderFRMS">
+                     <property name="minimum">
+                      <number>1</number>
+                     </property>
+                     <property name="maximum">
+                      <number>10</number>
+                     </property>
+                     <property name="pageStep">
+                      <number>2</number>
+                     </property>
+                     <property name="value">
+                      <number>2</number>
+                     </property>
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QSpinBox" name="spinBoxFRMS">
+                     <property name="minimum">
+                      <number>1</number>
+                     </property>
+                     <property name="maximum">
+                      <number>10</number>
+                     </property>
+                     <property name="value">
+                      <number>2</number>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="labelCRMS">
+                   <property name="text">
+                    <string>Color radius:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <layout class="QHBoxLayout" name="horizontalLayout_14">
+                   <item>
+                    <widget class="QSlider" name="horizontalSliderCRMS">
+                     <property name="minimum">
+                      <number>1</number>
+                     </property>
+                     <property name="maximum">
+                      <number>100</number>
+                     </property>
+                     <property name="singleStep">
+                      <number>1</number>
+                     </property>
+                     <property name="pageStep">
+                      <number>10</number>
+                     </property>
+                     <property name="value">
+                      <number>10</number>
+                     </property>
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QDoubleSpinBox" name="doubleSpinBoxCRMS">
+                     <property name="decimals">
+                      <number>2</number>
+                     </property>
+                     <property name="minimum">
+                      <double>0.010000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>1.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.010000000000000</double>
+                     </property>
+                     <property name="value">
+                      <double>0.100000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="labelMLMS">
+                   <property name="text">
+                    <string>Max level:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <layout class="QHBoxLayout" name="horizontalLayout_15">
+                   <item>
+                    <widget class="QSlider" name="horizontalSliderMLMS">
+                     <property name="minimum">
+                      <number>1</number>
+                     </property>
+                     <property name="maximum">
+                      <number>25</number>
+                     </property>
+                     <property name="pageStep">
+                      <number>2</number>
+                     </property>
+                     <property name="value">
+                      <number>1</number>
+                     </property>
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QSpinBox" name="spinBoxMLMS">
+                     <property name="minimum">
+                      <number>1</number>
+                     </property>
+                     <property name="maximum">
+                      <number>25</number>
+                     </property>
+                     <property name="value">
+                      <number>1</number>
                      </property>
                     </widget>
                    </item>
@@ -536,15 +690,8 @@
            </property>
            <item row="0" column="0">
             <layout class="QVBoxLayout" name="verticalLayout1">
-             <item>
-              <widget class="QLabel" name="labelImage1">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
+             <item alignment="Qt::AlignHCenter">
+              <widget class="SnapshotView" name="snapshot1" native="true"/>
              </item>
              <item>
               <widget class="QLabel" name="labelText1">
@@ -556,19 +703,25 @@
                </property>
               </widget>
              </item>
+             <item>
+              <spacer name="verticalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
             </layout>
            </item>
            <item row="0" column="1">
             <layout class="QVBoxLayout" name="verticalLayout2">
-             <item>
-              <widget class="QLabel" name="labelImage2">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
+             <item alignment="Qt::AlignHCenter">
+              <widget class="SnapshotView" name="snapshot2" native="true"/>
              </item>
              <item>
               <widget class="QLabel" name="labelText2">
@@ -580,19 +733,25 @@
                </property>
               </widget>
              </item>
+             <item>
+              <spacer name="verticalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
             </layout>
            </item>
            <item row="1" column="0">
             <layout class="QVBoxLayout" name="verticalLayout3">
-             <item>
-              <widget class="QLabel" name="labelImage3">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
+             <item alignment="Qt::AlignHCenter">
+              <widget class="SnapshotView" name="snapshot3" native="true"/>
              </item>
              <item>
               <widget class="QLabel" name="labelText3">
@@ -604,19 +763,25 @@
                </property>
               </widget>
              </item>
+             <item>
+              <spacer name="verticalSpacer_4">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
             </layout>
            </item>
            <item row="1" column="1">
             <layout class="QVBoxLayout" name="verticalLayout4">
-             <item>
-              <widget class="QLabel" name="labelImage4">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
+             <item alignment="Qt::AlignHCenter">
+              <widget class="SnapshotView" name="snapshot4" native="true"/>
              </item>
              <item>
               <widget class="QLabel" name="labelText4">
@@ -627,6 +792,19 @@
                 <set>Qt::AlignCenter</set>
                </property>
               </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_5">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
              </item>
             </layout>
            </item>
@@ -680,10 +858,20 @@
        </property>
       </spacer>
      </item>
-     <item alignment="Qt::AlignRight">
-      <widget class="QPushButton" name="pushButtonExport">
+     <item>
+      <widget class="QLabel" name="progressLabel">
        <property name="text">
-        <string>Export Result</string>
+        <string notr="true">placeholder</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QProgressBar" name="progressBar">
+       <property name="value">
+        <number>0</number>
+       </property>
+       <property name="format">
+        <string notr="true">%p%</string>
        </property>
       </widget>
      </item>
@@ -691,6 +879,14 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>SnapshotView</class>
+   <extends>QWidget</extends>
+   <header>snapshotview.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="images.qrc"/>
  </resources>
@@ -702,12 +898,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>400</x>
+     <x>397</x>
      <y>101</y>
     </hint>
     <hint type="destinationlabel">
-     <x>563</x>
-     <y>101</y>
+     <x>443</x>
+     <y>102</y>
     </hint>
    </hints>
   </connection>
@@ -718,12 +914,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>400</x>
-     <y>114</y>
+     <x>397</x>
+     <y>115</y>
     </hint>
     <hint type="destinationlabel">
-     <x>414</x>
-     <y>118</y>
+     <x>443</x>
+     <y>116</y>
     </hint>
    </hints>
   </connection>
@@ -750,12 +946,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>560</x>
-     <y>92</y>
+     <x>443</x>
+     <y>102</y>
     </hint>
     <hint type="destinationlabel">
-     <x>399</x>
-     <y>92</y>
+     <x>397</x>
+     <y>101</y>
     </hint>
    </hints>
   </connection>
@@ -766,12 +962,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>519</x>
-     <y>191</y>
+     <x>535</x>
+     <y>233</y>
     </hint>
     <hint type="destinationlabel">
-     <x>555</x>
-     <y>190</y>
+     <x>587</x>
+     <y>234</y>
     </hint>
    </hints>
   </connection>
@@ -782,12 +978,76 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>555</x>
-     <y>178</y>
+     <x>587</x>
+     <y>234</y>
     </hint>
     <hint type="destinationlabel">
-     <x>538</x>
-     <y>183</y>
+     <x>535</x>
+     <y>233</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSliderFRMS</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBoxFRMS</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>515</x>
+     <y>102</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>540</x>
+     <y>102</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBoxFRMS</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>horizontalSliderFRMS</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>542</x>
+     <y>109</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>94</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSliderMLMS</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBoxMLMS</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>519</x>
+     <y>159</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>549</x>
+     <y>159</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBoxMLMS</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>horizontalSliderMLMS</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>562</x>
+     <y>149</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>522</x>
+     <y>149</y>
     </hint>
    </hints>
   </connection>

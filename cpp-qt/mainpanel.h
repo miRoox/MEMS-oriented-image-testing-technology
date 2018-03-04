@@ -30,13 +30,13 @@
 #include <QWidget>
 #include <QThread>
 #include <QPointer>
-#include <QScopedPointer>
 #include <QString>
 #include <QPointF>
 #include <QMap>
 #include "configuration.h"
 
 class Processor;
+class ProgressUpdater;
 
 namespace Ui {
 class MainPanel;
@@ -60,9 +60,10 @@ signals:
     void changeErrorCorrectionMethodRequest(Configuration::ErrorCorrectionMethod method);
     void changeFilterRadiusRequest(uint radius);
     void changeGaussianSigmaRequest(qreal sigma);
+    void changeColorRadiusRequest(qreal radius);
+    void changeMaxLevelRequest(uint level);
     void changePTileValueRequest(qreal value);
     void saveConfigurationsRequest(const QString& group);
-    void exportResultRequest(const QString& fileName);
 
 private:
     void setByConfig(const Configuration& config);
@@ -77,10 +78,14 @@ private slots:
     void setFitImage(const QImage& img);
     void setCircleCenter(const QPointF& center);
     void setCircleRadius(qreal radius);
+    void overrideBusyCursor();
+    void restoreCursor();
 
 private slots:
     void on_horizontalSliderGS_valueChanged(int value);
     void on_doubleSpinBoxGS_valueChanged(double arg1);
+    void on_horizontalSliderCRMS_valueChanged(int value);
+    void on_doubleSpinBoxCRMS_valueChanged(double arg1);
     void on_radioButtonA_toggled(bool checked);
     void on_radioButtonB_toggled(bool checked);
     void on_radioButtonC_toggled(bool checked);
@@ -92,12 +97,12 @@ private slots:
     void on_spinBoxPT_valueChanged(int arg1);
     void on_pushButtonSaveConfig_clicked();
     void on_pushButtonLoadConfig_clicked();
-    void on_pushButtonExport_clicked();
 
 private:
-    QScopedPointer<Ui::MainPanel> ui;
+    Ui::MainPanel* ui;
     QThread workerThread;
     QPointer<Processor> processor;
+    ProgressUpdater* progressUpdater;
     Q_DISABLE_COPY(MainPanel)
 
     QString currentOriginKey;

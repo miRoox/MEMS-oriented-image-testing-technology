@@ -32,7 +32,37 @@
 
 namespace MEMS {
 
-using MatrixKernel = QVector<QVector<qreal>>;
+class MatrixKernel
+{
+public:
+    MatrixKernel() = default;
+    MatrixKernel(const MatrixKernel& other);
+    MatrixKernel(int rows, int columns, qreal value = 0);
+    MatrixKernel(const QVector<QVector<qreal>>& args);
+    MatrixKernel(QVector<QVector<qreal>>&& args);
+
+    int rows() const;
+    int columns() const;
+
+    qreal at(int row, int column) const;
+    qreal& operator ()(int row, int column);
+    qreal operator ()(int row, int column) const;
+
+    MatrixKernel& operator =(const MatrixKernel& other);
+    MatrixKernel& operator *=(qreal scaler);
+    MatrixKernel& operator /=(qreal scaler);
+
+    MatrixKernel operator *(qreal scaler) const;
+    MatrixKernel operator /(qreal scaler) const;
+
+private:
+    QVector<QVector<qreal>> data;
+};
+
+inline MatrixKernel operator *(qreal scaler, const MatrixKernel& mat)
+{
+    return mat*scaler;
+}
 
 enum class PaddingType
 {
@@ -98,6 +128,11 @@ extern QImage gaussianFilter(const QImage& image,
                              const QColor& padding);
 
 extern QImage medianFilter(const QImage& image, uint radius);
+
+extern QImage meanShiftFilter(const QImage& image,
+                              uint spatialRadius,
+                              qreal colorRadius,
+                              uint maxLevel = 1);
 
 } // namespace MEMS
 

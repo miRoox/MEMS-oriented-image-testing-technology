@@ -27,6 +27,7 @@
 #include "mainpanel.h"
 #include "ui_mainpanel.h"  // generate from mainpanel.ui
 #include "processor.h"
+#include "progressupdater.h"
 #include <cmath>
 #include <QImage>
 #include <QIcon>
@@ -34,6 +35,8 @@
 #include <QSize>
 #include <QStringList>
 #include <QFileDialog>
+#include <QCursor>
+#include <QApplication>
 #include <QtDebug>
 
 static constexpr const char DefaultOriginKey[] = "A";
@@ -50,7 +53,8 @@ MainPanel::MainPanel(QWidget *parent) :
     MapFilterMethod{
         {tr("Box filter"), Configuration::BoxFilter},
         {tr("Gaussian filter"), Configuration::GaussianFilter},
-        {tr("Median filter"), Configuration::MedianFilter}
+        {tr("Median filter"), Configuration::MedianFilter},
+        {tr("Mean shift filter"), Configuration::MeanShiftFilter}
     },
     MapThresMethod{
         {tr("Otsu's threshold clustering algorithm"), Configuration::Cluster},
@@ -77,6 +81,8 @@ MainPanel::MainPanel(QWidget *parent) :
     }
 {
     ui->setupUi(this);
+    ui->progressBar->hide();
+    ui->progressLabel->hide();
     // init combo box
     ui->comboBoxFilter->addItems(MapFilterMethod.keys());
     ui->comboBoxThres->addItems(MapThresMethod.keys());
@@ -89,9 +95,43 @@ MainPanel::MainPanel(QWidget *parent) :
     connect(ui->spinBoxFRG,qOverload<int>(&QSpinBox::valueChanged),
             ui->spinBoxFR,&QSpinBox::setValue);
     connect(ui->spinBoxFR,qOverload<int>(&QSpinBox::valueChanged),
+            ui->spinBoxFRMS,&QSpinBox::setValue);
+    connect(ui->spinBoxFRMS,qOverload<int>(&QSpinBox::valueChanged),
+            ui->spinBoxFR,&QSpinBox::setValue);
+    connect(ui->spinBoxFR,qOverload<int>(&QSpinBox::valueChanged),
             this,&MainPanel::changeFilterRadiusRequest);
     connect(ui->doubleSpinBoxGS,qOverload<double>(&QDoubleSpinBox::valueChanged),
             this,&MainPanel::changeGaussianSigmaRequest);
+    connect(ui->doubleSpinBoxCRMS,qOverload<double>(&QDoubleSpinBox::valueChanged),
+            this,&MainPanel::changeColorRadiusRequest);
+    connect(ui->spinBoxMLMS,qOverload<int>(&QSpinBox::valueChanged),
+            this,&MainPanel::changeMaxLevelRequest);
+
+    // init progress
+    progressUpdater = new ProgressUpdater;
+    progressUpdater->moveToThread(&workerThread);
+    connect(&workerThread,&QThread::finished,
+            progressUpdater,&ProgressUpdater::deleteLater);
+
+    // recieve from progressUpdater
+    connect(progressUpdater,&ProgressUpdater::beginRequest,
+            ui->progressBar,&QProgressBar::show);
+    connect(progressUpdater,&ProgressUpdater::beginRequest,
+            ui->progressLabel,&QProgressBar::show);
+    connect(progressUpdater,&ProgressUpdater::beginRequest,
+            this,&MainPanel::overrideBusyCursor);
+    connect(progressUpdater,&ProgressUpdater::endRequest,
+            ui->progressBar,&QProgressBar::hide);
+    connect(progressUpdater,&ProgressUpdater::endRequest,
+            ui->progressLabel,&QProgressBar::hide);
+    connect(progressUpdater,&ProgressUpdater::endRequest,
+            ui->progressBar,&QProgressBar::reset);
+    connect(progressUpdater,&ProgressUpdater::endRequest,
+            this,&MainPanel::restoreCursor);
+    connect(progressUpdater,&ProgressUpdater::valueChange,
+            ui->progressBar,&QProgressBar::setValue);
+    connect(progressUpdater,&ProgressUpdater::textTipChange,
+            ui->progressLabel,&QLabel::setText);
 
     // load config
     auto config = loadConfigs(DefaultOriginKey);
@@ -123,12 +163,14 @@ MainPanel::MainPanel(QWidget *parent) :
             processor,&Processor::setFilterRadius);
     connect(this,&MainPanel::changeGaussianSigmaRequest,
             processor,&Processor::setGaussianSigma);
+    connect(this,&MainPanel::changeColorRadiusRequest,
+            processor,&Processor::setColorRadius);
+    connect(this,&MainPanel::changeMaxLevelRequest,
+            processor,&Processor::setMaxLevel);
     connect(this,&MainPanel::changePTileValueRequest,
             processor,&Processor::setPTileValue);
     connect(this,&MainPanel::saveConfigurationsRequest,
             processor,&Processor::saveConfigurations);
-    connect(this,&MainPanel::exportResultRequest,
-            processor,&Processor::exportResult);
 
     // recieve data from Processor
     connect(processor,&Processor::filteredImageChanged,
@@ -151,9 +193,11 @@ MainPanel::MainPanel(QWidget *parent) :
 
 MainPanel::~MainPanel()
 {
+    workerThread.requestInterruption();
     workerThread.quit();
     bool quited = workerThread.wait();
     Q_ASSERT(quited);
+    delete ui;
 }
 
 void MainPanel::setByConfig(const Configuration& config)
@@ -166,6 +210,8 @@ void MainPanel::setByConfig(const Configuration& config)
     ui->comboBoxCorr->setCurrentText(MapErrCorrMethod.key(config.errorCorrectionMethod()));
     ui->spinBoxFR->setValue(config.filterRadius());
     ui->doubleSpinBoxGS->setValue(config.gaussianSigma());
+    ui->doubleSpinBoxCRMS->setValue(config.colorRadius());
+    ui->spinBoxMLMS->setValue(config.maxLevel());
     ui->spinBoxPT->setValue(::std::round(100*config.pTileValue()));
 }
 
@@ -205,26 +251,24 @@ void MainPanel::initializeOnRun()
     setOrigin(DefaultOriginKey);
 }
 
-static constexpr QSize snapshotSize{320,240};
-
 void MainPanel::setFilteredImage(const QImage& img)
 {
-    ui->labelImage1->setPixmap(QPixmap::fromImage(img.scaled(snapshotSize,Qt::KeepAspectRatio)));
+    ui->snapshot1->setImage(img);
 }
 
 void MainPanel::setBinaryImage(const QImage& img)
 {
-    ui->labelImage2->setPixmap(QPixmap::fromImage(img.scaled(snapshotSize,Qt::KeepAspectRatio)));
+    ui->snapshot2->setImage(img);
 }
 
 void MainPanel::setEdgeImage(const QImage& img)
 {
-    ui->labelImage3->setPixmap(QPixmap::fromImage(img.scaled(snapshotSize,Qt::KeepAspectRatio)));
+    ui->snapshot3->setImage(img);
 }
 
 void MainPanel::setFitImage(const QImage& img)
 {
-    ui->labelImage4->setPixmap(QPixmap::fromImage(img.scaled(snapshotSize,Qt::KeepAspectRatio)));
+    ui->snapshot4->setImage(img);
 }
 
 void MainPanel::setCircleCenter(const QPointF& center)
@@ -239,6 +283,16 @@ void MainPanel::setCircleRadius(qreal radius)
     updateCircle();
 }
 
+void MainPanel::overrideBusyCursor()
+{
+    QApplication::setOverrideCursor(QCursor(Qt::BusyCursor));
+}
+
+void MainPanel::restoreCursor()
+{
+    QApplication::restoreOverrideCursor();
+}
+
 void MainPanel::on_horizontalSliderGS_valueChanged(int value)
 {
     ui->doubleSpinBoxGS->setValue(value/10.);
@@ -247,6 +301,16 @@ void MainPanel::on_horizontalSliderGS_valueChanged(int value)
 void MainPanel::on_doubleSpinBoxGS_valueChanged(double arg1)
 {
     ui->horizontalSliderGS->setValue(static_cast<int>(10*arg1));
+}
+
+void MainPanel::on_horizontalSliderCRMS_valueChanged(int value)
+{
+    ui->doubleSpinBoxCRMS->setValue(value/100.);
+}
+
+void MainPanel::on_doubleSpinBoxCRMS_valueChanged(double arg1)
+{
+    ui->horizontalSliderCRMS->setValue(static_cast<int>(100*arg1));
 }
 
 void MainPanel::on_radioButtonA_toggled(bool checked)
@@ -281,6 +345,9 @@ void MainPanel::on_comboBoxFilter_currentIndexChanged(const QString& arg1)
     {
     case Configuration::GaussianFilter:
         ui->stackedWidgetFilter->setCurrentWidget(ui->pageFilterG);
+        break;
+    case Configuration::MeanShiftFilter:
+        ui->stackedWidgetFilter->setCurrentWidget(ui->pageFilterMS);
         break;
     default:
         ui->stackedWidgetFilter->setCurrentWidget(ui->pageFilter);
@@ -333,15 +400,4 @@ void MainPanel::on_pushButtonLoadConfig_clicked()
     Configuration config = loadConfigs(currentOriginKey);
     setByConfig(config);
     qInfo() << "For" << currentOriginKey << ", load the" << config;
-}
-
-void MainPanel::on_pushButtonExport_clicked()
-{
-    QString fileName = QFileDialog::getSaveFileName(this,tr("Export result"),
-                                                    currentOriginKey + ".out.png",
-                                                    tr("Images (*.png *.jpg *.jpeg *.bmp *.xpm)"));
-    if (!fileName.isEmpty())
-    {
-        emit exportResultRequest(fileName);
-    }
 }

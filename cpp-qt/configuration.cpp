@@ -39,6 +39,8 @@ static constexpr auto DefaultCircleFitMethod = Configuration::SimpleAlgebraicFit
 static constexpr auto DefaultErrorCorrectionMethod = Configuration::NoCorrection;
 static constexpr auto DefaultFilterRadius = 2u;
 static constexpr auto DefaultGaussianSigma = 1.;
+static constexpr auto DefaultColorRadius = 0.1;
+static constexpr auto DefaultMaxLevel = 1u;
 static constexpr auto DefaultPTileValue = 0.5;
 
 /*!
@@ -57,6 +59,8 @@ public:
           circleFitMethod(rhs.circleFitMethod),
           filterRadius(rhs.filterRadius),
           gaussianSigma(rhs.gaussianSigma),
+          colorRadius(rhs.colorRadius),
+          maxLevel(rhs.maxLevel),
           pTileValue(rhs.pTileValue)
     { }
 
@@ -68,6 +72,8 @@ public:
                 || circleFitMethod == rhs.circleFitMethod
                 || filterRadius == rhs.filterRadius
                 || qFuzzyIsNull(gaussianSigma - rhs.gaussianSigma)
+                || qFuzzyIsNull(colorRadius - rhs.colorRadius)
+                || maxLevel == rhs.maxLevel
                 || qFuzzyIsNull(pTileValue - rhs.pTileValue);
     }
 
@@ -78,6 +84,8 @@ public:
     Configuration::ErrorCorrectionMethod errorCorrectionMethod = DefaultErrorCorrectionMethod;
     uint filterRadius = DefaultFilterRadius;
     qreal gaussianSigma = DefaultGaussianSigma;
+    qreal colorRadius = DefaultColorRadius;
+    qreal maxLevel = DefaultMaxLevel;
     qreal pTileValue = DefaultPTileValue;
 
 };
@@ -159,6 +167,16 @@ qreal Configuration::gaussianSigma() const
     return data->gaussianSigma;
 }
 
+qreal Configuration::colorRadius() const
+{
+    return data->colorRadius;
+}
+
+uint Configuration::maxLevel() const
+{
+    return data->maxLevel;
+}
+
 qreal Configuration::pTileValue() const
 {
     return data->pTileValue;
@@ -206,6 +224,18 @@ Configuration& Configuration::setGaussianSigma(qreal sigma)
     return *this;
 }
 
+Configuration& Configuration::setColorRadius(qreal radius)
+{
+    data->colorRadius = radius;
+    return *this;
+}
+
+Configuration& Configuration::setMaxLevel(uint level)
+{
+    data->maxLevel = level;
+    return *this;
+}
+
 Configuration& Configuration::setPTileValue(qreal value)
 {
     data->pTileValue = value;
@@ -245,6 +275,16 @@ uint Configuration::defaultFilterRadius()
 qreal Configuration::defaultGaussianSigma()
 {
     return DefaultGaussianSigma;
+}
+
+qreal Configuration::defaultColorRadius()
+{
+    return DefaultColorRadius;
+}
+
+qreal Configuration::defaultMaxLevel()
+{
+    return DefaultMaxLevel;
 }
 
 qreal Configuration::defaultPTileValue()
@@ -299,6 +339,8 @@ QDebug operator<<(QDebug dbg, const Configuration& config)
                   << "ErrorCorrectionMethod: " << qPrintable(valueToKey(config.data->errorCorrectionMethod)) << ", "
                   << "FilterRadius: " << config.data->filterRadius << ", "
                   << "GaussianSigma: " << config.data->gaussianSigma << ", "
+                  << "ColorRadius: " << config.data->colorRadius << ", "
+                  << "MaxLevel: " << config.data->maxLevel << ", "
                   << "PTileValue: " << config.data->pTileValue << ")";
 
     return dbg;
@@ -311,13 +353,13 @@ static constexpr const char CircleFitMethodKey[] = "CircleFitMethod";
 static constexpr const char ErrorCorrectionMethodKey[] = "ErrorCorrectionMethod";
 static constexpr const char FilterRadiusKey[] = "FilterRadius";
 static constexpr const char GaussianSigmaKey[] = "GaussianSigma";
+static constexpr const char ColorRadiusKey[] = "ColorRadius";
+static constexpr const char MaxLevelKey[] = "MaxLevel";
 static constexpr const char PTileValueKey[] = "PTileValue";
-
-static constexpr const char SettingFile[] = "/config.ini";
 
 void saveConfigs(const Configuration& config, QString group)
 {
-    QSettings settings(qApp->applicationDirPath() + SettingFile, QSettings::IniFormat);
+    QSettings settings(qApp->applicationDirPath() + "/" + SettingFile, QSettings::IniFormat);
     settings.beginGroup(group);
     settings.setValue(FilterMethodKey,valueToKey(config.filterMethod()));
     settings.setValue(ThresholdingMethodKey,valueToKey(config.thresholdingMethod()));
@@ -326,13 +368,15 @@ void saveConfigs(const Configuration& config, QString group)
     settings.setValue(ErrorCorrectionMethodKey,valueToKey(config.errorCorrectionMethod()));
     settings.setValue(FilterRadiusKey,config.filterRadius());
     settings.setValue(GaussianSigmaKey,config.gaussianSigma());
+    settings.setValue(ColorRadiusKey,config.colorRadius());
+    settings.setValue(MaxLevelKey,config.maxLevel());
     settings.setValue(PTileValueKey,config.pTileValue());
     settings.endGroup();
 }
 
 Configuration loadConfigs(QString group)
 {
-    QSettings settings(qApp->applicationDirPath() + SettingFile, QSettings::IniFormat);
+    QSettings settings(qApp->applicationDirPath() + "/" + SettingFile, QSettings::IniFormat);
     Configuration config;
     settings.beginGroup(group);
     config.setFilterMethod(keyToValue(settings.value(FilterMethodKey).toString(),DefaultFilterMethod))
@@ -342,7 +386,9 @@ Configuration loadConfigs(QString group)
           .setErrorCorrectionMethod(keyToValue(settings.value(ErrorCorrectionMethodKey).toString(),DefaultErrorCorrectionMethod))
           .setFilterRadius(settings.value(FilterRadiusKey,DefaultFilterRadius).toUInt())
           .setGaussianSigma(settings.value(GaussianSigmaKey,DefaultGaussianSigma).toReal())
-          .setPTileValue(settings.value(PTileValueKey,DefaultPTileValue).toReal());//TODO
+          .setColorRadius(settings.value(ColorRadiusKey,DefaultColorRadius).toReal())
+          .setMaxLevel(settings.value(MaxLevelKey,DefaultMaxLevel).toUInt())
+          .setPTileValue(settings.value(PTileValueKey,DefaultPTileValue).toReal());
     settings.endGroup();
     return config;
 }

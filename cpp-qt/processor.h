@@ -57,6 +57,8 @@ class Processor : public QObject
     Q_PROPERTY(Configuration::ErrorCorrectionMethod errorCorrectionMethod READ errorCorrectionMethod WRITE setErrorCorrectionMethod NOTIFY errorCorrectionMethodChanged)
     Q_PROPERTY(uint filterRadius READ filterRadius WRITE setFilterRadius NOTIFY filterRadiusChanged)
     Q_PROPERTY(qreal gaussianSigma READ gaussianSigma WRITE setGaussianSigma NOTIFY gaussianSigmaChanged)
+    Q_PROPERTY(qreal colorRadius READ colorRadius WRITE setColorRadius NOTIFY colorRadiusChanged)
+    Q_PROPERTY(uint maxLevel READ maxLevel WRITE setMaxLevel NOTIFY maxLevelChanged)
     Q_PROPERTY(qreal pTileValue READ pTileValue WRITE setPTileValue NOTIFY pTileValueChanged)
     Q_PROPERTY(int threshold READ threshold NOTIFY thresholdChanged)
 
@@ -78,6 +80,8 @@ public:
     Configuration::FilterMethod filterMethod() const;
     uint filterRadius() const;
     qreal gaussianSigma() const;
+    qreal colorRadius() const;
+    uint maxLevel() const;
 
     Configuration::ThresholdingMethod thresholdingMethod() const;
     qreal pTileValue() const;
@@ -104,6 +108,8 @@ signals:
     void errorCorrectionMethodChanged(Configuration::ErrorCorrectionMethod method);
     void filterRadiusChanged(uint radius);
     void gaussianSigmaChanged(qreal sigma);
+    void colorRadiusChanged(qreal radius);
+    void maxLevelChanged(uint level);
     void pTileValueChanged(qreal value);
     void thresholdChanged(int threshold);
 
@@ -117,10 +123,11 @@ public slots:
     void setErrorCorrectionMethod(Configuration::ErrorCorrectionMethod method);
     void setFilterRadius(uint radius);
     void setGaussianSigma(qreal sigma);
+    void setColorRadius(qreal radius);
+    void setMaxLevel(uint level);
     void setPTileValue(qreal value);
 
     void saveConfigurations(const QString& group) const;
-    void exportResult(const QString& fileName) const;
 
 private slots: // internal
     void setFilteredImage(const QImage& filtered);
