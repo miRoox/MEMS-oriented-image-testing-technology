@@ -87,11 +87,6 @@ ProgressUpdaterContext::ProgressUpdaterContext(const QString &textTip)
     ptr->setTextTip(textTip);
 }
 
-ProgressUpdaterContext::~ProgressUpdaterContext()
-{
-    end();
-}
-
 void ProgressUpdaterContext::end()
 {
     Q_CHECK_PTR(ptr);

@@ -64,9 +64,11 @@ class ProgressUpdaterContext // RAII Container
 {
 public:
     explicit ProgressUpdaterContext(const QString& textTip);
-    ~ProgressUpdaterContext();
+    inline ~ProgressUpdaterContext() { end(); }
 
     void end();
+private:
+    Q_DISABLE_COPY(ProgressUpdaterContext)
 };
 
 #endif // PROGRESSUPDATER_H
