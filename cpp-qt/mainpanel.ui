@@ -691,7 +691,7 @@
            <item row="0" column="0">
             <layout class="QVBoxLayout" name="verticalLayout1">
              <item alignment="Qt::AlignHCenter">
-              <widget class="SnapshotView" name="snapshot1" native="true"/>
+              <widget class="ThumbnailView" name="thumbnail1" native="true"/>
              </item>
              <item>
               <widget class="QLabel" name="labelText1">
@@ -721,7 +721,7 @@
            <item row="0" column="1">
             <layout class="QVBoxLayout" name="verticalLayout2">
              <item alignment="Qt::AlignHCenter">
-              <widget class="SnapshotView" name="snapshot2" native="true"/>
+              <widget class="ThumbnailView" name="thumbnail2" native="true"/>
              </item>
              <item>
               <widget class="QLabel" name="labelText2">
@@ -751,7 +751,7 @@
            <item row="1" column="0">
             <layout class="QVBoxLayout" name="verticalLayout3">
              <item alignment="Qt::AlignHCenter">
-              <widget class="SnapshotView" name="snapshot3" native="true"/>
+              <widget class="ThumbnailView" name="thumbnail3" native="true"/>
              </item>
              <item>
               <widget class="QLabel" name="labelText3">
@@ -781,7 +781,7 @@
            <item row="1" column="1">
             <layout class="QVBoxLayout" name="verticalLayout4">
              <item alignment="Qt::AlignHCenter">
-              <widget class="SnapshotView" name="snapshot4" native="true"/>
+              <widget class="ThumbnailView" name="thumbnail4" native="true"/>
              </item>
              <item>
               <widget class="QLabel" name="labelText4">
@@ -881,9 +881,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>SnapshotView</class>
+   <class>ThumbnailView</class>
    <extends>QWidget</extends>
-   <header>snapshotview.h</header>
+   <header>thumbnailview.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

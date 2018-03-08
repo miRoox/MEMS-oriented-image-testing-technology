@@ -293,59 +293,59 @@ Radius: %3</source>
     </message>
 </context>
 <context>
-    <name>SnapshotView</name>
+    <name>ThumbnailView</name>
     <message>
-        <location filename="snapshotview.cpp" line="22"/>
+        <location filename="thumbnailview.cpp" line="48"/>
         <source>Copy</source>
         <translation>复制</translation>
     </message>
     <message>
-        <location filename="snapshotview.cpp" line="23"/>
+        <location filename="thumbnailview.cpp" line="49"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="snapshotview.cpp" line="55"/>
+        <location filename="thumbnailview.cpp" line="81"/>
         <source>&lt;html&gt;&lt;body&gt;&lt;p style=&quot;color:gray&quot;&gt;No Image&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;body&gt;&lt;p style=&quot;color:gray&quot;&gt;无图像&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="snapshotview.cpp" line="86"/>
+        <location filename="thumbnailview.cpp" line="112"/>
         <source>No image to save</source>
         <translation>没有要保存的文件</translation>
     </message>
     <message>
-        <location filename="snapshotview.cpp" line="87"/>
+        <location filename="thumbnailview.cpp" line="113"/>
         <source>There is no image to save, please retry later.</source>
         <translation>没有要保存的文件，请稍后重试。</translation>
     </message>
     <message>
-        <location filename="snapshotview.cpp" line="92"/>
+        <location filename="thumbnailview.cpp" line="118"/>
         <source>Save Image</source>
         <translation>保存图像</translation>
     </message>
     <message>
-        <location filename="snapshotview.cpp" line="94"/>
+        <location filename="thumbnailview.cpp" line="120"/>
         <source>Images (*.png *.jpg *.jpeg *.bmp *.xpm)</source>
         <translation>图像 (*.png *.jpg *.jpeg *.bmp *.xpm)</translation>
     </message>
     <message>
-        <location filename="snapshotview.cpp" line="101"/>
+        <location filename="thumbnailview.cpp" line="127"/>
         <source>Image saved sucessfully!</source>
         <translation>图像保存成功！</translation>
     </message>
     <message>
-        <location filename="snapshotview.cpp" line="102"/>
+        <location filename="thumbnailview.cpp" line="128"/>
         <source>Image sucessfully saved to %1.</source>
         <translation>图像成功保存到%1。</translation>
     </message>
     <message>
-        <location filename="snapshotview.cpp" line="109"/>
+        <location filename="thumbnailview.cpp" line="135"/>
         <source>Image save failed!</source>
         <translation>图像保存失败！</translation>
     </message>
     <message>
-        <location filename="snapshotview.cpp" line="110"/>
+        <location filename="thumbnailview.cpp" line="136"/>
         <source>Do you want to retry?</source>
         <translation>是否需要重试？</translation>
     </message>

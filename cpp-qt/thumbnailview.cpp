@@ -24,7 +24,7 @@
  **/
 
 
-#include "snapshotview.h"
+#include "thumbnailview.h"
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QAction>
@@ -37,7 +37,7 @@
 
 static constexpr QSize snapshotSize{320,240};
 
-SnapshotView::SnapshotView(QWidget *parent)
+ThumbnailView::ThumbnailView(QWidget *parent)
     : QWidget(parent), view(new QLabel)
 {
     auto layout = new QHBoxLayout;
@@ -56,16 +56,16 @@ SnapshotView::SnapshotView(QWidget *parent)
         QApplication::clipboard()->setPixmap(image);
     });
     connect(actionSave,&QAction::triggered,
-            this,&SnapshotView::saveImage);
+            this,&ThumbnailView::saveImage);
     setPixmap( {} );
 }
 
-QPixmap SnapshotView::pixmap() const
+QPixmap ThumbnailView::pixmap() const
 {
     return image;
 }
 
-QPixmap SnapshotView::snapshot() const
+QPixmap ThumbnailView::snapshot() const
 {
     const QPixmap* d = view->pixmap();
     if (!d)
@@ -73,7 +73,7 @@ QPixmap SnapshotView::snapshot() const
     return *d;
 }
 
-void SnapshotView::setPixmap(const QPixmap& pixmap)
+void ThumbnailView::setPixmap(const QPixmap& pixmap)
 {
     image = pixmap;
     if (pixmap.isNull())
@@ -86,26 +86,26 @@ void SnapshotView::setPixmap(const QPixmap& pixmap)
     }
 }
 
-void SnapshotView::setImage(const QImage& image)
+void ThumbnailView::setImage(const QImage& image)
 {
     return setPixmap(QPixmap::fromImage(image));
 }
 
-void SnapshotView::enterEvent(QEvent* e)
+void ThumbnailView::enterEvent(QEvent* e)
 {
     if (!image.isNull())
         view->setPixmap(image);
     return QWidget::enterEvent(e);
 }
 
-void SnapshotView::leaveEvent(QEvent* e)
+void ThumbnailView::leaveEvent(QEvent* e)
 {
     if (!image.isNull())
         view->setPixmap(image.scaled(snapshotSize,Qt::KeepAspectRatio));
     return QWidget::leaveEvent(e);
 }
 
-void SnapshotView::saveImage()
+void ThumbnailView::saveImage()
 {
     if (image.isNull())
     {

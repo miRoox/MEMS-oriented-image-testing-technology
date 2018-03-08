@@ -253,22 +253,22 @@ void MainPanel::initializeOnRun()
 
 void MainPanel::setFilteredImage(const QImage& img)
 {
-    ui->snapshot1->setImage(img);
+    ui->thumbnail1->setImage(img);
 }
 
 void MainPanel::setBinaryImage(const QImage& img)
 {
-    ui->snapshot2->setImage(img);
+    ui->thumbnail2->setImage(img);
 }
 
 void MainPanel::setEdgeImage(const QImage& img)
 {
-    ui->snapshot3->setImage(img);
+    ui->thumbnail3->setImage(img);
 }
 
 void MainPanel::setFitImage(const QImage& img)
 {
-    ui->snapshot4->setImage(img);
+    ui->thumbnail4->setImage(img);
 }
 
 void MainPanel::setCircleCenter(const QPointF& center)

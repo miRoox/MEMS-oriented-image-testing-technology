@@ -24,19 +24,19 @@
  **/
 
 
-#ifndef SNAPSHOTVIEW_H
-#define SNAPSHOTVIEW_H
+#ifndef THUMBNAILVIEW_H
+#define THUMBNAILVIEW_H
 
 #include <QWidget>
 #include <QPixmap>
 
 class QLabel;
 
-class SnapshotView : public QWidget
+class ThumbnailView : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SnapshotView(QWidget *parent = nullptr);
+    explicit ThumbnailView(QWidget *parent = nullptr);
 
     QPixmap pixmap() const;
     QPixmap snapshot() const;
@@ -59,4 +59,4 @@ private:
     QPixmap image;
 };
 
-#endif // SNAPSHOTVIEW_H
+#endif // THUMBNAILVIEW_H

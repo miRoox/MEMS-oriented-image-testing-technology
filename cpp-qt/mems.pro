@@ -27,8 +27,8 @@ SOURCES += main.cpp \
     circlefit.cpp \
     processor.cpp \
     configuration.cpp \
-    snapshotview.cpp \
-    progressupdater.cpp
+    progressupdater.cpp \
+    thumbnailview.cpp
 
 
 HEADERS += \
@@ -42,8 +42,8 @@ HEADERS += \
     configuration.h \
     algorithms.h \
     utils.h \
-    snapshotview.h \
-    progressupdater.h
+    progressupdater.h \
+    thumbnailview.h
 
 FORMS += \
     mainpanel.ui
