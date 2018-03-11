@@ -42,6 +42,7 @@ public:
     QPixmap originPixmap() const;
 
 signals:
+    void viewChanged(bool isOrigin);
 
 public slots:
     void setOriginPixmap(const QPixmap& pixmap);
@@ -57,6 +58,7 @@ private slots:
 private:
     QLabel* view;
     QPixmap origin;
+    bool viewOrigin;
 };
 
 #endif // THUMBNAILVIEW_H

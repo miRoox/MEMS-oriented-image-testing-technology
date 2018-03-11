@@ -133,6 +133,16 @@ MainPanel::MainPanel(QWidget *parent) :
     connect(progressUpdater,&ProgressUpdater::textTipChange,
             ui->progressLabel,&QLabel::setText);
 
+    // update view
+    connect(ui->thumbnail1,&ThumbnailView::viewChanged,
+            this,&MainPanel::updateView);
+    connect(ui->thumbnail2,&ThumbnailView::viewChanged,
+            this,&MainPanel::updateView);
+    connect(ui->thumbnail3,&ThumbnailView::viewChanged,
+            this,&MainPanel::updateView);
+    connect(ui->thumbnail4,&ThumbnailView::viewChanged,
+            this,&MainPanel::updateView);
+
     // load config
     auto config = loadConfigs(DefaultOriginKey);
     setByConfig(config);
@@ -291,6 +301,33 @@ void MainPanel::overrideBusyCursor()
 void MainPanel::restoreCursor()
 {
     QApplication::restoreOverrideCursor();
+}
+
+void MainPanel::updateView(bool isOrigin)
+{
+    if (isOrigin)
+    {
+        ThumbnailView* current = q_check_ptr(qobject_cast<ThumbnailView*>(sender()));
+        ui->thumbnail1->setVisible(current == ui->thumbnail1);
+        ui->labelText1->setVisible(current == ui->thumbnail1);
+        ui->thumbnail2->setVisible(current == ui->thumbnail2);
+        ui->labelText2->setVisible(current == ui->thumbnail2);
+        ui->thumbnail3->setVisible(current == ui->thumbnail3);
+        ui->labelText3->setVisible(current == ui->thumbnail3);
+        ui->thumbnail4->setVisible(current == ui->thumbnail4);
+        ui->labelText4->setVisible(current == ui->thumbnail4);
+    }
+    else
+    {
+        ui->thumbnail1->show();
+        ui->labelText1->show();
+        ui->thumbnail2->show();
+        ui->labelText2->show();
+        ui->thumbnail3->show();
+        ui->labelText3->show();
+        ui->thumbnail4->show();
+        ui->labelText4->show();
+    }
 }
 
 void MainPanel::on_horizontalSliderGS_valueChanged(int value)

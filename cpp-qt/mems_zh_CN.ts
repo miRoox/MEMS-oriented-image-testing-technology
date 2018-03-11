@@ -15,7 +15,7 @@
     </message>
     <message>
         <location filename="mainpanel.ui" line="91"/>
-        <location filename="mainpanel.cpp" line="226"/>
+        <location filename="mainpanel.cpp" line="236"/>
         <source>A</source>
         <translation>A</translation>
     </message>
@@ -26,7 +26,7 @@
     </message>
     <message>
         <location filename="mainpanel.ui" line="108"/>
-        <location filename="mainpanel.cpp" line="231"/>
+        <location filename="mainpanel.cpp" line="241"/>
         <source>B</source>
         <translation>B</translation>
     </message>
@@ -37,7 +37,7 @@
     </message>
     <message>
         <location filename="mainpanel.ui" line="125"/>
-        <location filename="mainpanel.cpp" line="237"/>
+        <location filename="mainpanel.cpp" line="247"/>
         <source>C</source>
         <translation>C</translation>
     </message>
@@ -129,27 +129,27 @@
         <translation>滤波图像</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="729"/>
+        <location filename="mainpanel.ui" line="716"/>
         <source>Binarized Image</source>
         <translation>二值化图像</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="759"/>
+        <location filename="mainpanel.ui" line="733"/>
         <source>Edge Image</source>
         <translation>边缘图像</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="789"/>
+        <location filename="mainpanel.ui" line="750"/>
         <source>Circle Image</source>
         <translation>拟合圆图像</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="837"/>
+        <location filename="mainpanel.ui" line="785"/>
         <source>Save Configuration</source>
         <translation>保存配置</translation>
     </message>
     <message>
-        <location filename="mainpanel.ui" line="844"/>
+        <location filename="mainpanel.ui" line="792"/>
         <source>Load Configuration</source>
         <translation>加载配置</translation>
     </message>
@@ -249,7 +249,7 @@
         <translation>基于连通性的误差校正</translation>
     </message>
     <message>
-        <location filename="mainpanel.cpp" line="245"/>
+        <location filename="mainpanel.cpp" line="255"/>
         <source>The center of the circle is (%1, %2), and the radius is %3</source>
         <translation>圆心为(%1, %2)，半径为%3</translation>
     </message>
@@ -310,42 +310,42 @@ Radius: %3</source>
         <translation>&lt;html&gt;&lt;body&gt;&lt;p style=&quot;color:gray&quot;&gt;无图像&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="104"/>
+        <location filename="thumbnailview.cpp" line="119"/>
         <source>No image to save</source>
         <translation>没有要保存的文件</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="105"/>
+        <location filename="thumbnailview.cpp" line="120"/>
         <source>There is no image to save, please retry later.</source>
         <translation>没有要保存的文件，请稍后重试。</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="110"/>
+        <location filename="thumbnailview.cpp" line="125"/>
         <source>Save Image</source>
         <translation>保存图像</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="112"/>
+        <location filename="thumbnailview.cpp" line="127"/>
         <source>Images (*.png *.jpg *.jpeg *.bmp *.xpm)</source>
         <translation>图像 (*.png *.jpg *.jpeg *.bmp *.xpm)</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="119"/>
+        <location filename="thumbnailview.cpp" line="134"/>
         <source>Image saved sucessfully!</source>
         <translation>图像保存成功！</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="120"/>
+        <location filename="thumbnailview.cpp" line="135"/>
         <source>Image sucessfully saved to %1.</source>
         <translation>图像成功保存到%1。</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="127"/>
+        <location filename="thumbnailview.cpp" line="142"/>
         <source>Image save failed!</source>
         <translation>图像保存失败！</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="128"/>
+        <location filename="thumbnailview.cpp" line="143"/>
         <source>Do you want to retry?</source>
         <translation>是否需要重试？</translation>
     </message>

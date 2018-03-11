@@ -80,6 +80,7 @@ private slots:
     void setCircleRadius(qreal radius);
     void overrideBusyCursor();
     void restoreCursor();
+    void updateView(bool isOrigin);
 
 private slots:
     void on_horizontalSliderGS_valueChanged(int value);

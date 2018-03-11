@@ -38,7 +38,7 @@
 static constexpr QSize snapshotSize{320,240};
 
 ThumbnailView::ThumbnailView(QWidget *parent)
-    : QWidget(parent), view(new QLabel)
+    : QWidget(parent), view(new QLabel),viewOrigin(false)
 {
     auto layout = new QHBoxLayout;
     layout->setMargin(0);
@@ -74,7 +74,14 @@ void ThumbnailView::setOriginPixmap(const QPixmap& pixmap)
     }
     else
     {
-        view->setPixmap(origin.scaled(snapshotSize,Qt::KeepAspectRatio));
+        if (viewOrigin)
+        {
+            view->setPixmap(origin);
+        }
+        else
+        {
+            view->setPixmap(origin.scaled(snapshotSize,Qt::KeepAspectRatio));
+        }
     }
 }
 
@@ -86,14 +93,22 @@ void ThumbnailView::setOriginImage(const QImage& image)
 void ThumbnailView::enterEvent(QEvent* e)
 {
     if (!origin.isNull())
+    {
+        viewOrigin = true;
         view->setPixmap(origin);
+        emit viewChanged(viewOrigin);
+    }
     return QWidget::enterEvent(e);
 }
 
 void ThumbnailView::leaveEvent(QEvent* e)
 {
     if (!origin.isNull())
+    {
+        viewOrigin = false;
         view->setPixmap(origin.scaled(snapshotSize,Qt::KeepAspectRatio));
+        emit viewChanged(viewOrigin);
+    }
     return QWidget::leaveEvent(e);
 }
 
