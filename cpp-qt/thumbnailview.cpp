@@ -28,6 +28,7 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QAction>
+#include <QEvent>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QString>
@@ -90,26 +91,27 @@ void ThumbnailView::setOriginImage(const QImage& image)
     return setOriginPixmap(QPixmap::fromImage(image));
 }
 
-void ThumbnailView::enterEvent(QEvent* e)
+bool ThumbnailView::event(QEvent *event)
 {
     if (!origin.isNull())
     {
-        viewOrigin = true;
-        view->setPixmap(origin);
-        emit viewChanged(viewOrigin);
+        switch (event->type())
+        {
+        case QEvent::HoverEnter:
+            viewOrigin = true;
+            view->setPixmap(origin);
+            emit viewChanged(viewOrigin);
+            break;
+        case QEvent::HoverLeave:
+            viewOrigin = false;
+            view->setPixmap(origin.scaled(snapshotSize,Qt::KeepAspectRatio));
+            emit viewChanged(viewOrigin);
+            break;
+        default:
+            break;
+        }
     }
-    return QWidget::enterEvent(e);
-}
-
-void ThumbnailView::leaveEvent(QEvent* e)
-{
-    if (!origin.isNull())
-    {
-        viewOrigin = false;
-        view->setPixmap(origin.scaled(snapshotSize,Qt::KeepAspectRatio));
-        emit viewChanged(viewOrigin);
-    }
-    return QWidget::leaveEvent(e);
+    return QWidget::event(event);
 }
 
 void ThumbnailView::saveImage()
