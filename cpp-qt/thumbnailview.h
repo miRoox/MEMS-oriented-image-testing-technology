@@ -49,8 +49,7 @@ public slots:
     void setOriginImage(const QImage& origin);
 
 protected:
-    virtual void enterEvent(QEvent* e) override;
-    virtual void leaveEvent(QEvent* e) override;
+    virtual bool event(QEvent *event) override;
 
 private slots:
     void saveImage();
