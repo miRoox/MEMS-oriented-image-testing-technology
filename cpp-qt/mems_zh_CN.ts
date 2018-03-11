@@ -305,47 +305,47 @@ Radius: %3</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="81"/>
+        <location filename="thumbnailview.cpp" line="73"/>
         <source>&lt;html&gt;&lt;body&gt;&lt;p style=&quot;color:gray&quot;&gt;No Image&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;body&gt;&lt;p style=&quot;color:gray&quot;&gt;无图像&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="112"/>
+        <location filename="thumbnailview.cpp" line="104"/>
         <source>No image to save</source>
         <translation>没有要保存的文件</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="113"/>
+        <location filename="thumbnailview.cpp" line="105"/>
         <source>There is no image to save, please retry later.</source>
         <translation>没有要保存的文件，请稍后重试。</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="118"/>
+        <location filename="thumbnailview.cpp" line="110"/>
         <source>Save Image</source>
         <translation>保存图像</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="120"/>
+        <location filename="thumbnailview.cpp" line="112"/>
         <source>Images (*.png *.jpg *.jpeg *.bmp *.xpm)</source>
         <translation>图像 (*.png *.jpg *.jpeg *.bmp *.xpm)</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="127"/>
+        <location filename="thumbnailview.cpp" line="119"/>
         <source>Image saved sucessfully!</source>
         <translation>图像保存成功！</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="128"/>
+        <location filename="thumbnailview.cpp" line="120"/>
         <source>Image sucessfully saved to %1.</source>
         <translation>图像成功保存到%1。</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="135"/>
+        <location filename="thumbnailview.cpp" line="127"/>
         <source>Image save failed!</source>
         <translation>图像保存失败！</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="136"/>
+        <location filename="thumbnailview.cpp" line="128"/>
         <source>Do you want to retry?</source>
         <translation>是否需要重试？</translation>
     </message>

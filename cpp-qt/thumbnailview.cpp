@@ -51,63 +51,55 @@ ThumbnailView::ThumbnailView(QWidget *parent)
     addAction(actionSave);
     setContextMenuPolicy(Qt::ActionsContextMenu);
     connect(actionCopy,&QAction::triggered,[this]{
-        if (image.isNull())
+        if (origin.isNull())
             return;
-        QApplication::clipboard()->setPixmap(image);
+        QApplication::clipboard()->setPixmap(origin);
     });
     connect(actionSave,&QAction::triggered,
             this,&ThumbnailView::saveImage);
-    setPixmap( {} );
+    setOriginPixmap( {} );
 }
 
-QPixmap ThumbnailView::pixmap() const
+QPixmap ThumbnailView::originPixmap() const
 {
-    return image;
+    return origin;
 }
 
-QPixmap ThumbnailView::snapshot() const
+void ThumbnailView::setOriginPixmap(const QPixmap& pixmap)
 {
-    const QPixmap* d = view->pixmap();
-    if (!d)
-        return {};
-    return *d;
-}
-
-void ThumbnailView::setPixmap(const QPixmap& pixmap)
-{
-    image = pixmap;
+    origin = pixmap;
     if (pixmap.isNull())
     {
         view->setText(tr("<html><body><p style=\"color:gray\">No Image</p></body></html>"));
     }
     else
     {
-        view->setPixmap(image.scaled(snapshotSize,Qt::KeepAspectRatio));
+        view->setPixmap(origin.scaled(snapshotSize,Qt::KeepAspectRatio));
     }
 }
 
-void ThumbnailView::setImage(const QImage& image)
+void ThumbnailView::setOriginImage(const QImage& image)
 {
-    return setPixmap(QPixmap::fromImage(image));
+    return setOriginPixmap(QPixmap::fromImage(image));
 }
 
 void ThumbnailView::enterEvent(QEvent* e)
 {
-    if (!image.isNull())
-        view->setPixmap(image);
+    if (!origin.isNull())
+        view->setPixmap(origin);
     return QWidget::enterEvent(e);
 }
 
 void ThumbnailView::leaveEvent(QEvent* e)
 {
-    if (!image.isNull())
-        view->setPixmap(image.scaled(snapshotSize,Qt::KeepAspectRatio));
+    if (!origin.isNull())
+        view->setPixmap(origin.scaled(snapshotSize,Qt::KeepAspectRatio));
     return QWidget::leaveEvent(e);
 }
 
 void ThumbnailView::saveImage()
 {
-    if (image.isNull())
+    if (origin.isNull())
     {
         QMessageBox::information(this,tr("No image to save"),
                                  tr("There is no image to save, please retry later."),
@@ -122,7 +114,7 @@ void ThumbnailView::saveImage()
     {
         bool retry = false;
         do {
-            if (image.save(fileName))
+            if (origin.save(fileName))
             {
                 QMessageBox::information(this,tr("Image saved sucessfully!"),
                                          tr("Image sucessfully saved to %1.").arg(fileName),

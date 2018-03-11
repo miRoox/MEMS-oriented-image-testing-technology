@@ -35,17 +35,17 @@ class QLabel;
 class ThumbnailView : public QWidget
 {
     Q_OBJECT
+    Q_PROPERTY(QPixmap originPixmap READ originPixmap WRITE setOriginPixmap)
 public:
     explicit ThumbnailView(QWidget *parent = nullptr);
 
-    QPixmap pixmap() const;
-    QPixmap snapshot() const;
+    QPixmap originPixmap() const;
 
 signals:
 
 public slots:
-    void setPixmap(const QPixmap& pixmap);
-    void setImage(const QImage& image);
+    void setOriginPixmap(const QPixmap& pixmap);
+    void setOriginImage(const QImage& origin);
 
 protected:
     virtual void enterEvent(QEvent* e) override;
@@ -56,7 +56,7 @@ private slots:
 
 private:
     QLabel* view;
-    QPixmap image;
+    QPixmap origin;
 };
 
 #endif // THUMBNAILVIEW_H
