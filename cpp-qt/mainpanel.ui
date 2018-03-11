@@ -657,7 +657,7 @@
                 <enum>QFrame::Raised</enum>
                </property>
                <property name="text">
-                <string notr="true">Result</string>
+                <string notr="true">result placeholder</string>
                </property>
                <property name="textInteractionFlags">
                 <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
