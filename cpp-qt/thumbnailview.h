@@ -24,51 +24,40 @@
  **/
 
 
-#ifndef PROGRESSUPDATER_H
-#define PROGRESSUPDATER_H
+#ifndef THUMBNAILVIEW_H
+#define THUMBNAILVIEW_H
 
-#include <QObject>
+#include <QWidget>
+#include <QPixmap>
 
-class QString;
+class QLabel;
 
-class ProgressUpdater : public QObject
+class ThumbnailView : public QWidget
 {
     Q_OBJECT
+    Q_PROPERTY(QPixmap originPixmap READ originPixmap WRITE setOriginPixmap)
 public:
-    explicit ProgressUpdater(QObject *parent = nullptr);
-    ~ProgressUpdater();
+    explicit ThumbnailView(QWidget *parent = nullptr);
 
-    static ProgressUpdater* instance(); // singleton
+    QPixmap originPixmap() const;
 
 signals:
-    void beginRequest();
-    void endRequest();
-    void valueChange(int value);
-    void textTipChange(const QString& text);
+    void viewChanged(bool isOrigin);
 
 public slots:
-    void begin();
-    void end();
-    void increaseToValue(int value);
-    void setValue(int value);
-    void setTextTip(const QString& text);
-private:
-    Q_DISABLE_COPY(ProgressUpdater)
+    void setOriginPixmap(const QPixmap& pixmap);
+    void setOriginImage(const QImage& origin);
 
-    bool state;
-    int value;
+protected:
+    virtual bool event(QEvent *event) override;
+
+private slots:
+    void saveImage();
+
+private:
+    QLabel* view;
+    QPixmap origin;
+    bool viewOrigin;
 };
 
-
-class ProgressUpdaterContext // RAII Container
-{
-public:
-    explicit ProgressUpdaterContext(const QString& textTip);
-    inline ~ProgressUpdaterContext() { end(); }
-
-    void end();
-private:
-    Q_DISABLE_COPY(ProgressUpdaterContext)
-};
-
-#endif // PROGRESSUPDATER_H
+#endif // THUMBNAILVIEW_H

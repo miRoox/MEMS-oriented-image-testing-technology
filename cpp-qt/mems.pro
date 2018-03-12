@@ -4,7 +4,7 @@ TEMPLATE = app
 TARGET = mems
 DESTDIR = ./
 
-VERSION = 1.1.0
+VERSION = 1.1.1
 
 CONFIG += c++14
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000 # disables all the APIs deprecated before Qt 6.0.0
@@ -27,8 +27,8 @@ SOURCES += main.cpp \
     circlefit.cpp \
     processor.cpp \
     configuration.cpp \
-    snapshotview.cpp \
-    progressupdater.cpp
+    progressupdater.cpp \
+    thumbnailview.cpp
 
 
 HEADERS += \
@@ -42,8 +42,8 @@ HEADERS += \
     configuration.h \
     algorithms.h \
     utils.h \
-    snapshotview.h \
-    progressupdater.h
+    progressupdater.h \
+    thumbnailview.h
 
 FORMS += \
     mainpanel.ui

@@ -36,6 +36,9 @@
 #include <QPoint>
 #include <QVector>
 #include <QColor>
+#include <cmath>
+#include <limits>
+#include <algorithm>
 #include "utils.h"
 
 namespace MEMS {
