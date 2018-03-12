@@ -296,13 +296,15 @@ Radius: %3</source>
     <name>ThumbnailView</name>
     <message>
         <location filename="thumbnailview.cpp" line="49"/>
-        <source>Copy</source>
-        <translation>复制</translation>
+        <source>&amp;Copy</source>
+        <oldsource>Copy</oldsource>
+        <translation>复制(&amp;C)</translation>
     </message>
     <message>
         <location filename="thumbnailview.cpp" line="50"/>
-        <source>Save</source>
-        <translation>保存</translation>
+        <source>&amp;Save</source>
+        <oldsource>Save</oldsource>
+        <translation>保存(&amp;S)</translation>
     </message>
     <message>
         <location filename="thumbnailview.cpp" line="74"/>

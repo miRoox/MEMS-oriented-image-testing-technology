@@ -46,8 +46,8 @@ ThumbnailView::ThumbnailView(QWidget *parent)
     layout->addWidget(view);
     setLayout(layout);
     setAttribute(Qt::WA_Hover);
-    auto actionCopy = new QAction(tr("Copy"),this);
-    auto actionSave = new QAction(tr("Save"),this);
+    auto actionCopy = new QAction(tr("&Copy"),this);
+    auto actionSave = new QAction(tr("&Save"),this);
     addAction(actionCopy);
     addAction(actionSave);
     connect(actionCopy,&QAction::triggered,[this]{
