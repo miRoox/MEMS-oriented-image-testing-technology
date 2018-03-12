@@ -310,42 +310,42 @@ Radius: %3</source>
         <translation>&lt;html&gt;&lt;body&gt;&lt;p style=&quot;color:gray&quot;&gt;无图像&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="121"/>
+        <location filename="thumbnailview.cpp" line="122"/>
         <source>No image to save</source>
         <translation>没有要保存的文件</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="122"/>
+        <location filename="thumbnailview.cpp" line="123"/>
         <source>There is no image to save, please retry later.</source>
         <translation>没有要保存的文件，请稍后重试。</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="127"/>
+        <location filename="thumbnailview.cpp" line="128"/>
         <source>Save Image</source>
         <translation>保存图像</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="129"/>
+        <location filename="thumbnailview.cpp" line="130"/>
         <source>Images (*.png *.jpg *.jpeg *.bmp *.xpm)</source>
         <translation>图像 (*.png *.jpg *.jpeg *.bmp *.xpm)</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="136"/>
+        <location filename="thumbnailview.cpp" line="137"/>
         <source>Image saved sucessfully!</source>
         <translation>图像保存成功！</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="137"/>
+        <location filename="thumbnailview.cpp" line="138"/>
         <source>Image sucessfully saved to %1.</source>
         <translation>图像成功保存到%1。</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="144"/>
+        <location filename="thumbnailview.cpp" line="145"/>
         <source>Image save failed!</source>
         <translation>图像保存失败！</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="145"/>
+        <location filename="thumbnailview.cpp" line="146"/>
         <source>Do you want to retry?</source>
         <translation>是否需要重试？</translation>
     </message>

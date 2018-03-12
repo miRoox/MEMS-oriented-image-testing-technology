@@ -50,7 +50,6 @@ ThumbnailView::ThumbnailView(QWidget *parent)
     auto actionSave = new QAction(tr("Save"),this);
     addAction(actionCopy);
     addAction(actionSave);
-    setContextMenuPolicy(Qt::ActionsContextMenu);
     connect(actionCopy,&QAction::triggered,[this]{
         if (origin.isNull())
             return;
@@ -71,10 +70,12 @@ void ThumbnailView::setOriginPixmap(const QPixmap& pixmap)
     origin = pixmap;
     if (pixmap.isNull())
     {
+        setContextMenuPolicy(Qt::NoContextMenu);
         view->setText(tr("<html><body><p style=\"color:gray\">No Image</p></body></html>"));
     }
     else
     {
+        setContextMenuPolicy(Qt::ActionsContextMenu);
         if (viewOrigin)
         {
             view->setPixmap(origin);
