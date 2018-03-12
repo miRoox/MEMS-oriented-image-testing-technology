@@ -124,6 +124,7 @@ void ThumbnailView::saveImage()
                                  QMessageBox::Cancel);
         return;
     }
+    QPixmap toSave = origin;
     QString key = window()->windowTitle();
     QString fileName = QFileDialog::getSaveFileName(this,tr("Save Image"),
                                                     key + ".out.png",
@@ -132,7 +133,7 @@ void ThumbnailView::saveImage()
     {
         bool retry = false;
         do {
-            if (origin.save(fileName))
+            if (toSave.save(fileName))
             {
                 QMessageBox::information(this,tr("Image saved sucessfully!"),
                                          tr("Image sucessfully saved to %1.").arg(fileName),

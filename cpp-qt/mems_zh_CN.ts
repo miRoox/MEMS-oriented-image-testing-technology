@@ -320,32 +320,32 @@ Radius: %3</source>
         <translation>没有要保存的文件，请稍后重试。</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="128"/>
+        <location filename="thumbnailview.cpp" line="129"/>
         <source>Save Image</source>
         <translation>保存图像</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="130"/>
+        <location filename="thumbnailview.cpp" line="131"/>
         <source>Images (*.png *.jpg *.jpeg *.bmp *.xpm)</source>
         <translation>图像 (*.png *.jpg *.jpeg *.bmp *.xpm)</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="137"/>
+        <location filename="thumbnailview.cpp" line="138"/>
         <source>Image saved sucessfully!</source>
         <translation>图像保存成功！</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="138"/>
+        <location filename="thumbnailview.cpp" line="139"/>
         <source>Image sucessfully saved to %1.</source>
         <translation>图像成功保存到%1。</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="145"/>
+        <location filename="thumbnailview.cpp" line="146"/>
         <source>Image save failed!</source>
         <translation>图像保存失败！</translation>
     </message>
     <message>
-        <location filename="thumbnailview.cpp" line="146"/>
+        <location filename="thumbnailview.cpp" line="147"/>
         <source>Do you want to retry?</source>
         <translation>是否需要重试？</translation>
     </message>
