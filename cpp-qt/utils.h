@@ -27,10 +27,6 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <QtGlobal>
-#include <cmath>
-#include <limits>
-#include <algorithm>
 #include <chrono>
 #include <QtDebug>
 #include <QThread>

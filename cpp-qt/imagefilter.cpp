@@ -35,6 +35,8 @@
 #include <QImage>
 #include <QPoint>
 #include <QColor>
+#include <cmath>
+#include <algorithm>
 #include "utils.h"
 
 namespace MEMS {
