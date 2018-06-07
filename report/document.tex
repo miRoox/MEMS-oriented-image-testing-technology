@@ -9,14 +9,25 @@
 \usepackage{tikz}
 %\usepackage{CJK}
 \usepackage{url}
+\usepackage{array}
 
 \setcounter{secnumdepth}{3}
 \renewcommand\thesection{\arabic {section}}
+\usepackage{tabularx}
 \usepackage{float}
-\usepackage{subfig}
+\usepackage{subcaption}
 \usepackage{caption}
 \usepackage{lipsum}
-\usepackage[unicode, colorlinks=true]{hyperref}
+\usepackage[backend=biber,bibstyle=gb7714-2015,%nature,%
+citestyle=gb7714-2015%,backref=true%
+]{biblatex}
+\usepackage[unicode,colorlinks=true,pdfstartview=FitH,
+linkcolor=blue,anchorcolor=violet,citecolor=magenta
+]{hyperref}
+
+\addbibresource[location=local]{cite.bib}
+
+\newcommand{\reporef}[1]{\href{https://github.com/miRoox/MEMS-oriented-image-testing-technology/blob/master/cpp-qt/#1}{#1}}
 
 \begin{document}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -37,10 +48,10 @@
     {\fangsong\Large\itshape 卢XX, 张XX\par}
     \vfill
     {**********, **********}\par
-    \fangsong{XX系}
+    \fangsong{自动化测试与控制系}
 
     \vfill
-    指导教师	\textsc{王XX}
+    指导教师	\textsc{金XX}
     \vfill
 % Bottom of the page
     {\large \today\par}
@@ -57,11 +68,11 @@ MEMS技术是近年来随着微电子技术的不断成熟而发展起来的一�
 
 \section{设计要求}
 
-\begin{figure}[htb]
+\begin{figure}[!htb]
     \centering
-    \subfloat[A组]{\includegraphics[width = 0.48\linewidth]{A.png}}\hfill
-    \subfloat[B组]{\includegraphics[width = 0.48\linewidth]{B.png}}\\
-    \subfloat[C组]{\includegraphics[width = 0.48\linewidth]{C.png}}
+    \subcaptionbox{A组}{\includegraphics[width = 0.48\linewidth]{A.png}}\hfill
+    \subcaptionbox{B组}{\includegraphics[width = 0.48\linewidth]{B.png}}\\
+    \subcaptionbox{C组}{\includegraphics[width = 0.48\linewidth]{C.png}}
     \caption{采集图像}\label{fig:origin}
 \end{figure}
 
@@ -93,22 +104,167 @@ MEMS技术是近年来随着微电子技术的不断成熟而发展起来的一�
     \item 中值滤波 - 非线性滤波，边缘保持能力较好。
     \item 均值平移滤波 - 非线性滤波，边缘保持能力好，但性能较差。
 \end{itemize}
-这其中，均值滤波基本就是拿来练手的。
+这其中，均值滤波基本就是拿来练手的，基本没有实用意义。
 
-\lipsum[1]
+线性滤波基于卷积\cite{KernelWiki}实现。
+均值滤波使用权值相等的卷积核；
+而高斯滤波的所用卷积核按高斯分布分配权值。
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width = 0.6\linewidth]{median.png}
+    \caption{中值滤波}\label{fig:median}
+\end{figure}
+
+中值滤波将每个像素用其周围像素的中位数替代。
+它不引入新的像素值，故具有一定的边缘保持能力。
+同时，它也是这几种方法中唯一能滤除图像左侧边缘的白线的方法，
+如图\ref{fig:median}所示。
+
+\begin{figure}[!htb]
+    \centering
+    \subcaptionbox{A组滤波结果}{\includegraphics[width = 0.48\linewidth]{A-meanshift.png}}\hfill
+    \subcaptionbox{C组滤波结果}{\includegraphics[width = 0.48\linewidth]{C-meanshift.png}}
+    \caption{均值平移滤波}\label{fig:meanshift}
+\end{figure}
+
+均值平移滤波同时考虑了空间距离和灰度距离\cite{MeanShiftWiki}，
+只有同时在像素的空间邻域和灰度邻域内才计入平均值计算。
+在边缘处，像素的灰度变化通常较大，
+选取合适的灰度邻域范围，边缘另一侧的像素可以不被计入平均值计算，
+因而具有一定的边缘保持能力。
+但当图像曝光较差时，噪声的灰度可能和图形本身的灰度相当。
+此时若要继续保持边缘，则难以有效降噪。
+如图\ref{fig:meanshift}所示。
 
 \subsection{二值化之阈值分割算法}
 
 二值化本身的算法并没有什么特别的，就是普通的单一阈值分割。
 重要的是选取阈值所用的方法。
 
-\lipsum[1]
+程序中尝试了以下方法：
+\begin{itemize}
+    \item 灰度平均值法
+    \item P-Tile比例阈值法
+    \item 力矩保持法\cite{Tsai1985Moment}
+    \item 大津法\cite{Otsu1979A}
+    \item 模糊度阈值分割法\cite{Huang1995Image}
+\end{itemize}
+
+\begin{figure}[!htbp]
+    \centering
+    \begin{minipage}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{threshold-origin.png}
+        \subcaption{测试原图像}\label{fig:thres-origin}
+    \end{minipage} \hfill
+    \begin{minipage}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{graymean.png}
+        \subcaption{灰度平均值法}\label{fig:graymean}
+    \end{minipage} \\
+    \begin{minipage}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{ptile.png}
+        \subcaption{P-Tile比例阈值法($P=87\%$)}\label{fig:ptile}
+    \end{minipage} \hfill
+    \begin{minipage}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{moment.png}
+        \subcaption{力矩保持法}\label{fig:moment}
+    \end{minipage} \\
+    \begin{minipage}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{otsu.png}
+        \subcaption{大津法}\label{fig:otsu}
+    \end{minipage} \hfill
+    \begin{minipage}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{fuzziness.png}
+        \subcaption{模糊度阈值分割法}\label{fig:fuzziness}
+    \end{minipage}
+    \caption{阈值分割算法测试}\label{fig:threshold}
+\end{figure}
+
+对经过均值平移滤波的B组图像进行二值化测试，结果如图\ref{fig:threshold}所示。
+可以看到，灰度平均值法得到的阈值偏低，在二值图像中引入了大量噪声；
+而力矩保持法得到的阈值偏高，导致二值图像中的目标图形显示不全。
+P-Tile比例阈值法是半自动的阈值分割方法，选取合适的背景比例可以得到较好的二值图像，
+但如果比值划分不够细致，同样也不能保证获得非常准确的图像形态（如图\ref{fig:ptile}）。
+而对于测试图像，大津法和模糊度阈值分割法得到的结果完全一致，也是效果最好的，
+因此程序中推荐方案使用的是这两种方法。
 
 \subsection{边缘检测算法}
 
-在传统的Canny边缘算法中，边缘检测算子是先于二值化进行的。
+在传统的Canny边缘算法\cite{CannyWiki}中，边缘检测算子是先于二值化进行的。
+但在本方案中，边缘检测是后于二值化进行的。因而几种边缘检测算子的实际效果相差无几。
 
-\lipsum[1]
+边缘检测算子是基于卷积的线性滤波，程序中用到的几种算子如表\ref{tabu:edgeop}所示。
+
+\renewcommand\arraystretch{1.2}
+\begin{table}[!htb]
+    \centering
+    \caption{边缘检测算子}\label{tabu:edgeop}
+    \begin{tabular}{|c|c|}
+        \hline
+        算子 & 卷积核 \\
+        \hline
+        Sobel算子 & $
+            \begin{pmatrix}
+                -1 & 0 & 1 \\
+                -2 & 0 & 2 \\
+                -1 & 0 & 1
+            \end{pmatrix}
+            ,\quad
+            \begin{pmatrix}
+                \ 1 & \ 2 & \ 1 \\
+                \ 0 & \ 0 & \ 0 \\
+                 -1 &  -2 &  -1
+            \end{pmatrix}
+        $ \\
+        \hline
+        Prewitt算子 & $
+            \begin{pmatrix}
+                -1 & 0 & 1 \\
+                -1 & 0 & 1 \\
+                -1 & 0 & 1
+            \end{pmatrix}
+            ,\quad
+            \begin{pmatrix}
+                \ 1 & \ 1 & \ 1 \\
+                \ 0 & \ 0 & \ 0 \\
+                 -1 &  -1 &  -1
+            \end{pmatrix}
+        $ \\
+        \hline
+        Scharr算子 & $
+            \begin{pmatrix}
+                \ 3 & 0 & \ -3 \\
+                 10 & 0 &  -10 \\
+                \ 3 & 0 & \ -3
+            \end{pmatrix}
+            ,\quad
+            \begin{pmatrix}
+                \ 3 &  \ 10 & \ 3 \\
+                \ 0 & \ \ 0 & \ 0 \\
+                 -3 &   -10 &  -3
+            \end{pmatrix}
+        $ \\
+        \hline
+        Laplacian算子 & $
+            \begin{pmatrix}
+                0 & \ 1 & 0 \\
+                1 &  -4 & 1 \\
+                0 & \ 1 & 0
+            \end{pmatrix}
+        $ \\
+        \hline
+    \end{tabular}
+\end{table}
+\renewcommand\arraystretch{1}
+
+几种方法中，Laplacian算子效果最好（边缘最细），
+因而在程序中推荐的方案配置都使用的是Laplacian算子。
 
 \subsection{圆拟合与误差矫正}
 
@@ -116,6 +272,39 @@ MEMS技术是近年来随着微电子技术的不断成熟而发展起来的一�
 
 \section{程序说明}
 
-\lipsum[1]
+程序源码较长，就不附在报告里了。
+完整源码可以在GitHub仓库
+\url{https://github.com/miRoox/MEMS-oriented-image-testing-technology}
+下的子目录
+\href{https://github.com/miRoox/MEMS-oriented-image-testing-technology/tree/master/cpp-qt}{cpp-qt}
+找到。
+
+程序基于\href{https://www.qt.io/}{Qt开发套件}开发。
+结构上，采用视图与模型分离的模式，使程序结构清晰，开发与调试便利；
+行为上，操作和响应是异步进行的，将耗时的图像处理过程放置于单独的线程中，以避免界面操作被阻塞。
+
+源文件介绍：
+\begin{itemize}
+    \item \reporef{mems.pro} - qmake项目文件，提供项目管理和自动构建。
+    \item \reporef{main.cpp} - 主函数所在文件，程序入口。
+    \item \reporef{mainpanel.h}, \reporef{mainpanel.cpp} - 主面板，界面响应与控制。
+    \item \reporef{mainpanel.ui} - 基于 Qt Designer 设计的主面板界面，构建时自动生成 ui\_mainpanel.h 。
+    \item \reporef{processor.h}, \reporef{processor.cpp} - 处理器，负责处理图像。
+    \item \reporef{algorithms.h} - 算法包装，包含了所用到的全部图像处理算法。
+    \item \reporef{imagefilter.h}, \reporef{imagefilter.cpp} - 图像滤波与卷积算法。
+    \item \reporef{binarize.hpp} - 二值化算法，header only。
+    \item \reporef{thresholding.h}, \reporef{thresholding.cpp} - 阈值分割算法。
+    \item \reporef{edgedetect.h}, \reporef{edgedetect.cpp} - 边缘检测算法。
+    \item \reporef{circlefit.h}, \reporef{circlefit.cpp} - 圆拟合与误差矫正算法。
+    \item \reporef{configuration.h}, \reporef{configuration.cpp} - 参数配置类，参数配置的包装。
+    \item \reporef{thumbnailview.h}, \reporef{thumbnailview.cpp} - 缩略图预览控件。
+    \item \reporef{progressupdater.h}, \reporef{progressupdater.cpp} - 进度条控制辅助类。
+    \item \reporef{utils.h} - 杂项工具。
+    \item \reporef{images.qrc} - Qt 资源文件，图像资源。
+    \item \reporef{mems\_zh\_CN.ts} - Qt 翻译文件，中文翻译。
+    \item \reporef{config.ini} - 配置文件，提供算法的默认配置。
+\end{itemize}
+
+\printbibliography[heading=bibliography,title=参考文献]
 
 \end{document}
