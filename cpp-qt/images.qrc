@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/images">
-        <file>A.bmp</file>
-        <file>B.bmp</file>
-        <file>C.bmp</file>
-    </qresource>
-</RCC>
