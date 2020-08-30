@@ -1,5 +1,7 @@
 # 面向微系统的图像测试技术
 
+[![View notebooks](https://wolfr.am/HAAhzkRq)](https://wolfr.am/PbaJmi3j)
+
 ## 一、课程内容
 
 MEMS技术是近年来随着微电子技术的不断成熟而发展起来的一门新兴的交叉学科。
